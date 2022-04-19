@@ -9,7 +9,7 @@ import '../../widget/post/post_daily_info_widget.dart';
 import '../../widget/post/post_appbar_widget.dart';
 
 bool isMyPostUploaded = true; // temp
-bool isOtherPostUploaded = true; // temp
+bool isPartnerPostUploaded = true; // temp
 List<DailyCouplePostModel> dailyPosts = [];
 
 class PostMainScreen extends StatelessWidget {
@@ -36,7 +36,7 @@ class PostMainScreen extends StatelessWidget {
                       Container(
                         height: 30.w,
                       ),
-                      dailyOtherPostWidget(context),
+                      dailyPartnerPostWidget(context),
                     ],
                   );
                 }
@@ -151,7 +151,7 @@ class PostMainScreen extends StatelessWidget {
   }
 
   /// Partner's Daily Post
-  Widget dailyOtherPostWidget(BuildContext context) {
+  Widget dailyPartnerPostWidget(BuildContext context) {
     return Container(
       height: 220.w,
       decoration: BoxDecoration(
@@ -169,7 +169,7 @@ class PostMainScreen extends StatelessWidget {
       alignment: Alignment.center,
       child: isMyPostUploaded == false ?
       Container(
-        child: isOtherPostUploaded == false ?
+        child: isPartnerPostUploaded == false ?
         /// 상대 답변 기다리는 중 안내
         Container(
             height: 80.w,
@@ -266,7 +266,7 @@ class PostMainScreen extends StatelessWidget {
       )
           :
       Container(
-        child: isOtherPostUploaded == false ?
+        child: isPartnerPostUploaded == false ?
         /// 상대 답변 푸시 안내 버튼
         Container(
           height: 80.w,
