@@ -1,5 +1,7 @@
 import 'package:couple_seflie_app/ui/view/screen/login/login_screen.dart';
+import 'package:couple_seflie_app/ui/view/screen/post/post_edit_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
+import 'package:couple_seflie_app/ui/view/screen/post/post_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -29,7 +31,12 @@ class MyApp extends StatelessWidget {
               child: child!,
             );
           },
-          home: PostMainScreen(),
+          initialRoute: '/mainScreen',
+          routes: {
+            '/mainScreen': (context) => PostMainScreen(),
+            '/postEditScreen': (context) => PostEditScreen(),
+            '/postDetailScreen': (context) => PostDetailScreen(),
+          },
         )
     );
   }
