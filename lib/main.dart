@@ -1,11 +1,19 @@
-import 'package:couple_seflie_app/ui/view/screen/login/login_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_edit_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_detail_screen.dart';
+import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(
+  MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (_) => PostViewModel())
+    ],
+    child: MyApp(),
+  )
+);
 
 class MyApp extends StatelessWidget {
   @override
