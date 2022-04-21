@@ -6,14 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-void main() => runApp(
-  MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (_) => PostViewModel())
-    ],
-    child: MyApp(),
-  )
-);
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   @override

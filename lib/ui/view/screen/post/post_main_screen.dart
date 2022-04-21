@@ -3,8 +3,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:couple_seflie_app/data/model/daily_couple_post_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
-import '../../../../data/model/post_model.dart';
+import '../../../view_model/daily_couple_post_view_model.dart';
 import '../../widget/post/post_daily_info_widget.dart';
 import '../../widget/post/post_appbar_widget.dart';
 
@@ -17,31 +18,39 @@ class PostMainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => DailyCouplePostViewModel(),
+      child: postMainWidget(context),
+    );
+  }
+
+  /// 매인 스크린
+  Widget postMainWidget(BuildContext context) {
     FocusScope.of(context).unfocus();
     return Scaffold(
       body: SafeArea(
         child: Container(
           child: Column(
-            children: <Widget>[
-              postAppBarWidget("/mainScreen", context),
-              postDailyInfoWidget("/mainScreen", context),
-              PageView.builder(
-                scrollDirection: Axis.horizontal,
-                controller: PageController(initialPage: dailyPosts.length),
-                itemCount: dailyPosts.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: <Widget>[
-                      dailyMyPostWidget(context),
-                      Container(
-                        height: 30.w,
-                      ),
-                      dailyPartnerPostWidget(context),
-                    ],
-                  );
-                }
-              )
-            ]
+              children: <Widget>[
+                postAppBarWidget("/mainScreen", context),
+                postDailyInfoWidget("/mainScreen", context),
+                PageView.builder(
+                    scrollDirection: Axis.horizontal,
+                    controller: PageController(initialPage: dailyPosts.length),
+                    itemCount: dailyPosts.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: <Widget>[
+                          dailyMyPostWidget(context),
+                          Container(
+                            height: 30.w,
+                          ),
+                          dailyPartnerPostWidget(context),
+                        ],
+                      );
+                    }
+                )
+              ]
           ),
         ),
       ),
