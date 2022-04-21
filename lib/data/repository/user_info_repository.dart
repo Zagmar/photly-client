@@ -1,5 +1,5 @@
 import '../datasource/local_datasource.dart';
-import '../datasource/remote_datasourcee.dart';
+import '../datasource/remote_datasource.dart';
 
 class UserInfoRepository {
   final RemoteDataSource _remoteDataSource = RemoteDataSource();
