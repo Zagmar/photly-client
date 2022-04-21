@@ -1,15 +1,14 @@
 import 'dart:io';
-import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 
-import '../model/user_info_model.dart';
-
-
 /// Status Code
+const OK = 200;
 const INVALID_RESPONSE = 100;
 const NO_INTERNET = 101;
 const INVALID_FORMAT = 102;
 const UNKNOWN_ERROR = 103;
+
+/// API URL
 const PHOTLY = "https://rpqkktcxv9.execute-api.ap-northeast-2.amazonaws.com/A1/photly";
 
 class Success {
@@ -24,12 +23,17 @@ class Failure {
 }
 
 class RemoteDataSource {
-  Future<Object> getFromUri(String uri, Map<String, String> inputData) async {
+  final int timeout = 5;
+  Future<Object> getFromUri(String uri, Map<String, String>? inputData) async {
     try{
       var url = Uri.parse(uri);
-      var response = await http.get(url, headers: inputData);
+      var response = inputData != null ?
+      await http.get(url, headers: inputData).timeout(Duration(seconds: timeout))
+          :
+      await http.get(url).timeout(Duration(seconds: timeout))
+      ;
 
-      if(response.statusCode == 100) {
+      if(response.statusCode == OK) {
         return Success(response: response.body);
       }
       return Failure(code: INVALID_RESPONSE, errorResponse: "Invalid Response");
@@ -43,12 +47,12 @@ class RemoteDataSource {
     }
   }
 
-  Future<Object> postToUri(String uri) async {
+  Future<Object> postToUri(String uri, Map<String, String> inputData) async {
     try{
       var url = Uri.parse(uri);
-      var response = await http.post(url);
-      if(response.statusCode == 100) {
-        return Success(code: response.statusCode, response: userInfoModelFromJson(response.body));
+      var response = await http.post(url, body: inputData).timeout(Duration(seconds: timeout));
+      if(response.statusCode == OK) {
+        return Success(response: response.body);
       }
       return Failure(code: INVALID_RESPONSE, errorResponse: "Invalid Response");
     } on HttpException{
@@ -61,12 +65,16 @@ class RemoteDataSource {
     }
   }
 
-  Future<Object> putToUri(String uri) async {
+  Future<Object> putToUri(String uri, Map<String, String> inputData) async {
     try{
       var url = Uri.parse(uri);
-      var response = await http.put(url);
-      if(response.statusCode == 100) {
-        return Success(code: response.statusCode, response: userInfoModelFromJson(response.body));
+      var response = await http.put(
+          url,
+          headers: {"Content-Type": "application/json"},
+          body: inputData
+      ).timeout(Duration(seconds: timeout));
+      if(response.statusCode == OK) {
+        return Success(response: response.body);
       }
       return Failure(code: INVALID_RESPONSE, errorResponse: "Invalid Response");
     } on HttpException{
@@ -79,12 +87,12 @@ class RemoteDataSource {
     }
   }
 
-  Future<Object> deleteFromUri(String uri) async {
+  Future<Object> deleteFromUri(String uri, Map<String, String> inputData) async {
     try{
       var url = Uri.parse(uri);
-      var response = await http.delete(url);
-      if(response.statusCode == 100) {
-        return Success(code: response.statusCode, response: userInfoModelFromJson(response.body));
+      var response = await http.delete(url, headers: inputData).timeout(Duration(seconds: timeout));
+      if(response.statusCode == OK) {
+        return Success(response: response.body);
       }
       return Failure(code: INVALID_RESPONSE, errorResponse: "Invalid Response");
     } on HttpException{
