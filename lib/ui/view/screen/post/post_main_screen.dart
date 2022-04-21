@@ -5,26 +5,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
+import '../../../ui_setting.dart';
 import '../../../view_model/daily_couple_post_view_model.dart';
 import '../../widget/post/post_daily_info_widget.dart';
 import '../../widget/post/post_appbar_widget.dart';
 
-bool isMyPostUploaded = true; // temp
-bool isPartnerPostUploaded = true; // temp
+
 List<DailyCouplePostModel> dailyPosts = [];
 
 class PostMainScreen extends StatelessWidget {
-  const PostMainScreen({Key? key}) : super(key: key);
+  PostMainScreen({Key? key}) : super(key: key);
+  late DailyCouplePostViewModel _dailyCouplePostViewModel;
 
   @override
   Widget build(BuildContext context) {
+    _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context);
     return ChangeNotifierProvider(
       create: (_) => DailyCouplePostViewModel(),
       child: postMainWidget(context),
     );
   }
 
-  /// 매인 스크린
+  /// Main structure
   Widget postMainWidget(BuildContext context) {
     FocusScope.of(context).unfocus();
     return Scaffold(
@@ -36,16 +38,16 @@ class PostMainScreen extends StatelessWidget {
                 postDailyInfoWidget("/mainScreen", context),
                 PageView.builder(
                     scrollDirection: Axis.horizontal,
-                    controller: PageController(initialPage: dailyPosts.length),
-                    itemCount: dailyPosts.length,
+                    controller: PageController(initialPage: 1),
+                    itemCount: _dailyCouplePostViewModel.dailyCouplePosts.length,
                     itemBuilder: (context, index) {
                       return Column(
                         children: <Widget>[
-                          dailyMyPostWidget(context),
+                          dailyMyPostWidget(context, index),
                           Container(
                             height: 30.w,
                           ),
-                          dailyPartnerPostWidget(context),
+                          dailyPartnerPostWidget(context, index),
                         ],
                       );
                     }
@@ -57,11 +59,11 @@ class PostMainScreen extends StatelessWidget {
     );
   }
 
-  /// 화면 분할 비율
+  /// Split ratio
   /// 295 : 1 : 94
 
   /// My Daily Post
-  Widget dailyMyPostWidget(BuildContext context) {
+  Widget dailyMyPostWidget(BuildContext context, int index) {
     return Container(
       height: 220.w,
       decoration: BoxDecoration(
@@ -77,8 +79,43 @@ class PostMainScreen extends StatelessWidget {
         ),
       ),
       alignment: Alignment.center,
-      child: isMyPostUploaded == false ?
-      /// 업로드 페이지
+      child: _dailyCouplePostViewModel.dailyCouplePosts[index].userPostId != null ?
+      /// Image that user posted
+      Row(
+        children: <Widget>[
+          InkWell(
+            onTap: (){
+              // temp
+              Navigator.pushNamed(context, "/postDetailScreen");
+            },
+            child: Container(
+              width: 295.w,
+              height: 295.w * IMAGE_RATIO,
+              child: CachedNetworkImage(
+                imageUrl: _dailyCouplePostViewModel.dailyCouplePosts[index].userPostImageUrl!,
+                width: 295.w,
+                height: 295.w * IMAGE_RATIO,
+                progressIndicatorBuilder: (context, url, downloadProgress) =>
+                    Center(
+                      child: SizedBox(
+                          width: 30.w,
+                          height: 30.w,
+                          child: CircularProgressIndicator(value: downloadProgress.progress)
+                      ),
+                    ),
+                errorWidget: (context, url, error) => Icon(Icons.error_outline_outlined),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Container(
+            width: 95.w,
+          ),
+        ],
+      )
+          :
+      index == 0?
+      /// Link to upload today's post
       InkWell(
         onTap: (){
           FocusScope.of(context).unfocus();
@@ -121,46 +158,47 @@ class PostMainScreen extends StatelessWidget {
         ),
       )
           :
-      /// 내가 업로드한 이미지
-      Row(
-        children: <Widget>[
-          InkWell(
-            onTap: (){
-              // temp
-              Navigator.pushNamed(context, "/postDetailScreen");
-            },
-            child: Container(
-              // temp - 사진 비율 4:3으로 임의 설정
-              width: 295.w,
-              height: 295.w * 3 / 4,
-              child: CachedNetworkImage(
-                // temp
-                imageUrl: "https://pbs.twimg.com/media/D9P1_mlUYAApghf.jpg",
-                width: 295.w,
-                height: 295.w * 3 / 4,
-                progressIndicatorBuilder: (context, url, downloadProgress) =>
-                    Center(
-                      child: SizedBox(
-                          width: 30.w,
-                          height: 30.w,
-                          child: CircularProgressIndicator(value: downloadProgress.progress)
-                      ),
-                    ),
-                errorWidget: (context, url, error) => Icon(Icons.error),
-                fit: BoxFit.cover,
+      /// Inform that user didn't answer
+      Container(
+        height: 80.w,
+        width: 120.w,
+        alignment: Alignment.center,
+        child: Column(
+          children: <Widget>[
+            SizedBox(
+              height: 24.w,
+              width: 24.w,
+              child: Icon(
+                Icons.edit,
               ),
             ),
-          ),
-          Container(
-            width: 95.w,
-          ),
-        ],
-      )
+            Text(
+              "슬퍼요",
+              style: TextStyle(
+                color: Color(0xFF000000),
+                fontSize: 14.w,
+                fontWeight: FontWeight.w400,
+                decoration: TextDecoration.underline,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              "답변을 하지 않았어요\n앞으로는 꾸준히 답변해보세요",
+              style: TextStyle(
+                color: Color(0xFF000000),
+                fontSize: 10.w,
+                fontWeight: FontWeight.w400,
+              ),
+              textAlign: TextAlign.center,
+            )
+          ],
+        ),
+      ),
     );
   }
 
   /// Partner's Daily Post
-  Widget dailyPartnerPostWidget(BuildContext context) {
+  Widget dailyPartnerPostWidget(BuildContext context, int index) {
     return Container(
       height: 220.w,
       decoration: BoxDecoration(
@@ -176,10 +214,10 @@ class PostMainScreen extends StatelessWidget {
         ),
       ),
       alignment: Alignment.center,
-      child: isMyPostUploaded == false ?
+      child: _dailyCouplePostViewModel.dailyCouplePosts[index].userPostId == null  ?
       Container(
-        child: isPartnerPostUploaded == false ?
-        /// 상대 답변 기다리는 중 안내
+        child: _dailyCouplePostViewModel.dailyCouplePosts[index].partnerPostId == null  ?
+        /// Inform that partner didn't answer
         Container(
             height: 80.w,
             width: 220.w,
@@ -216,14 +254,14 @@ class PostMainScreen extends StatelessWidget {
             ),
           )
             :
-        /// Blur 처리된 이미지
+        index == 0 ?
+        /// That day : Blurred image
         Container(
             height: 220.w,
             width: 390.w,
             alignment: Alignment.center,
             child: CachedNetworkImage(
-              // temp
-              imageUrl: "https://file3.instiz.net/data/cached_img/upload/2021/07/16/3/7cede7a98eaff4c6047fedea6c6bca6d.jpg",
+              imageUrl: _dailyCouplePostViewModel.dailyCouplePosts[index].partnerPostImageUrl!,
               height: 220.w,
               width: 390.w,
               progressIndicatorBuilder: (context, url, downloadProgress) =>
@@ -271,49 +309,9 @@ class PostMainScreen extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-      )
-          :
-      Container(
-        child: isPartnerPostUploaded == false ?
-        /// 상대 답변 푸시 안내 버튼
-        Container(
-          height: 80.w,
-          width: 120.w,
-          alignment: Alignment.center,
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                height: 24.w,
-                width: 24.w,
-                child: Icon(
-                  Icons.notifications_outlined,
-                ),
-              ),
-              Text(
-                "답변 푸쉬하기",
-                style: TextStyle(
-                  color: Color(0xFF000000),
-                  fontSize: 14.w,
-                  fontWeight: FontWeight.w400,
-                  decoration: TextDecoration.underline,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              Text(
-                "아직 답변을 하지 않았어요\n답변을 요청해보세요",
-                style: TextStyle(
-                  color: Color(0xFF000000),
-                  fontSize: 10.w,
-                  fontWeight: FontWeight.w400,
-                ),
-                textAlign: TextAlign.center,
-              )
-            ],
-          ),
-        )
+          )
             :
-        /// 상대가 업로드한 이미지
+        /// otherwise : original image
         Row(
           children: <Widget>[
             Container(
@@ -325,14 +323,126 @@ class PostMainScreen extends StatelessWidget {
                 Navigator.pushNamed(context, "/postDetailScreen");
               },
               child: Container(
-                // temp - 사진 비율 4:3으로 임의 설정
                 width: 295.w,
-                height: 295.w * 3 / 4,
+                height: 295.w * IMAGE_RATIO,
                 child: CachedNetworkImage(
-                  // temp
-                  imageUrl: "https://file3.instiz.net/data/cached_img/upload/2021/07/16/3/7cede7a98eaff4c6047fedea6c6bca6d.jpg",
+                  imageUrl: _dailyCouplePostViewModel.dailyCouplePosts[index].partnerPostImageUrl!,
                   width: 295.w,
-                  height: 295.w * 3 / 4,
+                  height: 295.w * IMAGE_RATIO,
+                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                      Center(
+                        child: SizedBox(
+                            width: 30.w,
+                            height: 30.w,
+                            child: CircularProgressIndicator(value: downloadProgress.progress)
+                        ),
+                      ),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ],
+        ),
+      )
+          :
+      Container(
+        child: _dailyCouplePostViewModel.dailyCouplePosts[index].partnerPostId == null  ?
+        /// Partner doesn't answer
+        Container(
+          height: 80.w,
+          width: 120.w,
+          alignment: Alignment.center,
+          child: index == 0 ?
+          /// That day : Provide function to alert partner to answer
+          InkWell(
+            onTap: (){
+              // temp
+              // 푸시하기 기능
+            },
+            child: Column(
+              children: <Widget>[
+                SizedBox(
+                  height: 24.w,
+                  width: 24.w,
+                  child: Icon(
+                    Icons.notifications_outlined,
+                  ),
+                ),
+                Text(
+                  "답변 푸쉬하기",
+                  style: TextStyle(
+                    color: Color(0xFF000000),
+                    fontSize: 14.w,
+                    fontWeight: FontWeight.w400,
+                    decoration: TextDecoration.underline,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                Text(
+                  "아직 답변을 하지 않았어요\n답변을 요청해보세요",
+                  style: TextStyle(
+                    color: Color(0xFF000000),
+                    fontSize: 10.w,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  textAlign: TextAlign.center,
+                )
+              ],
+            ),
+          )
+              :
+          /// Inform that partner didn't answer
+          Column(
+            children: <Widget>[
+              SizedBox(
+                height: 24.w,
+                width: 24.w,
+                child: Icon(
+                  Icons.warning_amber_outlined,
+                ),
+              ),
+              Text(
+                "슬퍼요",
+                style: TextStyle(
+                  color: Color(0xFF000000),
+                  fontSize: 14.w,
+                  fontWeight: FontWeight.w400,
+                  decoration: TextDecoration.underline,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              Text(
+                "상대가 답변을 하지 않았어요\n다음 날을 기대해봐요",
+                style: TextStyle(
+                  color: Color(0xFF000000),
+                  fontSize: 10.w,
+                  fontWeight: FontWeight.w400,
+                ),
+                textAlign: TextAlign.center,
+              )
+            ],
+          ),
+        )
+            :
+        /// Image that partner posted
+        Row(
+          children: <Widget>[
+            Container(
+              width: 95.w,
+            ),
+            InkWell(
+              onTap: (){
+                // temp
+                Navigator.pushNamed(context, "/postDetailScreen");
+              },
+              child: Container(
+                width: 295.w,
+                height: 295.w * IMAGE_RATIO,
+                child: CachedNetworkImage(
+                  imageUrl: _dailyCouplePostViewModel.dailyCouplePosts[index].partnerPostImageUrl!,
+                  width: 295.w,
+                  height: 295.w * IMAGE_RATIO,
                   progressIndicatorBuilder: (context, url, downloadProgress) =>
                       Center(
                         child: SizedBox(

@@ -1,15 +1,28 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
+import '../../../ui_setting.dart';
+import '../../../view_model/post_view_model.dart';
 import '../../widget/post/post_appbar_widget.dart';
 import '../../widget/post/post_daily_info_widget.dart';
 
 class PostDetailScreen extends StatelessWidget {
-  const PostDetailScreen({Key? key}) : super(key: key);
+  PostDetailScreen({Key? key}) : super(key: key);
+  late PostViewModel _postViewModel;
 
   @override
   Widget build(BuildContext context) {
+    _postViewModel = Provider.of<PostViewModel>(context);
+    return ChangeNotifierProvider(
+      create: (_) => PostViewModel(),
+      child: postDetailMainWidget(context),
+    );
+  }
+
+  Widget postDetailMainWidget(BuildContext context){
     FocusScope.of(context).unfocus();
     return Scaffold(
       body: SafeArea(
@@ -39,17 +52,16 @@ class PostDetailScreen extends StatelessWidget {
           /// 이미지
           Container(
             width: 390.w,
-            height: 390.w * 3 / 4,
+            height: 390.w * IMAGE_RATIO,
             child: InkWell(
               onTap: (){
                 // temp
                 /// detail image
               },
               child: CachedNetworkImage(
-                // temp
-                imageUrl: "https://pbs.twimg.com/media/D9P1_mlUYAApghf.jpg",
+                imageUrl: _postViewModel.post.postImageUrl,
                 width: 390.w,
-                height: 390.w * 3 / 4,
+                height: 390.w * IMAGE_RATIO,
                 progressIndicatorBuilder: (context, url, downloadProgress) =>
                     Center(
                       child: SizedBox(
@@ -72,6 +84,7 @@ class PostDetailScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
+                    _postViewModel.post.postLocation != null ?
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -94,8 +107,7 @@ class PostDetailScreen extends StatelessWidget {
                           width: 280.w,
                           padding: EdgeInsets.only(left: 5.w),
                           child: Text(
-                            // temp
-                            "서울시 마포구",
+                            _postViewModel.post.postLocation!,
                             style: TextStyle(
                               fontSize: 13.w,
                               fontWeight: FontWeight.w400,
@@ -106,7 +118,9 @@ class PostDetailScreen extends StatelessWidget {
                           ),
                         )
                       ],
-                    ),
+                    )
+                        :
+                    Container(),
                     SizedBox(
                       height: 30.w,
                       width: 30.w,
@@ -132,8 +146,7 @@ class PostDetailScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        // temp
-                        "널 생각하면 기분이 좋아",
+                        _postViewModel.post.postText ?? "",
                         style: TextStyle(
                           fontSize: 16.w,
                           fontWeight: FontWeight.w400,
@@ -141,8 +154,8 @@ class PostDetailScreen extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        // temp
-                        "오후 11시 30분",
+                        // 오후 1시 30분
+                        DateFormat(TIME_FORMAT, krLocale).format(_postViewModel.post.postEditTime), // temp
                         style: TextStyle(
                             fontSize: 9.w,
                             fontWeight: FontWeight.w400,

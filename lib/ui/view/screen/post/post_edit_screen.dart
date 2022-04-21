@@ -1,7 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
+import '../../../ui_setting.dart';
 import '../../widget/adBannerWidget.dart';
 import '../../widget/post/post_daily_info_widget.dart';
 import '../../widget/post/post_appbar_widget.dart';
@@ -10,9 +14,18 @@ bool isMyPostUploaded = false; // temp
 
 class PostEditScreen extends StatelessWidget {
   PostEditScreen({Key? key}) : super(key: key);
+  late PostViewModel _postViewModel;
 
   @override
   Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => PostViewModel(),
+      child: postEditMainWidget(context),
+    );
+  }
+
+  Widget postEditMainWidget(BuildContext context){
+    _postViewModel = Provider.of<PostViewModel>(context);
     return Scaffold(
       body: GestureDetector(
         onTap: (){
@@ -47,7 +60,7 @@ class PostEditScreen extends StatelessWidget {
         children: <Widget>[
           Container(
             width: 390.w,
-            height: 390.w * 3 / 4,
+            height: 390.w * IMAGE_RATIO,
             child: isMyPostUploaded == false ?
             Container(
               color: Color(0xFFC4C4C4),
@@ -72,13 +85,13 @@ class PostEditScreen extends StatelessWidget {
             InkWell(
               onTap: (){
                 // temp
-                /// detail page
+                /// detail image
               },
               child: CachedNetworkImage(
                 // temp
                 imageUrl: "https://pbs.twimg.com/media/D9P1_mlUYAApghf.jpg",
                 width: 390.w,
-                height: 390.w * 3 / 4,
+                height: 390.w * IMAGE_RATIO,
                 progressIndicatorBuilder: (context, url, downloadProgress) =>
                     Center(
                       child: SizedBox(
@@ -184,7 +197,7 @@ class PostEditScreen extends StatelessWidget {
                   padding: EdgeInsets.only(right: 26.w),
                   child: Text(
                     // temp
-                    "오후 11시 30분",
+                    DateFormat(TIME_FORMAT, krLocale).format(DateTime.now()), // temp
                     style: TextStyle(
                       fontSize: 9.w,
                       fontWeight: FontWeight.w400,
