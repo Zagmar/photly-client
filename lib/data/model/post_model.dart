@@ -18,7 +18,7 @@ class PostModel {
     this.postLocation,
   });
 
-  int postId;
+  String postId;
   String postUserId;
   String postImageUrl;
   DateTime postEditTime;
@@ -29,7 +29,7 @@ class PostModel {
   String? postLocation;
 
   factory PostModel.fromJson(Map<String, dynamic> json) => PostModel(
-    postId: int.parse(json["postId"]),
+    postId: json["postId"],
     postUserId: json["postUserId"],
     postImageUrl: json["postImageUrl"],
     postIsPublic: json["postIsPublic"],
