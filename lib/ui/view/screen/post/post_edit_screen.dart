@@ -6,11 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../ui_setting.dart';
-import '../../widget/adBannerWidget.dart';
+import '../../widget/ad_banner_widget.dart';
 import '../../widget/post/post_daily_info_widget.dart';
 import '../../widget/post/post_appbar_widget.dart';
-
-bool isMyPostUploaded = false; // temp
 
 class PostEditScreen extends StatelessWidget {
   PostEditScreen({Key? key}) : super(key: key);
@@ -39,7 +37,7 @@ class PostEditScreen extends StatelessWidget {
                   children: <Widget>[
                     postAppBarWidget("/postEditScreen", context),
                     postDailyInfoWidget("/postEditScreen", context),
-                    postEditWidget(),
+                    postEditWidget(context),
                     adBannerWidget()
                   ]
               ),
@@ -50,9 +48,8 @@ class PostEditScreen extends StatelessWidget {
     );
   }
 
-  Widget postEditWidget() {
-    String text = "널 생각하면"; // temp
-    TextEditingController textController = TextEditingController()..text = text; // temp
+  Widget postEditWidget(BuildContext context) {
+    TextEditingController textController = TextEditingController()..text = _postViewModel.post.postText ?? ""; // temp
     // TextEditingController _locateController = TextEditingController();
     return Container(
       margin: EdgeInsets.only(bottom: 5.w),
@@ -61,35 +58,14 @@ class PostEditScreen extends StatelessWidget {
           Container(
             width: 390.w,
             height: 390.w * IMAGE_RATIO,
-            child: isMyPostUploaded == false ?
-            Container(
-              color: Color(0xFFC4C4C4),
-              alignment: Alignment.center,
-              child: InkWell(
-                onTap: (){
-                  // temp
-                  /// add image
-                },
-                child: Container(
-                  width: 100.w,
-                  height: 100.w,
-                  child: Icon(
-                    Icons.add,
-                    size: 57.w,
-                    color: Color(0xFFFFFFFF),
-                  ),
-                ),
-              ),
-            )
-                :
-            InkWell(
+            child: InkWell(
               onTap: (){
-                // temp
-                /// detail image
+                FocusScope.of(context).unfocus();
+                getImageDialogWidget(context);
               },
-              child: CachedNetworkImage(
-                // temp
-                imageUrl: "https://pbs.twimg.com/media/D9P1_mlUYAApghf.jpg",
+              child: _postViewModel.post.postId != "" ?
+              CachedNetworkImage(
+                imageUrl: _postViewModel.post.postImageUrl,
                 width: 390.w,
                 height: 390.w * IMAGE_RATIO,
                 progressIndicatorBuilder: (context, url, downloadProgress) =>
@@ -102,7 +78,26 @@ class PostEditScreen extends StatelessWidget {
                     ),
                 errorWidget: (context, url, error) => Icon(Icons.error),
                 fit: BoxFit.cover,
-              ),
+              )
+                  :
+              _postViewModel.postImage == null ?
+              Container(
+                width: 100.w,
+                height: 100.w,
+                alignment: Alignment.center,
+                child: Icon(
+                  Icons.add,
+                  size: 57.w,
+                  color: Color(0xFFFFFFFF),
+                ),
+              )
+                  :
+              Image.file(
+                _postViewModel.postImage!,
+                width: 390.w,
+                height: 390.w * IMAGE_RATIO,
+                fit: BoxFit.cover,
+              )
             ),
           ),
           Container(
@@ -174,7 +169,7 @@ class PostEditScreen extends StatelessWidget {
                             enabledBorder: InputBorder.none,
                             errorBorder: InputBorder.none,
                             disabledBorder: InputBorder.none,
-                            labelText: "남기고 싶은 메모가 있다면 작성해주세요",
+                            labelText: "오늘의 한 마디",
                             labelStyle: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: 16.w,
@@ -184,9 +179,6 @@ class PostEditScreen extends StatelessWidget {
                         // temp
                         maxLines: null,
                         maxLength: 50,
-                        onChanged: (_) {
-                          text = textController.text;
-                        },
                       ),
                     )
                   ],
@@ -210,6 +202,65 @@ class PostEditScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  // Dialog to select from gallery or take a photo via camera
+  getImageDialogWidget(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context){
+          return SimpleDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            title: Text(
+              "이미지 추가",
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.black,
+              ),
+            ),
+            children: <Widget>[
+              // Select from gallery
+              SimpleDialogOption(
+                child: Text(
+                  "갤러리에서 이미지 추가하기",
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+                onPressed: (){
+                  _postViewModel.pickImage("gallery");
+                },
+              ),
+              // Take a photo via camera
+              SimpleDialogOption(
+                child: Text(
+                  "카메라로 이미지 촬영하기",
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+                onPressed: (){
+                  _postViewModel.pickImage("camera");
+                },
+              ),
+              // Cancel
+              SimpleDialogOption(
+                child: Text(
+                  "취소",
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+                onPressed: (){
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          );
+        }
     );
   }
 }

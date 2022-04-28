@@ -22,7 +22,7 @@ class DailyCouplePostViewModel extends ChangeNotifier {
   // set default of mainScreen
   DailyCouplePostViewModel() {
     if(_dailyCouplePosts.isEmpty){
-      // 처음 앱을 사용할 때 사용
+      // set mainScreen to default
       loadDailyCouplePosts();
     }
   }

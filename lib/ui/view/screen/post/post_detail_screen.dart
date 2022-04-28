@@ -35,7 +35,7 @@ class PostDetailScreen extends StatelessWidget {
                 children: <Widget>[
                   postAppBarWidget("/postDetailScreen", context),
                   postDailyInfoWidget("/postDetailScreen", context),
-                  postDetailWidget(),
+                  postDetailWidget(context),
                 ]
             ),
           ),
@@ -44,7 +44,7 @@ class PostDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget postDetailWidget() {
+  Widget postDetailWidget(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 5.w),
       child: Column(
@@ -55,8 +55,8 @@ class PostDetailScreen extends StatelessWidget {
             height: 390.w * IMAGE_RATIO,
             child: InkWell(
               onTap: (){
-                // temp
-                /// detail image
+                _postViewModel.setTempImageUrl(_postViewModel.post.postImageUrl);
+                Navigator.pushNamed(context, "/largeImageScreen");
               },
               child: CachedNetworkImage(
                 imageUrl: _postViewModel.post.postImageUrl,

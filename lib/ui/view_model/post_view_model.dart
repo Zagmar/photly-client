@@ -1,3 +1,4 @@
+import 'dart:io';
 
 import 'package:couple_seflie_app/data/model/post_model.dart';
 import 'package:couple_seflie_app/data/repository/post_info_repository.dart';
@@ -6,30 +7,56 @@ import 'package:flutter/material.dart';
 import '../../data/datasource/remote_datasource.dart';
 
 class PostViewModel extends ChangeNotifier {
-  late PostInfoRepository _postInfoRepository = PostInfoRepository();
+  final PostInfoRepository _postInfoRepository = PostInfoRepository();
   bool _loading = false;
   late Failure _failure;
-  late int _postId;
+  late String _postId;
+  File? _postImage;
+  late String _tempImageUrl;
 
   late PostModel _post;
 
+  File? get postImage => _postImage;
   PostModel get post => _post;
   Failure get failure => _failure;
   bool get loading => _loading;
-  int get postId => _postId;
+  String get postId => _postId;
+  String get tempImageUrl => _tempImageUrl;
 
-  PostViewModel() {
-    getPost(_postId);
+  // set temp image
+  setTempImageUrl(String imageUrl){
+    _tempImageUrl = imageUrl;
   }
 
   // set postId
-  setPostId(int postId) {
+  setPostId(String postId) {
     _postId = postId;
     // notifyListeners();
   }
 
-  setPostImage() {
-    // 파일
+  //get image from local
+  pickImage(String imageSource) async {
+    var response = await _postInfoRepository.getImage(imageSource);
+    if(response != false){
+      setPostImage(response as File);
+    }
+  }
+
+  // set postImage
+  setPostImage(File? postImage) {
+    _postImage = postImage;
+    notifyListeners();
+  }
+
+  setNewPost(){
+    _post = PostModel(
+        postId: "",
+        postUserId: "",
+        postImageUrl: "",
+        postEditTime: DateTime.now(),
+        postIsPublic: true,
+    );
+    notifyListeners();
   }
 
   // set post
@@ -51,7 +78,7 @@ class PostViewModel extends ChangeNotifier {
   }
   
   // get post via postId
-  getPost(int postId) async {
+  getPost(String postId) async {
     // loading...start
     setLoading(true);
 
@@ -82,6 +109,7 @@ class PostViewModel extends ChangeNotifier {
 
     // success -> add new data to Post
     if(response is Success) {
+      setPostImage(null);
       setPost(postFromJson(response.response));
     }
 

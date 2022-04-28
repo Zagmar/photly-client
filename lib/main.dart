@@ -1,3 +1,4 @@
+import 'package:couple_seflie_app/ui/view/screen/large_image_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_edit_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_detail_screen.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
             '/mainScreen': (context) => PostMainScreen(),
             '/postEditScreen': (context) => PostEditScreen(),
             '/postDetailScreen': (context) => PostDetailScreen(),
+            '/largeImageScreen': (context) => LargeImageScreen(),
           },
         )
     );

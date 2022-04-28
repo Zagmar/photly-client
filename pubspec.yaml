@@ -45,6 +45,7 @@ dependencies:
   crypto: ^3.0.1
   intl: ^0.17.0
   dio: ^4.0.6
+  image_picker: ^0.8.5
 
 dev_dependencies:
   flutter_test:

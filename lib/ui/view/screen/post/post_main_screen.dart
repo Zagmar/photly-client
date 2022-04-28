@@ -1,6 +1,7 @@
 import 'package:blur/blur.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:couple_seflie_app/data/model/daily_couple_post_model.dart';
+import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -86,6 +87,8 @@ class PostMainScreen extends StatelessWidget {
           InkWell(
             onTap: (){
               // temp
+              PostViewModel _postViewModel = Provider.of<PostViewModel>(context);
+              _postViewModel.setPostId(_dailyCouplePostViewModel.dailyCouplePosts[index].userPostId!);
               Navigator.pushNamed(context, "/postDetailScreen");
             },
             child: Container(
@@ -114,7 +117,9 @@ class PostMainScreen extends StatelessWidget {
         ],
       )
           :
+      // No post in that day
       index == 0?
+      // If today
       /// Link to upload today's post
       InkWell(
         onTap: (){
@@ -158,6 +163,7 @@ class PostMainScreen extends StatelessWidget {
         ),
       )
           :
+      // Otherwise
       /// Inform that user didn't answer
       Container(
         height: 80.w,
@@ -217,7 +223,8 @@ class PostMainScreen extends StatelessWidget {
       child: _dailyCouplePostViewModel.dailyCouplePosts[index].userPostId == null  ?
       Container(
         child: _dailyCouplePostViewModel.dailyCouplePosts[index].partnerPostId == null  ?
-        /// Inform that partner didn't answer
+        // user : false, partner : false
+        /// Just inform that partner didn't answer
         Container(
             height: 80.w,
             width: 220.w,
@@ -254,8 +261,10 @@ class PostMainScreen extends StatelessWidget {
             ),
           )
             :
+        // user : false, partner : true
         index == 0 ?
-        /// That day : Blurred image
+        // today
+        /// Show as blurred image
         Container(
             height: 220.w,
             width: 390.w,
@@ -311,6 +320,7 @@ class PostMainScreen extends StatelessWidget {
             ),
           )
             :
+        // other days
         /// otherwise : original image
         Row(
           children: <Widget>[
@@ -319,7 +329,8 @@ class PostMainScreen extends StatelessWidget {
             ),
             InkWell(
               onTap: (){
-                // temp
+                PostViewModel _postViewModel = Provider.of<PostViewModel>(context);
+                _postViewModel.setPostId(_dailyCouplePostViewModel.dailyCouplePosts[index].partnerPostId!);
                 Navigator.pushNamed(context, "/postDetailScreen");
               },
               child: Container(
@@ -348,13 +359,15 @@ class PostMainScreen extends StatelessWidget {
           :
       Container(
         child: _dailyCouplePostViewModel.dailyCouplePosts[index].partnerPostId == null  ?
+        // user : true, partner : false
         /// Partner doesn't answer
         Container(
           height: 80.w,
           width: 120.w,
           alignment: Alignment.center,
           child: index == 0 ?
-          /// That day : Provide function to alert partner to answer
+          // today
+          /// Provide function to alert partner to answer
           InkWell(
             onTap: (){
               // temp
@@ -392,6 +405,7 @@ class PostMainScreen extends StatelessWidget {
             ),
           )
               :
+          // Other days
           /// Inform that partner didn't answer
           Column(
             children: <Widget>[
@@ -425,6 +439,7 @@ class PostMainScreen extends StatelessWidget {
           ),
         )
             :
+        // user : true, partner : true
         /// Image that partner posted
         Row(
           children: <Widget>[
@@ -433,7 +448,8 @@ class PostMainScreen extends StatelessWidget {
             ),
             InkWell(
               onTap: (){
-                // temp
+                PostViewModel _postViewModel = Provider.of<PostViewModel>(context);
+                _postViewModel.setPostId(_dailyCouplePostViewModel.dailyCouplePosts[index].partnerPostId!);
                 Navigator.pushNamed(context, "/postDetailScreen");
               },
               child: Container(
