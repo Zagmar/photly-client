@@ -36,10 +36,12 @@ class PostViewModel extends ChangeNotifier {
 
   //get image from local
   pickImage(String imageSource) async {
+    setLoading(true);
     var response = await _postInfoRepository.getImage(imageSource);
-    if(response != false){
-      setPostImage(response as File);
+    if(response != null){
+      setPostImage(response);
     }
+    setLoading(false);
   }
 
   // set postImage

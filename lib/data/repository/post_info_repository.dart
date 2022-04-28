@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:couple_seflie_app/data/model/post_model.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -65,7 +67,7 @@ class PostInfoRepository {
 
   /// Local
   /// Get Image From Gallery or Camera
-  Future<Object> getImage(String source) async {
+  Future<File?> getImage(String source) async {
     ImageSource imageSource;
     // get image from gallery
     if(source == "gallery") {
