@@ -5,29 +5,33 @@ class RegisterViewModel with ChangeNotifier {
   late String _password;
   late String _passwordCheck;
   late String _username;
-  late DateTime _birthday;
+  late DateTime _anniversary;
   late String _userCode;
   late String _inputCode;
   late bool _isIdOk;
   late bool _isPwOk;
   late bool _isPwCheckOk;
   late bool _isUsernameOk;
-  late bool _isBirthdayOk;
+  late bool _isAnniversaryOk;
+  late bool _isCodeMatched;
   String? _idErrorMessage;
   String? _pwErrorMessage;
   String? _pwCheckErrorMessage;
   String? _usernameErrorMessage;
+  String? _codeErrorMessage;
 
   String? get idErrorMessage => _idErrorMessage;
   String? get pwErrorMessage => _pwErrorMessage;
   String? get pwCheckErrorMessage => _pwCheckErrorMessage;
   String? get usernameErrorMessage => _usernameErrorMessage;
+  String? get codeErrorMessage => _codeErrorMessage;
   bool get isRegisterOk => _isIdOk && _isPwOk && _isPwCheckOk;
   bool get isUsernameOk => _isUsernameOk;
-  bool get isBirthdayOk => _isBirthdayOk;
+  bool get isAnniversaryOk => _isAnniversaryOk;
+  bool get isCodeMatched => _isCodeMatched;
   String get email => _email;
   String get username => _username;
-  String get coupleCode => _userCode;
+  String get userCode => _userCode;
 
   bool doRegistration() {
     // temp
@@ -35,9 +39,22 @@ class RegisterViewModel with ChangeNotifier {
     return true;
   }
 
-  setBirthday(DateTime val) {
-    _birthday = val;
-    _isBirthdayOk = true;
+  checkCode(String inputCode){
+    _inputCode = inputCode;
+    // temp
+    // code 찾기 - 같은 code 찾기, 파트너 없는지 확인
+    if(!_isCodeMatched){
+      _codeErrorMessage = "잘못된 코드입니다";
+    }
+    else{
+      _codeErrorMessage = null;
+    }
+    notifyListeners();
+  }
+
+  setAnniversary(DateTime val) {
+    _anniversary = val;
+    _isAnniversaryOk = true;
     notifyListeners();
   }
 

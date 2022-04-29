@@ -89,7 +89,7 @@ class RegisterUsernameScreen extends StatelessWidget {
             onTap: (){
               FocusScope.of(_context).unfocus();
               _registerViewModel.isRegisterOk ?
-              Navigator.pushNamed(_context, '/registerBirthdayScreen')
+              Navigator.pushNamed(_context, '/registerAnniversaryScreen')
                   :
               ScaffoldMessenger.of(_context).showSnackBar(
                 SnackBar(

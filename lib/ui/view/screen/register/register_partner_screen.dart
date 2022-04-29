@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
@@ -88,12 +89,12 @@ class RegisterPartnerScreen extends StatelessWidget {
           InkWell(
             onTap: (){
               FocusScope.of(_context).unfocus();
-              _registerViewModel.isRegisterOk ?
-              Navigator.pushNamed(_context, '/registerBirthdayScreen')
+              _registerViewModel.doRegistration() ?
+              Navigator.pushNamedAndRemoveUntil(_context, "/mainScreen", (route) => false)
                   :
               ScaffoldMessenger.of(_context).showSnackBar(
                 SnackBar(
-                  content: Text('올바른 닉네임을 입력해주세요'),
+                  content: Text('다시 시도해주세요'),
                 ),
               );
             },
@@ -108,22 +109,14 @@ class RegisterPartnerScreen extends StatelessWidget {
               width: 90.w,
               height: 48.w,
               alignment: Alignment.center,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "다음",
-                    style: TextStyle(
-                        fontSize: 16.w,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF050505)
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  Padding(padding: EdgeInsets.only(right: 10.w)),
-                  Icon(Icons.chevron_right_outlined, size: 16.w, color: Color(0xFF050505),)
-                ],
+              child: Text(
+                "완료",
+                style: TextStyle(
+                    fontSize: 16.w,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF050505)
+                ),
+                textAlign: TextAlign.center,
               ),
             ),
           ),
@@ -142,7 +135,7 @@ class RegisterPartnerScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "서로 불러줄\n닉네임을\n정해주세요",
+            "이제\n서로를\n연결해봐요",
             style: TextStyle(
                 fontSize: 28.w,
                 fontWeight: FontWeight.w700,
@@ -152,7 +145,7 @@ class RegisterPartnerScreen extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
           Text(
-            "나중에 수정이 가능해요!",
+            "초대링크를 함께하고 싶은 사람에게",
             style: TextStyle(
                 fontSize: 16.w,
                 fontWeight: FontWeight.w400,
@@ -169,44 +162,85 @@ class RegisterPartnerScreen extends StatelessWidget {
   Widget registerWidget() {
     return Container(
       width: 320.w,
-      height: 150.w,
+      height: 160.w,
       alignment: Alignment.center,
-      child: TextFormField(
-        initialValue: _registerViewModel.username,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          focusedBorder: InputBorder.none,
-          enabledBorder: InputBorder.none,
-          errorBorder: InputBorder.none,
-          disabledBorder: InputBorder.none,
-          hintText: "서로 부르는 애칭, 별명 다 좋아요!",
-          hintStyle: TextStyle(
-              fontWeight: FontWeight.w400,
-              fontSize: 16.w,
-              color: Color(0xFFC4C4C4)
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          TextFormField(
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              errorBorder: InputBorder.none,
+              disabledBorder: InputBorder.none,
+              labelText: "상대방 코드 입력하기",
+              labelStyle: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 16.w,
+                  color: Color(0xFF808080)
+              ),
+            ),
+            // temp
+            // code 길이 설정
+            maxLines: 1,
+            maxLength: 7,
+            keyboardType: TextInputType.text,
+            onFieldSubmitted: (_){
+              FocusScope.of(_context).unfocus();
+            },
+            obscureText: false,
+            validator: (_) {
+              if(_registerViewModel.codeErrorMessage != null) {
+                return _registerViewModel.codeErrorMessage;
+              }
+            },
+            onChanged: (value){
+              _registerViewModel.checkCode(value);
+            },
           ),
-          labelText: "닉네임",
-          labelStyle: TextStyle(
-              fontWeight: FontWeight.w400,
-              fontSize: 16.w,
-              color: Color(0xFF808080)
-          ),
-        ),
-        maxLines: 1,
-        maxLength: 6,
-        keyboardType: TextInputType.text,
-        onFieldSubmitted: (_){
-          FocusScope.of(_context).unfocus();
-        },
-        obscureText: false,
-        validator: (_) {
-          if(_registerViewModel.usernameErrorMessage != null) {
-            return _registerViewModel.usernameErrorMessage;
-          }
-        },
-        onChanged: (value){
-          _registerViewModel.checkUsername(value);
-        },
+          Padding(padding: EdgeInsets.only(bottom: 10.w)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            children: <Widget>[
+              Container(
+                width: 255.w,
+                height: 20.w,
+                child: Text(
+                    _registerViewModel.userCode,
+                  style: TextStyle(
+                    fontSize: 16.w,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xFFD3D3D3),
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: (){
+                  FocusScope.of(_context).unfocus();
+                  Clipboard.setData(ClipboardData(text: _registerViewModel.userCode));
+                },
+                child: Container(
+                  width: 45.w,
+                  height: 15.w,
+                  child: Text(
+                      "복사하기",
+                    style: TextStyle(
+                      fontSize: 11.w,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF808080),
+                      decoration: TextDecoration.underline,
+                      decorationColor: Color(0xFF808080),
+                    ),
+                  ),
+                ),
+              ),
+              Divider()
+            ],
+          )
+        ],
       ),
     );
   }

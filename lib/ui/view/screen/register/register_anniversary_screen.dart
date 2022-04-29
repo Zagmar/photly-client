@@ -89,21 +89,12 @@ class RegisterAnniversaryScreen extends StatelessWidget {
           InkWell(
             onTap: () async {
               FocusScope.of(_context).unfocus();
-              _registerViewModel.isBirthdayOk ?
-              {
-                _registerViewModel.doRegistration() ?
-                Navigator.pushNamedAndRemoveUntil(_context, "/loginScreen", (route) => false)
-                    :
-                ScaffoldMessenger.of(_context).showSnackBar(
-                  SnackBar(
-                    content: Text('다시 시도해주세요'),
-                  ),
-                )
-              }
-              :
+              _registerViewModel.isAnniversaryOk ?
+              Navigator.pushNamedAndRemoveUntil(_context, "/registerPartnerScreen", (route) => false)
+                  :
               ScaffoldMessenger.of(_context).showSnackBar(
                 SnackBar(
-                  content: Text('올바른 생년월일을 선택해주세요'),
+                  content: Text('날짜를 올바르게 선택해주세요'),
                 ),
               );
             },
@@ -152,7 +143,7 @@ class RegisterAnniversaryScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "본인의\n생년월일을\n기록해주세요",
+            "서로의\n특별한 날을\n기록해주세요",
             style: TextStyle(
                 fontSize: 28.w,
                 fontWeight: FontWeight.w700,
@@ -162,7 +153,7 @@ class RegisterAnniversaryScreen extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
           Text(
-            "나중에 수정이 가능해요!",
+            "가장 특별한 하루를 정해주세요",
             style: TextStyle(
                 fontSize: 16.w,
                 fontWeight: FontWeight.w400,
@@ -182,12 +173,12 @@ class RegisterAnniversaryScreen extends StatelessWidget {
       height: 150.w,
       alignment: Alignment.center,
       child: CupertinoDatePicker(
-        minimumYear: 1900,
+        minimumYear: 1950,
         maximumYear: DateTime.now().year,
         initialDateTime: DateTime.now(),
         maximumDate: DateTime.now(),
         onDateTimeChanged: (DateTime value) {
-          _registerViewModel.setBirthday(value);
+          _registerViewModel.setAnniversary(value);
         },
         mode: CupertinoDatePickerMode.date,
       )
