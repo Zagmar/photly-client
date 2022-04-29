@@ -169,8 +169,8 @@ class PostEditScreen extends StatelessWidget {
                             enabledBorder: InputBorder.none,
                             errorBorder: InputBorder.none,
                             disabledBorder: InputBorder.none,
-                            labelText: "오늘의 한 마디",
-                            labelStyle: TextStyle(
+                            hintText: "오늘의 한 마디",
+                            hintStyle: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: 16.w,
                               color: Color(0xFFC4C4C4)
