@@ -1,22 +1,21 @@
-import 'package:couple_seflie_app/ui/view_model/user_info_view_model.dart';
+import 'package:couple_seflie_app/ui/view_model/login_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
-  late UserInfoViewModel _userInfoViewModel;
+  late LoginViewModel _loginViewModel;
   late BuildContext _context;
 
   @override
   Widget build(BuildContext context) {
     _context = context;
-    _userInfoViewModel = Provider.of<UserInfoViewModel>(context);
+    _loginViewModel = Provider.of<LoginViewModel>(context);
     return ChangeNotifierProvider(
-      create: (_) => UserInfoViewModel(),
+      create: (_) => LoginViewModel(),
       child: loginScreen(),
     );
-
   }
 
   Widget loginScreen() {
@@ -41,14 +40,15 @@ class LoginScreen extends StatelessWidget {
   Widget loginButtonWidget() {
     return InkWell(
       onTap: (){
-        _userInfoViewModel.isLoginOk ?
+        FocusScope.of(_context).unfocus();
+        !_loginViewModel.isLoginOk ?
         ScaffoldMessenger.of(_context).showSnackBar(
           SnackBar(
             content: Text('입력된 정보가 올바르지 않습니다'),
           ),
         )
             :
-        _userInfoViewModel.doLogin() ?
+        _loginViewModel.doLogin() ?
         Navigator.pushNamedAndRemoveUntil(_context, "/mainScreen", (route) => false)
             :
         ScaffoldMessenger.of(_context).showSnackBar(
@@ -113,6 +113,7 @@ class LoginScreen extends StatelessWidget {
     return Container(
       width: 320.w,
       height: 150.w,
+      alignment: Alignment.center,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
@@ -137,20 +138,20 @@ class LoginScreen extends StatelessWidget {
                 ),
                 maxLines: 1,
                 keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
                 onFieldSubmitted: (_){
-                  FocusScope.of(_context).offset;
+                  FocusScope.of(_context).unfocus();
                 },
                 obscureText: false,
                 validator: (_) {
-                  if(_userInfoViewModel.idErrorMessage != null) {
-                    return _userInfoViewModel.idErrorMessage;
+                  if(_loginViewModel.idErrorMessage != null) {
+                    return _loginViewModel.idErrorMessage;
                   }
                 },
                 onChanged: (value){
-                  _userInfoViewModel.checkEmail(value);
+                  _loginViewModel.checkEmail(value);
                 },
               ),
+              Padding(padding: EdgeInsets.symmetric(vertical: 20)),
               TextFormField(
                 decoration: InputDecoration(
                     border: InputBorder.none,
@@ -167,18 +168,17 @@ class LoginScreen extends StatelessWidget {
                 ),
                 maxLines: 1,
                 keyboardType: TextInputType.visiblePassword,
-                textInputAction: TextInputAction.done,
                 onFieldSubmitted: (_){
-                  FocusScope.of(_context).offset;
+                  FocusScope.of(_context).unfocus();
                 },
                 obscureText: true,
                 validator: (_) {
-                  if(_userInfoViewModel.idErrorMessage != null) {
-                    return _userInfoViewModel.idErrorMessage;
+                  if(_loginViewModel.pwErrorMessage != null) {
+                    return _loginViewModel.pwErrorMessage;
                   }
                 },
                 onChanged: (value){
-                  _userInfoViewModel.checkPassword(value);
+                  _loginViewModel.checkPassword(value);
                 },
               ),
             ],
@@ -190,8 +190,8 @@ class LoginScreen extends StatelessWidget {
             children: [
               TextButton(
                   onPressed: (){
-                    // temp
-                    // id 찾기
+                    FocusScope.of(_context).unfocus();
+                    Navigator.pushNamed(_context, "/findIdScreen");
                   },
                   child: Text(
                     "아이디 찾기",
@@ -207,8 +207,8 @@ class LoginScreen extends StatelessWidget {
               Divider(),
               TextButton(
                   onPressed: (){
-                    // temp
-                    // 비밀번호 찾기
+                    FocusScope.of(_context).unfocus();
+                    Navigator.pushNamed(_context, "/findPwScreen");
                   },
                   child: Text(
                     "비밀번호 찾기",
@@ -224,8 +224,8 @@ class LoginScreen extends StatelessWidget {
               Divider(),
               TextButton(
                   onPressed: (){
-                    // temp
-                    // 회원가입
+                    FocusScope.of(_context).unfocus();
+                    Navigator.pushNamed(_context, "/registerScreen");
                   },
                   child: Text(
                     "회원가입",

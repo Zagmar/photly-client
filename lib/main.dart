@@ -1,7 +1,15 @@
 import 'package:couple_seflie_app/ui/view/screen/large_image_screen.dart';
+import 'package:couple_seflie_app/ui/view/screen/login/find_id_screen.dart';
+import 'package:couple_seflie_app/ui/view/screen/login/find_pw_screen.dart';
+import 'package:couple_seflie_app/ui/view/screen/login/login_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_edit_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_detail_screen.dart';
+import 'package:couple_seflie_app/ui/view/screen/register/register_anniversary_screen.dart';
+import 'package:couple_seflie_app/ui/view/screen/register/register_birthday_screen.dart';
+import 'package:couple_seflie_app/ui/view/screen/register/register_partner_screen.dart';
+import 'package:couple_seflie_app/ui/view/screen/register/register_screen.dart';
+import 'package:couple_seflie_app/ui/view/screen/register/register_username_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -37,6 +45,14 @@ class MyApp extends StatelessWidget {
             '/postEditScreen': (context) => PostEditScreen(),
             '/postDetailScreen': (context) => PostDetailScreen(),
             '/largeImageScreen': (context) => LargeImageScreen(),
+            '/loginScreen': (context) => LoginScreen(),
+            '/findIdScreen': (context) => FindIdScreen(),
+            '/findPwScreen': (context) => FindPwScreen(),
+            '/registerScreen': (context) => RegisterScreen(),
+            '/registerBirthdayScreen': (context) => RegisterBirthdayScreen(),
+            '/registerUsernameScreen': (context) => RegisterUsernameScreen(),
+            '/registerPartnerScreen': (context) => RegisterPartnerScreen(),
+            '/registerAnniversaryScreen': (context) => RegisterAnniversaryScreen(),
           },
         )
     );
