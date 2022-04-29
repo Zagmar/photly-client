@@ -16,7 +16,7 @@ class DailyCouplePostModel {
     this.partnerPostImageUrl,
   });
 
-  String dailyPostDate;
+  DateTime dailyPostDate;
   int questionType;
   String questionText;
   String? questionImageUrl;
@@ -26,8 +26,8 @@ class DailyCouplePostModel {
   String? partnerPostImageUrl;
 
   factory DailyCouplePostModel.fromJson(Map<String, dynamic> json) => DailyCouplePostModel(
-    dailyPostDate: json['dailyPostDate'],
-    questionType: json["questionId"],
+    dailyPostDate: DateTime.parse(json['dailyPostDate']),
+    questionType: int.parse(json["questionId"]),
     questionText: json["questionText"],
     questionImageUrl: json["questionImageUrl"],
     userPostId: json["userPostId"],
@@ -37,8 +37,8 @@ class DailyCouplePostModel {
   );
 
   Map<String, dynamic> toJson() => {
-    "dailyPostDate": dailyPostDate,
-    "questionType": questionType,
+    "dailyPostDate": dailyPostDate.toString(),
+    "questionType": questionType.toString(),
     "questionText": questionText,
     "questionImageUrl": questionImageUrl,
     "userPostId": userPostId,

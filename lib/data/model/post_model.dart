@@ -33,7 +33,7 @@ class PostModel {
     postUserId: json["postUserId"],
     postImageUrl: json["postImageUrl"],
     postIsPublic: json["postIsPublic"],
-    postEditTime: DateTime.parse(json['postEdittedTime'].toString()),
+    postEditTime: DateTime.parse(json['postEdittedTime']),
     postText: json["postText"],
     postEmotion: int.parse(json["postEmotion"]),
     postWeather: int.parse(json["postWeather"]),
@@ -41,7 +41,7 @@ class PostModel {
   );
 
   Map<String, dynamic> toJson() => {
-    "postId": postId.toString(),
+    "postId": postId,
     "postUserId": postUserId,
     "postImageUrl": postImageUrl,
     "postIsPublic": postIsPublic,
