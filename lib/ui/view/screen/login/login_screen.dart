@@ -171,7 +171,7 @@ class LoginScreen extends StatelessWidget {
                 onFieldSubmitted: (_){
                   FocusScope.of(_context).offset;
                 },
-                obscureText: false,
+                obscureText: true,
                 validator: (_) {
                   if(_userInfoViewModel.idErrorMessage != null) {
                     return _userInfoViewModel.idErrorMessage;
