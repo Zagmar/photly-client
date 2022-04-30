@@ -22,19 +22,30 @@ class RegisterUsernameScreen extends StatelessWidget {
 
   Widget registerScreen() {
     return SafeArea(
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsetsDirectional.fromSTEB(35, 20, 35, 20),
-              child: Column(
-                children: <Widget>[
-                  topWidget(),
-                  registerWidget(),
-                ],
-              ),
+        child: GestureDetector(
+          onTap: (){
+            FocusScope.of(_context).unfocus();
+          },
+          child: Scaffold(
+            backgroundColor: Theme.of(_context).scaffoldBackgroundColor,
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(),
+                Container(
+                  padding: EdgeInsetsDirectional.fromSTEB(35.w, 20.w, 35.w, 20.w),
+                  child: Column(
+                    children: <Widget>[
+                      topWidget(),
+                      registerWidget(),
+                    ],
+                  ),
+                ),
+                routeButtonWidget()
+              ],
             ),
-            routeButtonWidget()
-          ],
+          ),
         )
     );
   }
@@ -45,7 +56,7 @@ class RegisterUsernameScreen extends StatelessWidget {
       width: 390.w,
       height: 60.w,
       alignment: Alignment.centerRight,
-      padding: EdgeInsets.symmetric(horizontal: 25.w),
+      padding: EdgeInsetsDirectional.fromSTEB(25.w, 0, 25.w, 20.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -57,43 +68,48 @@ class RegisterUsernameScreen extends StatelessWidget {
             },
             child: Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(28.w),
-                border: Border.all(
-                  width: 2.w,
-                  color: Color(0xFF050505),
-                )
+                  borderRadius: BorderRadius.circular(28.w),
+                  border: Border.all(
+                    width: 2.w,
+                    color: Color(0xFF050505),
+                  )
               ),
               width: 90.w,
               height: 48.w,
-              alignment: Alignment.center,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(Icons.chevron_left_outlined, size: 16.w, color: Color(0xFF050505),),
-                  Padding(padding: EdgeInsets.only(right: 10.w)),
-                  Text(
-                    "이전",
-                    style: TextStyle(
-                        fontSize: 16.w,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF050505)
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.only(left: 10.w),
+              child: Container(
+                width: 60.w,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(Icons.chevron_left_outlined, size: 30.w, color: Color(0xFF050505),),
+                    Text(
+                      "이전",
+                      style: TextStyle(
+                          fontSize: 16.w,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF050505)
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
           InkWell(
             onTap: (){
               FocusScope.of(_context).unfocus();
-              _registerViewModel.isRegisterOk ?
+              _registerViewModel.isUsernameOk ?
               Navigator.pushNamed(_context, '/registerAnniversaryScreen')
                   :
               ScaffoldMessenger.of(_context).showSnackBar(
                 SnackBar(
-                  content: Text('올바른 닉네임을 입력해주세요'),
+                  content: Text(
+                      _registerViewModel.usernameErrorMessage ?? '올바른 닉네임을 입력해주세요'
+                  ),
                 ),
               );
             },
@@ -107,23 +123,26 @@ class RegisterUsernameScreen extends StatelessWidget {
               ),
               width: 90.w,
               height: 48.w,
-              alignment: Alignment.center,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "다음",
-                    style: TextStyle(
-                        fontSize: 16.w,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF050505)
+              alignment: Alignment.centerRight,
+              padding: EdgeInsets.only(right: 10.w),
+              child: Container(
+                width: 60.w,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "다음",
+                      style: TextStyle(
+                          fontSize: 16.w,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF050505)
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  Padding(padding: EdgeInsets.only(right: 10.w)),
-                  Icon(Icons.chevron_right_outlined, size: 16.w, color: Color(0xFF050505),)
-                ],
+                    Icon(Icons.chevron_right_outlined, size: 30.w, color: Color(0xFF050505),)
+                  ],
+                ),
               ),
             ),
           ),
@@ -171,42 +190,43 @@ class RegisterUsernameScreen extends StatelessWidget {
       width: 320.w,
       height: 150.w,
       alignment: Alignment.center,
-      child: TextFormField(
-        initialValue: _registerViewModel.username,
-        decoration: InputDecoration(
-          border: InputBorder.none,
-          focusedBorder: InputBorder.none,
-          enabledBorder: InputBorder.none,
-          errorBorder: InputBorder.none,
-          disabledBorder: InputBorder.none,
-          hintText: "서로 부르는 애칭, 별명 다 좋아요!",
-          hintStyle: TextStyle(
-              fontWeight: FontWeight.w400,
-              fontSize: 16.w,
-              color: Color(0xFFC4C4C4)
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          TextFormField(
+            initialValue: _registerViewModel.username,
+            decoration: InputDecoration(
+              hintText: "서로 부르는 애칭, 별명 다 좋아요!",
+              hintStyle: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 16.w,
+                  color: Color(0xFFC4C4C4)
+              ),
+              labelText: "닉네임",
+              labelStyle: TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 16.w,
+                  color: Color(0xFF808080)
+              ),
+            ),
+            maxLines: 1,
+            maxLength: 6,
+            keyboardType: TextInputType.text,
+            onFieldSubmitted: (_){
+              FocusScope.of(_context).unfocus();
+            },
+            obscureText: false,
+            validator: (_) {
+              if(_registerViewModel.usernameErrorMessage != null) {
+                return _registerViewModel.usernameErrorMessage;
+              }
+            },
+            onChanged: (value){
+              _registerViewModel.checkUsername(value);
+            },
           ),
-          labelText: "닉네임",
-          labelStyle: TextStyle(
-              fontWeight: FontWeight.w400,
-              fontSize: 16.w,
-              color: Color(0xFF808080)
-          ),
-        ),
-        maxLines: 1,
-        maxLength: 6,
-        keyboardType: TextInputType.text,
-        onFieldSubmitted: (_){
-          FocusScope.of(_context).unfocus();
-        },
-        obscureText: false,
-        validator: (_) {
-          if(_registerViewModel.usernameErrorMessage != null) {
-            return _registerViewModel.usernameErrorMessage;
-          }
-        },
-        onChanged: (value){
-          _registerViewModel.checkUsername(value);
-        },
+        ],
       ),
     );
   }

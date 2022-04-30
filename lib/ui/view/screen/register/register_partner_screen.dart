@@ -18,24 +18,38 @@ class RegisterPartnerScreen extends StatelessWidget {
       create: (_) => RegisterViewModel(),
       child: registerScreen(),
     );
-
   }
 
   Widget registerScreen() {
     return SafeArea(
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsetsDirectional.fromSTEB(35, 20, 35, 20),
-              child: Column(
-                children: <Widget>[
-                  topWidget(),
-                  registerWidget(),
-                ],
-              ),
+        child: GestureDetector(
+          onTap: (){
+            FocusScope.of(_context).unfocus();
+          },
+          child: Scaffold(
+            backgroundColor: Theme.of(_context).scaffoldBackgroundColor,
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(),
+                Container(
+                  padding: EdgeInsetsDirectional.fromSTEB(35.w, 20.w, 35.w, 20.w),
+                  child: Column(
+                    children: <Widget>[
+                      topWidget(),
+                      Padding(padding: EdgeInsets.symmetric(vertical: 20.w)),
+                      registerWidget(),
+                    ],
+                  ),
+                ),
+                MediaQuery.of(_context).viewInsets.bottom <= 50 ?
+                routeButtonWidget()
+                    :
+                Container()
+              ],
             ),
-            routeButtonWidget()
-          ],
+          ),
         )
     );
   }
@@ -46,7 +60,7 @@ class RegisterPartnerScreen extends StatelessWidget {
       width: 390.w,
       height: 60.w,
       alignment: Alignment.centerRight,
-      padding: EdgeInsets.symmetric(horizontal: 25.w),
+      padding: EdgeInsetsDirectional.fromSTEB(25.w, 0, 25.w, 20.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -66,23 +80,26 @@ class RegisterPartnerScreen extends StatelessWidget {
               ),
               width: 90.w,
               height: 48.w,
-              alignment: Alignment.center,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(Icons.chevron_left_outlined, size: 16.w, color: Color(0xFF050505),),
-                  Padding(padding: EdgeInsets.only(right: 10.w)),
-                  Text(
-                    "이전",
-                    style: TextStyle(
-                        fontSize: 16.w,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF050505)
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.only(left: 10.w),
+              child: Container(
+                width: 60.w,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(Icons.chevron_left_outlined, size: 30.w, color: Color(0xFF050505),),
+                    Text(
+                      "이전",
+                      style: TextStyle(
+                          fontSize: 16.w,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF050505)
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -170,11 +187,6 @@ class RegisterPartnerScreen extends StatelessWidget {
         children: [
           TextFormField(
             decoration: InputDecoration(
-              border: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              errorBorder: InputBorder.none,
-              disabledBorder: InputBorder.none,
               labelText: "상대방 코드 입력하기",
               labelStyle: TextStyle(
                   fontWeight: FontWeight.w400,
@@ -201,45 +213,64 @@ class RegisterPartnerScreen extends StatelessWidget {
             },
           ),
           Padding(padding: EdgeInsets.only(bottom: 10.w)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.baseline,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Container(
-                width: 255.w,
-                height: 20.w,
-                child: Text(
-                    _registerViewModel.userCode,
-                  style: TextStyle(
+              Text(
+                "나의 코드 복사하기",
+                style: TextStyle(
                     fontSize: 16.w,
                     fontWeight: FontWeight.w400,
-                    color: Color(0xFFD3D3D3),
-                  ),
+                    color: Color(0xFF808080)
                 ),
               ),
-              InkWell(
-                onTap: (){
-                  FocusScope.of(_context).unfocus();
-                  Clipboard.setData(ClipboardData(text: _registerViewModel.userCode));
-                },
-                child: Container(
-                  width: 45.w,
-                  height: 15.w,
-                  child: Text(
-                      "복사하기",
-                    style: TextStyle(
-                      fontSize: 11.w,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF808080),
-                      decoration: TextDecoration.underline,
-                      decorationColor: Color(0xFF808080),
+              Padding(padding: EdgeInsets.only(bottom: 10.w)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  Container(
+                    width: 255.w,
+                    height: 20.w,
+                    child: Text(
+                      _registerViewModel.userCode,
+                      style: TextStyle(
+                        fontSize: 16.w,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFFD3D3D3),
+                      ),
                     ),
                   ),
-                ),
+                  InkWell(
+                    onTap: (){
+                      FocusScope.of(_context).unfocus();
+                      Clipboard.setData(ClipboardData(text: _registerViewModel.userCode));
+                    },
+                    child: Container(
+                      width: 45.w,
+                      height: 15.w,
+                      child: Text(
+                        "복사하기",
+                        style: TextStyle(
+                          fontSize: 11.w,
+                          fontWeight: FontWeight.w400,
+                          color: Color(0xFF808080),
+                          decoration: TextDecoration.underline,
+                          decorationColor: Color(0xFF808080),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Divider()
+                ],
               ),
-              Divider()
+              Divider(
+                thickness: 1.w,
+                color: Color(0xFFC4C4C4),
+              )
             ],
-          )
+          ),
         ],
       ),
     );

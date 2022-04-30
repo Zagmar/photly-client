@@ -23,19 +23,31 @@ class RegisterAnniversaryScreen extends StatelessWidget {
 
   Widget registerScreen() {
     return SafeArea(
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsetsDirectional.fromSTEB(35, 20, 35, 20),
-              child: Column(
-                children: <Widget>[
-                  topWidget(),
-                  registerWidget(),
-                ],
-              ),
+        child: GestureDetector(
+          onTap: (){
+            FocusScope.of(_context).unfocus();
+          },
+          child: Scaffold(
+            backgroundColor: Theme.of(_context).scaffoldBackgroundColor,
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(),
+                Container(
+                  padding: EdgeInsetsDirectional.fromSTEB(35.w, 20.w, 35.w, 20.w),
+                  child: Column(
+                    children: <Widget>[
+                      topWidget(),
+                      Padding(padding: EdgeInsets.symmetric(vertical: 20.w)),
+                      registerWidget(),
+                    ],
+                  ),
+                ),
+                routeButtonWidget()
+              ],
             ),
-            routeButtonWidget()
-          ],
+          ),
         )
     );
   }
@@ -46,7 +58,7 @@ class RegisterAnniversaryScreen extends StatelessWidget {
       width: 390.w,
       height: 60.w,
       alignment: Alignment.centerRight,
-      padding: EdgeInsets.symmetric(horizontal: 25.w),
+      padding: EdgeInsetsDirectional.fromSTEB(25.w, 0, 25.w, 20.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -66,23 +78,26 @@ class RegisterAnniversaryScreen extends StatelessWidget {
               ),
               width: 90.w,
               height: 48.w,
-              alignment: Alignment.center,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(Icons.chevron_left_outlined, size: 16.w, color: Color(0xFF050505),),
-                  Padding(padding: EdgeInsets.only(right: 10.w)),
-                  Text(
-                    "이전",
-                    style: TextStyle(
-                        fontSize: 16.w,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF050505)
+              alignment: Alignment.centerLeft,
+              padding: EdgeInsets.only(left: 10.w),
+              child: Container(
+                width: 60.w,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(Icons.chevron_left_outlined, size: 30.w, color: Color(0xFF050505),),
+                    Text(
+                      "이전",
+                      style: TextStyle(
+                          fontSize: 16.w,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF050505)
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -108,23 +123,26 @@ class RegisterAnniversaryScreen extends StatelessWidget {
               ),
               width: 90.w,
               height: 48.w,
-              alignment: Alignment.center,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "다음",
-                    style: TextStyle(
-                        fontSize: 16.w,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF050505)
+              alignment: Alignment.centerRight,
+              padding: EdgeInsets.only(right: 10.w),
+              child: Container(
+                width: 60.w,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "다음",
+                      style: TextStyle(
+                          fontSize: 16.w,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF050505)
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  Padding(padding: EdgeInsets.only(right: 10.w)),
-                  Icon(Icons.chevron_right_outlined, size: 16.w, color: Color(0xFF050505),)
-                ],
+                    Icon(Icons.chevron_right_outlined, size: 30.w, color: Color(0xFF050505),)
+                  ],
+                ),
               ),
             ),
           ),

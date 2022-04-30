@@ -12,7 +12,7 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _context = context;
-    _registerViewModel = Provider.of<RegisterViewModel>(context);
+    _registerViewModel = Provider.of<RegisterViewModel>(_context);
     return ChangeNotifierProvider(
       create: (_) => RegisterViewModel(),
       child: registerScreen(),
@@ -22,19 +22,34 @@ class RegisterScreen extends StatelessWidget {
 
   Widget registerScreen() {
     return SafeArea(
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsetsDirectional.fromSTEB(35, 20, 35, 20),
-              child: Column(
-                children: <Widget>[
-                  topWidget(),
-                  registerWidget(),
-                ],
-              ),
+        child: GestureDetector(
+          onTap: (){
+            FocusScope.of(_context).unfocus();
+          },
+          child: Scaffold(
+            backgroundColor: Theme.of(_context).scaffoldBackgroundColor,
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(),
+                Container(
+                  padding: EdgeInsetsDirectional.fromSTEB(35.w, 20.w, 35.w, 20.w),
+                  child: Column(
+                    children: <Widget>[
+                      topWidget(),
+                      Padding(padding: EdgeInsets.symmetric(vertical: 20.w)),
+                      registerWidget(),
+                    ],
+                  ),
+                ),
+                MediaQuery.of(_context).viewInsets.bottom <= 50 ?
+                registerButtonWidget()
+                    :
+                Container()
+              ],
             ),
-            registerButtonWidget()
-          ],
+          ),
         )
     );
   }
@@ -48,7 +63,9 @@ class RegisterScreen extends StatelessWidget {
             :
         ScaffoldMessenger.of(_context).showSnackBar(
           SnackBar(
-            content: Text('입력된 정보가 올바르지 않습니다'),
+            content: Text(
+                _registerViewModel.idErrorMessage ?? _registerViewModel.pwErrorMessage ?? _registerViewModel.pwCheckErrorMessage ?? '입력된 정보가 올바르지 않습니다'
+            ),
           ),
         );
       },
@@ -107,7 +124,7 @@ class RegisterScreen extends StatelessWidget {
   Widget registerWidget() {
     return Container(
       width: 320.w,
-      height: 150.w,
+      height: 180.w,
       alignment: Alignment.center,
       /// Register Textfield
       child: Column(
@@ -117,11 +134,6 @@ class RegisterScreen extends StatelessWidget {
           TextFormField(
             initialValue: _registerViewModel.email,
             decoration: InputDecoration(
-                border: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                errorBorder: InputBorder.none,
-                disabledBorder: InputBorder.none,
                 hintText: "아이디 입력",
                 hintStyle: TextStyle(
                     fontWeight: FontWeight.w400,
@@ -144,14 +156,8 @@ class RegisterScreen extends StatelessWidget {
               _registerViewModel.checkEmail(value);
             },
           ),
-          Padding(padding: EdgeInsets.symmetric(vertical: 20)),
           TextFormField(
             decoration: InputDecoration(
-                border: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                errorBorder: InputBorder.none,
-                disabledBorder: InputBorder.none,
                 hintText: "비밀번호 입력",
                 hintStyle: TextStyle(
                     fontWeight: FontWeight.w400,
@@ -174,14 +180,8 @@ class RegisterScreen extends StatelessWidget {
               _registerViewModel.checkPassword(value);
             },
           ),
-          Padding(padding: EdgeInsets.symmetric(vertical: 20)),
           TextFormField(
             decoration: InputDecoration(
-                border: InputBorder.none,
-                focusedBorder: InputBorder.none,
-                enabledBorder: InputBorder.none,
-                errorBorder: InputBorder.none,
-                disabledBorder: InputBorder.none,
                 hintText: "비밀번호 확인",
                 hintStyle: TextStyle(
                     fontWeight: FontWeight.w400,

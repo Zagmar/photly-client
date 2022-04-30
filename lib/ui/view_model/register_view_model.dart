@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 
 class RegisterViewModel with ChangeNotifier {
-  late String _email;
+  String _email = "";
   late String _password;
   late String _passwordCheck;
-  late String _username;
+  String _username = "";
   late DateTime _anniversary;
-  late String _userCode;
+  String _userCode = "sdfsdf"; // temp
   late String _inputCode;
-  late bool _isIdOk;
-  late bool _isPwOk;
-  late bool _isPwCheckOk;
-  late bool _isUsernameOk;
-  late bool _isAnniversaryOk;
-  late bool _isCodeMatched;
-  String? _idErrorMessage;
-  String? _pwErrorMessage;
-  String? _pwCheckErrorMessage;
-  String? _usernameErrorMessage;
+  bool _isIdOk = false;
+  bool _isPwOk = false;
+  bool _isPwCheckOk = false;
+  bool _isUsernameOk = false;
+  bool _isAnniversaryOk = false;
+  bool _isCodeMatched = false;
+  String? _idErrorMessage = '아이디는 필수사항입니다';
+  String? _pwErrorMessage = '비밀번호는 필수사항입니다';
+  String? _pwCheckErrorMessage = '비밀번호 확인은 필수사항입니다';
+  String? _usernameErrorMessage = '닉네임은 필수사항입니다';
   String? _codeErrorMessage;
 
   String? get idErrorMessage => _idErrorMessage;
@@ -43,6 +43,8 @@ class RegisterViewModel with ChangeNotifier {
     _inputCode = inputCode;
     // temp
     // code 찾기 - 같은 code 찾기, 파트너 없는지 확인
+    _isCodeMatched = true;
+    //temp
     if(!_isCodeMatched){
       _codeErrorMessage = "잘못된 코드입니다";
     }

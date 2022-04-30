@@ -47,7 +47,7 @@ class FindPwScreen extends StatelessWidget {
       width: 390.w,
       height: 60.w,
       alignment: Alignment.centerLeft,
-      padding: EdgeInsets.symmetric(horizontal: 25.w),
+      padding: EdgeInsetsDirectional.fromSTEB(25.w, 0, 25.w, 20.w),
       child: InkWell(
         onTap: (){
           FocusScope.of(_context).unfocus();

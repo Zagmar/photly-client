@@ -10,10 +10,32 @@ import 'package:couple_seflie_app/ui/view/screen/register/register_anniversary_s
 import 'package:couple_seflie_app/ui/view/screen/register/register_partner_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register/register_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register/register_username_screen.dart';
+import 'package:couple_seflie_app/ui/view_model/daily_couple_post_view_model.dart';
+import 'package:couple_seflie_app/ui/view_model/login_view_model.dart';
+import 'package:couple_seflie_app/ui/view_model/post_daily_info_widget_view_model.dart';
+import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
+import 'package:couple_seflie_app/ui/view_model/register_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(
+  MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+          create: (BuildContext context) => LoginViewModel()), // count_provider.dart
+      ChangeNotifierProvider(
+          create: (BuildContext context) => RegisterViewModel()),
+      ChangeNotifierProvider(
+          create: (BuildContext context) => PostViewModel()),
+      ChangeNotifierProvider(
+          create: (BuildContext context) => PostDailyInfoWidgetViewModel()),
+      ChangeNotifierProvider(
+          create: (BuildContext context) => DailyCouplePostViewModel()),
+    ],
+    child: MyApp(),
+  )
+);
 
 class MyApp extends StatelessWidget {
   @override
@@ -27,10 +49,10 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             fontFamily: 'Noto_Sans_KR',
             brightness: Brightness.light,
-            backgroundColor: Colors.white,
+            backgroundColor: Color(0xFFFFFFFF),
             primaryColor: Colors.blueGrey,
             primarySwatch: Colors.blueGrey,
-            scaffoldBackgroundColor: Colors.white,
+            scaffoldBackgroundColor: Color(0xFFFFFFFF),
           ),
           builder: (context, child) {
             ScreenUtil.setContext(context);
@@ -39,7 +61,7 @@ class MyApp extends StatelessWidget {
               child: child!,
             );
           },
-          initialRoute: '/mainScreen',
+          initialRoute: '/registerUsernameScreen',
           routes: {
             '/mainScreen': (context) => PostMainScreen(),
             '/postEditScreen': (context) => PostEditScreen(),

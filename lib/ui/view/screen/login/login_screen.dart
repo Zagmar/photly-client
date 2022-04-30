@@ -25,32 +25,28 @@ class LoginScreen extends StatelessWidget {
           FocusScope.of(_context).unfocus();
         },
         child: Scaffold(
+            backgroundColor: Theme.of(_context).scaffoldBackgroundColor,
             resizeToAvoidBottomInset : false,
-            body: Container(
-              color: Colors.white,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(),
-                  Container(
-                    padding: EdgeInsetsDirectional.fromSTEB(35, 20, 35, 20),
-                    child: Column(
-                      children: <Widget>[
-                        topWidget(),
-                        Padding(padding: EdgeInsets.symmetric(vertical: 20)),
-                        loginWidget(),
-                      ],
-                    ),
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(),
+                Container(
+                  padding: EdgeInsetsDirectional.fromSTEB(35.w, 20.w, 35.w, 20.w),
+                  child: Column(
+                    children: <Widget>[
+                      topWidget(),
+                      Padding(padding: EdgeInsets.symmetric(vertical: 20.w)),
+                      loginWidget(),
+                    ],
                   ),
-                  MediaQuery.of(_context).viewInsets.bottom <= 50 ?
-                  loginButtonWidget()
-                      :
-                  Container(
-                    height: MediaQuery.of(_context).viewInsets.bottom,
-                  )
-                ],
-              ),
+                ),
+                MediaQuery.of(_context).viewInsets.bottom <= 50 ?
+                loginButtonWidget()
+                    :
+                Container()
+              ],
             )
         ),
       ),
@@ -64,7 +60,9 @@ class LoginScreen extends StatelessWidget {
         !_loginViewModel.isLoginOk ?
         ScaffoldMessenger.of(_context).showSnackBar(
           SnackBar(
-            content: Text('입력된 정보가 올바르지 않습니다'),
+            content: Text(
+              _loginViewModel.idErrorMessage ?? _loginViewModel.pwErrorMessage ?? '입력된 정보가 올바르지 않습니다'
+            ),
           ),
         )
             :
@@ -144,11 +142,6 @@ class LoginScreen extends StatelessWidget {
             children: <Widget>[
               TextFormField(
                 decoration: InputDecoration(
-                    border: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    errorBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
                     hintText: "아이디 입력",
                     hintStyle: TextStyle(
                         fontWeight: FontWeight.w400,
@@ -171,14 +164,8 @@ class LoginScreen extends StatelessWidget {
                   _loginViewModel.checkEmail(value);
                 },
               ),
-              Divider(),
               TextFormField(
                 decoration: InputDecoration(
-                    border: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    errorBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
                     hintText: "비밀번호 입력",
                     hintStyle: TextStyle(
                         fontWeight: FontWeight.w400,
@@ -201,7 +188,6 @@ class LoginScreen extends StatelessWidget {
                   _loginViewModel.checkPassword(value);
                 },
               ),
-              Divider(),
             ],
           ),
           /// Other Functions
