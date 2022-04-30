@@ -225,7 +225,11 @@ class LoginScreen extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   )
               ),
-              Divider(),
+              Container(
+                width: 1.w,
+                height: 17.w,
+                color: Color(0xFF808080),
+              ),
               TextButton(
                   onPressed: (){
                     FocusScope.of(_context).unfocus();
@@ -242,7 +246,11 @@ class LoginScreen extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   )
               ),
-              Divider(),
+              Container(
+                width: 1.w,
+                height: 17.w,
+                color: Color(0xFF808080),
+              ),
               TextButton(
                   onPressed: (){
                     FocusScope.of(_context).unfocus();
