@@ -11,7 +11,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _context = context;
-    _loginViewModel = Provider.of<LoginViewModel>(context);
+    _loginViewModel = Provider.of<LoginViewModel>(_context);
     return ChangeNotifierProvider(
       create: (_) => LoginViewModel(),
       child: loginScreen(),
@@ -20,20 +20,40 @@ class LoginScreen extends StatelessWidget {
 
   Widget loginScreen() {
     return SafeArea(
-        child: Column(
-          children: [
-            Container(
-              padding: EdgeInsetsDirectional.fromSTEB(35, 20, 35, 20),
+      child: GestureDetector(
+        onTap: (){
+          FocusScope.of(_context).unfocus();
+        },
+        child: Scaffold(
+            resizeToAvoidBottomInset : false,
+            body: Container(
+              color: Colors.white,
               child: Column(
-                children: <Widget>[
-                  topWidget(),
-                  loginWidget(),
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(),
+                  Container(
+                    padding: EdgeInsetsDirectional.fromSTEB(35, 20, 35, 20),
+                    child: Column(
+                      children: <Widget>[
+                        topWidget(),
+                        Padding(padding: EdgeInsets.symmetric(vertical: 20)),
+                        loginWidget(),
+                      ],
+                    ),
+                  ),
+                  MediaQuery.of(_context).viewInsets.bottom <= 50 ?
+                  loginButtonWidget()
+                      :
+                  Container(
+                    height: MediaQuery.of(_context).viewInsets.bottom,
+                  )
                 ],
               ),
-            ),
-            loginButtonWidget()
-          ],
-        )
+            )
+        ),
+      ),
     );
   }
   /// login Button
@@ -112,7 +132,7 @@ class LoginScreen extends StatelessWidget {
   Widget loginWidget() {
     return Container(
       width: 320.w,
-      height: 150.w,
+      height: 200.w,
       alignment: Alignment.center,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -151,7 +171,7 @@ class LoginScreen extends StatelessWidget {
                   _loginViewModel.checkEmail(value);
                 },
               ),
-              Padding(padding: EdgeInsets.symmetric(vertical: 20)),
+              Divider(),
               TextFormField(
                 decoration: InputDecoration(
                     border: InputBorder.none,
@@ -181,6 +201,7 @@ class LoginScreen extends StatelessWidget {
                   _loginViewModel.checkPassword(value);
                 },
               ),
+              Divider(),
             ],
           ),
           /// Other Functions
