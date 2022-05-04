@@ -99,7 +99,8 @@ class MyApp extends StatelessWidget {
             scaffoldBackgroundColor: Color(0xFFFFFFFF),
           ),
           builder: (context, child) {
-            ScreenUtil.setContext(context);
+            ScreenUtil.init(context);
+            // ScreenUtil.setContext(context);
             return MediaQuery(
               data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
               child: child!,
