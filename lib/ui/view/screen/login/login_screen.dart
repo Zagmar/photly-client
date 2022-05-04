@@ -19,15 +19,14 @@ class LoginScreen extends StatelessWidget {
   }
 
   Widget loginScreen() {
-    return SafeArea(
-      child: GestureDetector(
-        onTap: (){
-          FocusScope.of(_context).unfocus();
-        },
-        child: Scaffold(
-            backgroundColor: Theme.of(_context).scaffoldBackgroundColor,
-            resizeToAvoidBottomInset : false,
-            body: Column(
+    return GestureDetector(
+      onTap: (){
+        FocusScope.of(_context).unfocus();
+      },
+      child: Scaffold(
+          backgroundColor: Theme.of(_context).scaffoldBackgroundColor,
+          body: Container(
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -47,15 +46,15 @@ class LoginScreen extends StatelessWidget {
                     :
                 Container()
               ],
-            )
-        ),
+            ),
+          )
       ),
     );
   }
   /// login Button
   Widget loginButtonWidget() {
     return InkWell(
-      onTap: (){
+      onTap: () async {
         FocusScope.of(_context).unfocus();
         !_loginViewModel.isLoginOk ?
         ScaffoldMessenger.of(_context).showSnackBar(
@@ -66,12 +65,17 @@ class LoginScreen extends StatelessWidget {
           ),
         )
             :
-        _loginViewModel.doLogin() ?
-        Navigator.pushNamedAndRemoveUntil(_context, "/mainScreen", (route) => false)
+        await _loginViewModel.doLogin() ?
+        {
+          _loginViewModel.clear(),
+          Navigator.pushNamedAndRemoveUntil(_context, "/mainScreen", (route) => false)
+        }
             :
         ScaffoldMessenger.of(_context).showSnackBar(
           SnackBar(
-            content: Text('로그인에 실패했습니다.'),
+            content: Text(
+              _loginViewModel.loginFailMessage!
+            ),
           ),
         );
       },
@@ -142,12 +146,12 @@ class LoginScreen extends StatelessWidget {
             children: <Widget>[
               TextFormField(
                 decoration: InputDecoration(
-                    hintText: "아이디 입력",
-                    hintStyle: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16.w,
-                        color: Color(0xFFC4C4C4)
-                    )
+                  hintText: "아이디 입력",
+                  hintStyle: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16.w,
+                      color: Color(0xFFC4C4C4)
+                  ),
                 ),
                 maxLines: 1,
                 keyboardType: TextInputType.emailAddress,
@@ -166,12 +170,12 @@ class LoginScreen extends StatelessWidget {
               ),
               TextFormField(
                 decoration: InputDecoration(
-                    hintText: "비밀번호 입력",
-                    hintStyle: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16.w,
-                        color: Color(0xFFC4C4C4)
-                    )
+                  hintText: "비밀번호 입력",
+                  hintStyle: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16.w,
+                      color: Color(0xFFC4C4C4)
+                  ),
                 ),
                 maxLines: 1,
                 keyboardType: TextInputType.visiblePassword,
@@ -198,6 +202,7 @@ class LoginScreen extends StatelessWidget {
               TextButton(
                   onPressed: (){
                     FocusScope.of(_context).unfocus();
+                    _loginViewModel.clear();
                     Navigator.pushNamed(_context, "/findIdScreen");
                   },
                   child: Text(
@@ -219,6 +224,7 @@ class LoginScreen extends StatelessWidget {
               TextButton(
                   onPressed: (){
                     FocusScope.of(_context).unfocus();
+                    _loginViewModel.clear();
                     Navigator.pushNamed(_context, "/findPwScreen");
                   },
                   child: Text(
@@ -240,6 +246,7 @@ class LoginScreen extends StatelessWidget {
               TextButton(
                   onPressed: (){
                     FocusScope.of(_context).unfocus();
+                    _loginViewModel.clear();
                     Navigator.pushNamed(_context, "/registerScreen");
                   },
                   child: Text(

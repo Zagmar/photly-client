@@ -1,17 +1,23 @@
+import 'package:couple_seflie_app/data/datasource/remote_datasource.dart';
+import 'package:couple_seflie_app/data/repository/auth_service.dart';
 import 'package:flutter/material.dart';
 
+import '../../data/model/auth_credentials_model.dart';
+
 class LoginViewModel with ChangeNotifier {
-  late String _email;
-  late String _password;
-  late bool _isIdOk;
-  late bool _isPwOk;
-  String? _idErrorMessage;
-  String? _pwErrorMessage;
+  String _email = "";
+  String _password = "";
+  bool _isIdOk = false;
+  bool _isPwOk = false;
+  String? _idErrorMessage = '이메일은 필수사항입니다.';
+  String? _pwErrorMessage = '비밀번호는 필수사항입니다.';
+  String? _loginFailMessage;
+  late AuthService _authService;
 
   String? get idErrorMessage => _idErrorMessage;
   String? get pwErrorMessage => _pwErrorMessage;
+  String? get loginFailMessage => _loginFailMessage;
   bool get isLoginOk => _isIdOk && _isPwOk;
-
 
   checkEmail(String val){
     _email = val;
@@ -38,10 +44,6 @@ class LoginViewModel with ChangeNotifier {
       _pwErrorMessage = '비밀번호는 필수사항입니다.';
       _isPwOk = false;
     }
-    else if(val.length < 8){
-      _pwErrorMessage = '8자 이상 입력해주세요!';
-      _isPwOk = false;
-    }
     else{
       _pwErrorMessage = null;
       _isPwOk = true;
@@ -49,9 +51,27 @@ class LoginViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  bool doLogin(){
-    // temp
-    // 성공 실패
-    return true;
+  Future<bool> doLogin() async {
+    _authService = AuthService();
+    final credentials = LoginCredential(email: _email, password: _password);
+    final result = await _authService.loginService(credentials);
+
+    if(result is Failure){
+      _loginFailMessage = result.errorResponse;
+      notifyListeners();
+      return false;
+    }
+    else {
+      // result = Success
+      _loginFailMessage = null;
+      notifyListeners();
+      return true;
+    }
+  }
+
+  clear() {
+    _email = "";
+    _password = "";
+    notifyListeners();
   }
 }

@@ -21,12 +21,33 @@ class RegisterPartnerScreen extends StatelessWidget {
   }
 
   Widget registerScreen() {
-    return SafeArea(
+    return Container(
         child: GestureDetector(
           onTap: (){
             FocusScope.of(_context).unfocus();
           },
           child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Theme.of(_context).scaffoldBackgroundColor,
+              elevation: 0,
+              leading: Container(),
+              actions: <Widget>[
+                InkWell(
+                  onTap: (){
+                    _registerViewModel.clear();
+                    FocusScope.of(_context).unfocus();
+                    Navigator.popUntil(_context, ModalRoute.withName("/loginScreen"));
+                  },
+                  child: SizedBox(
+                    width: 50.w,
+                    child: Icon(
+                      Icons.clear,
+                      color: Color(0xFF000000),
+                    ),
+                  ),
+                )
+              ],
+            ),
             backgroundColor: Theme.of(_context).scaffoldBackgroundColor,
             body: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -104,14 +125,26 @@ class RegisterPartnerScreen extends StatelessWidget {
             ),
           ),
           InkWell(
-            onTap: (){
+            onTap: () async {
               FocusScope.of(_context).unfocus();
-              _registerViewModel.doRegistration() ?
-              Navigator.pushNamedAndRemoveUntil(_context, "/mainScreen", (route) => false)
+              await _registerViewModel.doRegistration() ?
+              {
+                ScaffoldMessenger.of(_context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                        _registerViewModel.registrationResultMessage
+                    ),
+                    duration: Duration(seconds: 1),
+                  ),
+                ),
+                Navigator.pushNamedAndRemoveUntil(_context, "/loginScreen", (route) => false)
+              }
                   :
               ScaffoldMessenger.of(_context).showSnackBar(
                 SnackBar(
-                  content: Text('다시 시도해주세요'),
+                  content: Text(
+                      _registerViewModel.registrationResultMessage
+                  ),
                 ),
               );
             },
@@ -204,8 +237,8 @@ class RegisterPartnerScreen extends StatelessWidget {
             },
             obscureText: false,
             validator: (_) {
-              if(_registerViewModel.codeErrorMessage != null) {
-                return _registerViewModel.codeErrorMessage;
+              if(_registerViewModel.coupleCodeErrorMessage != null) {
+                return _registerViewModel.coupleCodeErrorMessage;
               }
             },
             onChanged: (value){

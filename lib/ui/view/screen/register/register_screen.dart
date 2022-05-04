@@ -21,36 +21,57 @@ class RegisterScreen extends StatelessWidget {
   }
 
   Widget registerScreen() {
-    return SafeArea(
-        child: GestureDetector(
-          onTap: (){
-            FocusScope.of(_context).unfocus();
-          },
-          child: Scaffold(
-            backgroundColor: Theme.of(_context).scaffoldBackgroundColor,
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(),
-                Container(
-                  padding: EdgeInsetsDirectional.fromSTEB(35.w, 20.w, 35.w, 20.w),
-                  child: Column(
-                    children: <Widget>[
-                      topWidget(),
-                      Padding(padding: EdgeInsets.symmetric(vertical: 20.w)),
-                      registerWidget(),
-                    ],
-                  ),
+    return GestureDetector(
+      onTap: (){
+        FocusScope.of(_context).unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(_context).scaffoldBackgroundColor,
+          elevation: 0,
+          leading: Container(),
+          actions: <Widget>[
+            InkWell(
+              onTap: (){
+                _registerViewModel.clear();
+                FocusScope.of(_context).unfocus();
+                Navigator.popUntil(_context, ModalRoute.withName("/loginScreen"));
+              },
+              child: SizedBox(
+                width: 50.w,
+                child: Icon(
+                  Icons.clear,
+                  color: Color(0xFF000000),
                 ),
-                MediaQuery.of(_context).viewInsets.bottom <= 50 ?
-                registerButtonWidget()
-                    :
-                Container()
-              ],
-            ),
+              ),
+            )
+          ],
+        ),
+        backgroundColor: Theme.of(_context).scaffoldBackgroundColor,
+        body: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(),
+              Container(
+                padding: EdgeInsetsDirectional.fromSTEB(35.w, 20.w, 35.w, 0.w),
+                child: Column(
+                  children: <Widget>[
+                    topWidget(),
+                    Padding(padding: EdgeInsets.symmetric(vertical: 20.w)),
+                    registerWidget(),
+                  ],
+                ),
+              ),
+              MediaQuery.of(_context).viewInsets.bottom <= 50 ?
+              registerButtonWidget()
+                  :
+              Container()
+            ],
           ),
-        )
+        ),
+      ),
     );
   }
   /// register Button
@@ -59,7 +80,9 @@ class RegisterScreen extends StatelessWidget {
       onTap: (){
         FocusScope.of(_context).unfocus();
         _registerViewModel.isRegisterOk ?
-        Navigator.pushNamed(_context, '/registerUsernameScreen')
+        {
+          Navigator.pushNamed(_context, '/registerUsernameScreen')
+        }
             :
         ScaffoldMessenger.of(_context).showSnackBar(
           SnackBar(
@@ -139,7 +162,7 @@ class RegisterScreen extends StatelessWidget {
                     fontWeight: FontWeight.w400,
                     fontSize: 16.w,
                     color: Color(0xFFC4C4C4)
-                )
+                ),
             ),
             maxLines: 1,
             keyboardType: TextInputType.emailAddress,
@@ -156,54 +179,58 @@ class RegisterScreen extends StatelessWidget {
               _registerViewModel.checkEmail(value);
             },
           ),
-          TextFormField(
-            decoration: InputDecoration(
-                hintText: "비밀번호 입력",
-                hintStyle: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16.w,
-                    color: Color(0xFFC4C4C4)
-                )
-            ),
-            maxLines: 1,
-            keyboardType: TextInputType.visiblePassword,
-            onFieldSubmitted: (_){
-              FocusScope.of(_context).unfocus();
-            },
-            obscureText: true,
-            validator: (_) {
-              if(_registerViewModel.pwErrorMessage != null) {
-                return _registerViewModel.pwErrorMessage;
-              }
-            },
-            onChanged: (value){
-              _registerViewModel.checkPassword(value);
-            },
-          ),
-          TextFormField(
-            decoration: InputDecoration(
-                hintText: "비밀번호 확인",
-                hintStyle: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16.w,
-                    color: Color(0xFFC4C4C4)
-                )
-            ),
-            maxLines: 1,
-            keyboardType: TextInputType.visiblePassword,
-            onFieldSubmitted: (_){
-              FocusScope.of(_context).unfocus();
-            },
-            obscureText: true,
-            validator: (_) {
-              if(_registerViewModel.pwCheckErrorMessage != null) {
-                return _registerViewModel.pwCheckErrorMessage;
-              }
-            },
-            onChanged: (value){
-              _registerViewModel.checkPasswordCheck(value);
-            },
-          ),
+          Column(
+            children: <Widget>[
+              TextFormField(
+                decoration: InputDecoration(
+                    hintText: "비밀번호 입력",
+                    hintStyle: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16.w,
+                        color: Color(0xFFC4C4C4)
+                    ),
+                ),
+                maxLines: 1,
+                keyboardType: TextInputType.visiblePassword,
+                onFieldSubmitted: (_){
+                  FocusScope.of(_context).unfocus();
+                },
+                obscureText: true,
+                validator: (_) {
+                  if(_registerViewModel.pwErrorMessage != null) {
+                    return _registerViewModel.pwErrorMessage;
+                  }
+                },
+                onChanged: (value){
+                  _registerViewModel.checkPassword(value);
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                    hintText: "비밀번호 확인",
+                    hintStyle: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16.w,
+                        color: Color(0xFFC4C4C4)
+                    ),
+                ),
+                maxLines: 1,
+                keyboardType: TextInputType.visiblePassword,
+                onFieldSubmitted: (_){
+                  FocusScope.of(_context).unfocus();
+                },
+                obscureText: true,
+                validator: (_) {
+                  if(_registerViewModel.pwCheckErrorMessage != null) {
+                    return _registerViewModel.pwCheckErrorMessage;
+                  }
+                },
+                onChanged: (value){
+                  _registerViewModel.checkPasswordCheck(value);
+                },
+              ),
+            ],
+          )
         ],
       ),
     );

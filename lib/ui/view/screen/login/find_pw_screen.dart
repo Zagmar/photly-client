@@ -20,24 +20,22 @@ class FindPwScreen extends StatelessWidget {
   }
 
   Widget findIdScreen() {
-    return SafeArea(
-        child: Scaffold(
-          body: Container(
-            color: Colors.white,
-            alignment: Alignment.center,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(),
-                Text(
-                    "관리자 문의 요망"
-                ),
-                routeButtonWidget()
-              ],
+    return Scaffold(
+      body: Container(
+        color: Colors.white,
+        alignment: Alignment.center,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(),
+            Text(
+                "관리자 문의 요망"
             ),
-          ),
-        )
+            routeButtonWidget()
+          ],
+        ),
+      ),
     );
   }
 

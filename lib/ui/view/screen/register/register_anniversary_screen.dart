@@ -22,12 +22,33 @@ class RegisterAnniversaryScreen extends StatelessWidget {
   }
 
   Widget registerScreen() {
-    return SafeArea(
+    return Container(
         child: GestureDetector(
           onTap: (){
             FocusScope.of(_context).unfocus();
           },
           child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Theme.of(_context).scaffoldBackgroundColor,
+              elevation: 0,
+              leading: Container(),
+              actions: <Widget>[
+                InkWell(
+                  onTap: (){
+                    _registerViewModel.clear();
+                    FocusScope.of(_context).unfocus();
+                    Navigator.popUntil(_context, ModalRoute.withName("/loginScreen"));
+                  },
+                  child: SizedBox(
+                    width: 50.w,
+                    child: Icon(
+                      Icons.clear,
+                      color: Color(0xFF000000),
+                    ),
+                  ),
+                )
+              ],
+            ),
             backgroundColor: Theme.of(_context).scaffoldBackgroundColor,
             body: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -105,7 +126,7 @@ class RegisterAnniversaryScreen extends StatelessWidget {
             onTap: () async {
               FocusScope.of(_context).unfocus();
               _registerViewModel.isAnniversaryOk ?
-              Navigator.pushNamedAndRemoveUntil(_context, "/registerPartnerScreen", (route) => false)
+              Navigator.pushNamed(_context, "/registerPartnerScreen")
                   :
               ScaffoldMessenger.of(_context).showSnackBar(
                 SnackBar(

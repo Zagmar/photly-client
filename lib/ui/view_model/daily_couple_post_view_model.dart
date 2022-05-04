@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import '../../data/datasource/remote_datasource.dart';
 
 class DailyCouplePostViewModel extends ChangeNotifier {
-  bool _loading = false;
+  bool _loading = true;
   late Failure _failure;
   final DailyCouplePostRepository _dailyCouplePostRepository = DailyCouplePostRepository();
   final int _nDailyCouplePosts = 5;
