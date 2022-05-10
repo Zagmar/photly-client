@@ -10,7 +10,7 @@ const INVALID_FORMAT = 102;
 const UNKNOWN_ERROR = 103;
 
 /// API URL
-const PHOTLY = "https://rpqkktcxv9.execute-api.ap-northeast-2.amazonaws.com/A1/photly";
+const PHOTLY = "https://0tijhj3s8l.execute-api.ap-northeast-2.amazonaws.com/A1";
 //const PHOTLY = "https://0tijhj3s8l.execute-api.ap-northeast-2.amazonaws.com/A1";
 
 // Success to get response
