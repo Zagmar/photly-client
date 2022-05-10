@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../ui_setting.dart';
+import '../../../view_model/daily_couple_post_view_model.dart';
 import '../../widget/ad_banner_widget.dart';
 import '../../widget/post/post_daily_info_widget.dart';
 import '../../widget/post/post_appbar_widget.dart';
@@ -13,31 +14,38 @@ import '../../widget/post/post_appbar_widget.dart';
 class PostEditScreen extends StatelessWidget {
   PostEditScreen({Key? key}) : super(key: key);
   late PostViewModel _postViewModel;
+  late BuildContext _context;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
+    _context = context;
+    DailyCouplePostViewModel _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(_context);
+    _dailyCouplePostViewModel.setScreenToEdit();
+    _postViewModel = Provider.of<PostViewModel>(_context);
     return ChangeNotifierProvider(
       create: (_) => PostViewModel(),
-      child: postEditMainWidget(context),
+      child: postEditMainWidget(),
     );
   }
 
-  Widget postEditMainWidget(BuildContext context){
-    _postViewModel = Provider.of<PostViewModel>(context);
+  Widget postEditMainWidget(){
     return Scaffold(
+      key: _scaffoldKey,
       body: GestureDetector(
         onTap: (){
-          FocusScope.of(context).unfocus();
+          FocusScope.of(_context).unfocus();
         },
-        child: SafeArea(
+        child: Container(
           child: SingleChildScrollView(
-
+            scrollDirection: Axis.vertical,
+            physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
             child: Container(
               child: Column(
                   children: <Widget>[
-                    postAppBarWidget("/postEditScreen", context),
-                    postDailyInfoWidget("/postEditScreen", context),
-                    postEditWidget(context),
+                    postAppBarWidget(_context, _scaffoldKey),
+                    postDailyInfoWidget(_context),
+                    postEditWidget(),
                     adBannerWidget()
                   ]
               ),
@@ -48,7 +56,7 @@ class PostEditScreen extends StatelessWidget {
     );
   }
 
-  Widget postEditWidget(BuildContext context) {
+  Widget postEditWidget() {
     TextEditingController textController = TextEditingController()..text = _postViewModel.post.postText ?? ""; // temp
     // TextEditingController _locateController = TextEditingController();
     return Container(
@@ -60,10 +68,18 @@ class PostEditScreen extends StatelessWidget {
             height: 390.w * IMAGE_RATIO,
             child: InkWell(
               onTap: (){
-                FocusScope.of(context).unfocus();
-                getImageDialogWidget(context);
+                FocusScope.of(_context).unfocus();
+                getImageDialogWidget();
               },
-              child: _postViewModel.post.postId != "" ?
+              child: _postViewModel.postImage != null ?
+              Image.file(
+                _postViewModel.postImage!,
+                width: 390.w,
+                height: 390.w * IMAGE_RATIO,
+                fit: BoxFit.cover,
+              )
+                :
+              _postViewModel.post.postId != "" ?
               CachedNetworkImage(
                 imageUrl: _postViewModel.post.postImageUrl,
                 width: 390.w,
@@ -80,23 +96,21 @@ class PostEditScreen extends StatelessWidget {
                 fit: BoxFit.cover,
               )
                   :
-              _postViewModel.postImage == null ?
               Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Color(0xFF000000),
+                    width: 1.w
+                  )
+                ),
                 width: 100.w,
                 height: 100.w,
                 alignment: Alignment.center,
                 child: Icon(
                   Icons.add,
                   size: 57.w,
-                  color: Color(0xFFFFFFFF),
+                  color: Color(0xFF000000),
                 ),
-              )
-                  :
-              Image.file(
-                _postViewModel.postImage!,
-                width: 390.w,
-                height: 390.w * IMAGE_RATIO,
-                fit: BoxFit.cover,
               )
             ),
           ),
@@ -189,7 +203,7 @@ class PostEditScreen extends StatelessWidget {
                   padding: EdgeInsets.only(right: 26.w),
                   child: Text(
                     // temp
-                    DateFormat(TIME_FORMAT, krLocale).format(DateTime.now()), // temp
+                    _postViewModel.dateTimeNow,
                     style: TextStyle(
                       fontSize: 9.w,
                       fontWeight: FontWeight.w400,
@@ -206,9 +220,9 @@ class PostEditScreen extends StatelessWidget {
   }
 
   // Dialog to select from gallery or take a photo via camera
-  getImageDialogWidget(BuildContext context) {
+  getImageDialogWidget() {
     return showDialog(
-        context: context,
+        context: _context,
         builder: (context){
           return SimpleDialog(
             shape: RoundedRectangleBorder(
@@ -231,6 +245,7 @@ class PostEditScreen extends StatelessWidget {
                   ),
                 ),
                 onPressed: (){
+                  Navigator.pop(_context);
                   _postViewModel.pickImage("gallery");
                 },
               ),
@@ -243,6 +258,7 @@ class PostEditScreen extends StatelessWidget {
                   ),
                 ),
                 onPressed: (){
+                  Navigator.pop(_context);
                   _postViewModel.pickImage("camera");
                 },
               ),
@@ -255,7 +271,7 @@ class PostEditScreen extends StatelessWidget {
                   ),
                 ),
                 onPressed: (){
-                  Navigator.pop(context);
+                  Navigator.pop(_context);
                 },
               )
             ],

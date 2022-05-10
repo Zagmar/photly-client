@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 
@@ -10,6 +11,7 @@ const UNKNOWN_ERROR = 103;
 
 /// API URL
 const PHOTLY = "https://rpqkktcxv9.execute-api.ap-northeast-2.amazonaws.com/A1/photly";
+//const PHOTLY = "https://0tijhj3s8l.execute-api.ap-northeast-2.amazonaws.com/A1";
 
 // Success to get response
 class Success {
@@ -26,6 +28,7 @@ class Failure {
 
 // API communication
 class RemoteDataSource {
+  // Timeout Time is set on 5 seconds
   final int timeout = 5;
 
   // Get data from API by inputData
@@ -37,8 +40,10 @@ class RemoteDataSource {
           :
       await http.get(url).timeout(Duration(seconds: timeout))
       ;
-
       if(response.statusCode == OK) {
+        print(response.body);
+        print("테스트1");
+
         return Success(response: response.body);
       }
       return Failure(code: INVALID_RESPONSE, errorResponse: "Invalid Response");

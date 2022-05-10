@@ -27,7 +27,7 @@ class DailyCouplePostModel {
 
   factory DailyCouplePostModel.fromJson(Map<String, dynamic> json) => DailyCouplePostModel(
     dailyPostDate: DateTime.parse(json['dailyPostDate']),
-    questionType: int.parse(json["questionId"]),
+    questionType: int.parse(json["questionType"]),
     questionText: json["questionText"],
     questionImageUrl: json["questionImageUrl"],
     userPostId: json["userPostId"],

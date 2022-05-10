@@ -68,7 +68,7 @@ class LoginScreen extends StatelessWidget {
         await _loginViewModel.doLogin() ?
         {
           _loginViewModel.clear(),
-          Navigator.pushNamedAndRemoveUntil(_context, "/mainScreen", (route) => false)
+          Navigator.pushNamedAndRemoveUntil(_context, "/dailyCouplePostScreen", (route) => false)
         }
             :
         ScaffoldMessenger.of(_context).showSnackBar(

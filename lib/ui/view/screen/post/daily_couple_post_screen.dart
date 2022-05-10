@@ -1,6 +1,5 @@
 import 'package:blur/blur.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:couple_seflie_app/data/model/daily_couple_post_model.dart';
 import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,54 +7,89 @@ import 'package:provider/provider.dart';
 
 import '../../../ui_setting.dart';
 import '../../../view_model/daily_couple_post_view_model.dart';
-import '../../widget/post/post_daily_info_widget.dart';
+import '../../widget/main_drawer_widget.dart';
 import '../../widget/post/post_appbar_widget.dart';
+import '../../widget/post/post_daily_info_widget.dart';
 
 
-List<DailyCouplePostModel> dailyPosts = [];
-
-class PostMainScreen extends StatelessWidget {
-  PostMainScreen({Key? key}) : super(key: key);
+class DailyCouplePostScreen extends StatelessWidget {
+  DailyCouplePostScreen({Key? key}) : super(key: key);
   late DailyCouplePostViewModel _dailyCouplePostViewModel;
+  late BuildContext _context;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context);
+    _context = context;
+    _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(_context);
+    _dailyCouplePostViewModel.setScreenToMain();
     return ChangeNotifierProvider(
       create: (_) => DailyCouplePostViewModel(),
-      child: postMainWidget(context),
+      child: postMainWidget(),
     );
   }
 
   /// Main structure
-  Widget postMainWidget(BuildContext context) {
-    FocusScope.of(context).unfocus();
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          child: Column(
-              children: <Widget>[
-                postAppBarWidget("/mainScreen", context),
-                postDailyInfoWidget("/mainScreen", context),
-                PageView.builder(
-                    scrollDirection: Axis.horizontal,
-                    controller: PageController(initialPage: 1),
-                    itemCount: _dailyCouplePostViewModel.dailyCouplePosts.length,
-                    itemBuilder: (context, index) {
-                      return Column(
-                        children: <Widget>[
-                          dailyMyPostWidget(context, index),
-                          Container(
-                            height: 30.w,
-                          ),
-                          dailyPartnerPostWidget(context, index),
-                        ],
-                      );
-                    }
-                )
-              ]
+  Widget postMainWidget() {
+    return GestureDetector(
+      onTap: (){
+        FocusScope.of(_context).unfocus();
+      },
+      child: Scaffold(
+        key: _scaffoldKey,
+        drawer: mainDrawerWidget(_context),
+        backgroundColor: Theme.of(_context).scaffoldBackgroundColor,
+        body: Container(
+          child: _dailyCouplePostViewModel.dailyCouplePosts.isEmpty || _dailyCouplePostViewModel.loading ?
+          // Show loading indicator when is loading
+          Center(
+            child: SizedBox(
+                width: 30.w,
+                height: 30.w,
+                child: CircularProgressIndicator()
+            ),
+          )
+              :
+          SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  postAppBarWidget(_context, _scaffoldKey),
+                  postDailyInfoWidget(_context),
+                  postsWidget()
+                ]
+            ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget postsWidget() {
+    return SizedBox(
+      width: 390.w,
+      height: 490.w,
+      child: PageView.builder(
+          onPageChanged:(index){
+            _dailyCouplePostViewModel.setPage(index);
+          },
+          reverse: true,
+          scrollDirection: Axis.horizontal,
+          // controller: PageController(initialPage: 1),
+          itemCount: _dailyCouplePostViewModel.dailyCouplePosts.length,
+          itemBuilder: (context, index) {
+            return Column(
+              children: <Widget>[
+                dailyMyPostWidget(),
+                Container(
+                  height: 30.w,
+                ),
+                dailyPartnerPostWidget(),
+              ],
+            );
+          }
       ),
     );
   }
@@ -64,7 +98,7 @@ class PostMainScreen extends StatelessWidget {
   /// 295 : 1 : 94
 
   /// My Daily Post
-  Widget dailyMyPostWidget(BuildContext context, int index) {
+  Widget dailyMyPostWidget() {
     return Container(
       height: 220.w,
       decoration: BoxDecoration(
@@ -80,22 +114,24 @@ class PostMainScreen extends StatelessWidget {
         ),
       ),
       alignment: Alignment.center,
-      child: _dailyCouplePostViewModel.dailyCouplePosts[index].userPostId != null ?
+      child: _dailyCouplePostViewModel.userPostId != null ?
       /// Image that user posted
       Row(
         children: <Widget>[
           InkWell(
-            onTap: (){
+            onTap: () async {
               // temp
-              PostViewModel _postViewModel = Provider.of<PostViewModel>(context);
-              _postViewModel.setPostId(_dailyCouplePostViewModel.dailyCouplePosts[index].userPostId!);
-              Navigator.pushNamed(context, "/postDetailScreen");
+              PostViewModel _postViewModel = Provider.of<PostViewModel>(_context, listen: false);
+              _postViewModel.getPost(_dailyCouplePostViewModel.userPostId!);
+              print("1통과");
+              Navigator.pushNamed(_context, "/postDetailScreen");
+              print("2통과");
             },
             child: Container(
               width: 295.w,
               height: 295.w * IMAGE_RATIO,
               child: CachedNetworkImage(
-                imageUrl: _dailyCouplePostViewModel.dailyCouplePosts[index].userPostImageUrl!,
+                imageUrl: _dailyCouplePostViewModel.userPostImageUrl!,
                 width: 295.w,
                 height: 295.w * IMAGE_RATIO,
                 progressIndicatorBuilder: (context, url, downloadProgress) =>
@@ -118,13 +154,17 @@ class PostMainScreen extends StatelessWidget {
       )
           :
       // No post in that day
-      index == 0?
+      _dailyCouplePostViewModel.isToday ?
       // If today
       /// Link to upload today's post
       InkWell(
         onTap: (){
-          FocusScope.of(context).unfocus();
-          Navigator.pushNamed(context, '/postEditScreen');
+          FocusScope.of(_context).unfocus();
+          if(_dailyCouplePostViewModel.userPostId != null){
+            PostViewModel _postViewModel = Provider.of<PostViewModel>(_context, listen: false);
+            _postViewModel.getPost(_dailyCouplePostViewModel.userPostId!);
+          }
+          Navigator.pushNamed(_context, '/postEditScreen');
         },
         child: Container(
           height: 80.w,
@@ -175,11 +215,11 @@ class PostMainScreen extends StatelessWidget {
               height: 24.w,
               width: 24.w,
               child: Icon(
-                Icons.edit,
+                Icons.image_not_supported_outlined,
               ),
             ),
             Text(
-              "슬퍼요",
+              "사진이 없습니다",
               style: TextStyle(
                 color: Color(0xFF000000),
                 fontSize: 14.w,
@@ -204,7 +244,7 @@ class PostMainScreen extends StatelessWidget {
   }
 
   /// Partner's Daily Post
-  Widget dailyPartnerPostWidget(BuildContext context, int index) {
+  Widget dailyPartnerPostWidget() {
     return Container(
       height: 220.w,
       decoration: BoxDecoration(
@@ -220,9 +260,9 @@ class PostMainScreen extends StatelessWidget {
         ),
       ),
       alignment: Alignment.center,
-      child: _dailyCouplePostViewModel.dailyCouplePosts[index].userPostId == null  ?
+      child: _dailyCouplePostViewModel.userPostId == null  ?
       Container(
-        child: _dailyCouplePostViewModel.dailyCouplePosts[index].partnerPostId == null  ?
+        child: _dailyCouplePostViewModel.partnerPostId == null  ?
         // user : false, partner : false
         /// Just inform that partner didn't answer
         Container(
@@ -262,7 +302,7 @@ class PostMainScreen extends StatelessWidget {
           )
             :
         // user : false, partner : true
-        index == 0 ?
+        _dailyCouplePostViewModel.isToday ?
         // today
         /// Show as blurred image
         Container(
@@ -270,10 +310,10 @@ class PostMainScreen extends StatelessWidget {
             width: 390.w,
             alignment: Alignment.center,
             child: CachedNetworkImage(
-              imageUrl: _dailyCouplePostViewModel.dailyCouplePosts[index].partnerPostImageUrl!,
+              imageUrl: _dailyCouplePostViewModel.partnerPostImageUrl!,
               height: 220.w,
               width: 390.w,
-              progressIndicatorBuilder: (context, url, downloadProgress) =>
+              progressIndicatorBuilder: (_context, url, downloadProgress) =>
                   Center(
                     child: SizedBox(
                         width: 30.w,
@@ -281,7 +321,7 @@ class PostMainScreen extends StatelessWidget {
                         child: CircularProgressIndicator(value: downloadProgress.progress)
                     ),
                   ),
-              errorWidget: (context, url, error) => Icon(Icons.error),
+              errorWidget: (_context, url, error) => Icon(Icons.error),
               fit: BoxFit.cover,
             ).blurred(
               colorOpacity: 0.5,
@@ -328,19 +368,14 @@ class PostMainScreen extends StatelessWidget {
               width: 95.w,
             ),
             InkWell(
-              onTap: (){
-                PostViewModel _postViewModel = Provider.of<PostViewModel>(context);
-                _postViewModel.setPostId(_dailyCouplePostViewModel.dailyCouplePosts[index].partnerPostId!);
-                Navigator.pushNamed(context, "/postDetailScreen");
-              },
               child: Container(
                 width: 295.w,
                 height: 295.w * IMAGE_RATIO,
                 child: CachedNetworkImage(
-                  imageUrl: _dailyCouplePostViewModel.dailyCouplePosts[index].partnerPostImageUrl!,
+                  imageUrl: _dailyCouplePostViewModel.partnerPostImageUrl!,
                   width: 295.w,
                   height: 295.w * IMAGE_RATIO,
-                  progressIndicatorBuilder: (context, url, downloadProgress) =>
+                  progressIndicatorBuilder: (_context, url, downloadProgress) =>
                       Center(
                         child: SizedBox(
                             width: 30.w,
@@ -348,24 +383,29 @@ class PostMainScreen extends StatelessWidget {
                             child: CircularProgressIndicator(value: downloadProgress.progress)
                         ),
                       ),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
+                  errorWidget: (_context, url, error) => Icon(Icons.error),
                   fit: BoxFit.cover,
                 ),
               ),
+              onTap: () async {
+                PostViewModel _postViewModel = Provider.of<PostViewModel>(_context, listen: false);
+                _postViewModel.getPost(_dailyCouplePostViewModel.partnerPostId!);
+                Navigator.pushNamed(_context, "/postDetailScreen");
+              },
             ),
           ],
         ),
       )
           :
       Container(
-        child: _dailyCouplePostViewModel.dailyCouplePosts[index].partnerPostId == null  ?
+        child: _dailyCouplePostViewModel.partnerPostId == null  ?
         // user : true, partner : false
         /// Partner doesn't answer
         Container(
           height: 80.w,
           width: 120.w,
           alignment: Alignment.center,
-          child: index == 0 ?
+          child: _dailyCouplePostViewModel.isToday ?
           // today
           /// Provide function to alert partner to answer
           InkWell(
@@ -447,16 +487,16 @@ class PostMainScreen extends StatelessWidget {
               width: 95.w,
             ),
             InkWell(
-              onTap: (){
-                PostViewModel _postViewModel = Provider.of<PostViewModel>(context);
-                _postViewModel.setPostId(_dailyCouplePostViewModel.dailyCouplePosts[index].partnerPostId!);
-                Navigator.pushNamed(context, "/postDetailScreen");
+              onTap: () async {
+                PostViewModel _postViewModel = Provider.of<PostViewModel>(_context, listen: false);
+                _postViewModel.getPost(_dailyCouplePostViewModel.partnerPostId!);
+                Navigator.pushNamed(_context, "/postDetailScreen");
               },
               child: Container(
                 width: 295.w,
                 height: 295.w * IMAGE_RATIO,
                 child: CachedNetworkImage(
-                  imageUrl: _dailyCouplePostViewModel.dailyCouplePosts[index].partnerPostImageUrl!,
+                  imageUrl: _dailyCouplePostViewModel.partnerPostImageUrl!,
                   width: 295.w,
                   height: 295.w * IMAGE_RATIO,
                   progressIndicatorBuilder: (context, url, downloadProgress) =>

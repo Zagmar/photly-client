@@ -21,6 +21,8 @@ class PostInfoRepository {
       'postId' : postId,
     };
 
+    return Success(response: '{"postId": "1", "postUserId": "00", "postImageUrl": "https://item.kakaocdn.net/do/493188dee481260d5c89790036be0e66c37d537a8f2c6f426591be6b8dc7b36a", "postIsPublic": "false", "postEditTime": "2022-05-10 15:47:12.924688", "postText": "hello", "postEmotion": "1", "postWeather": "1", "postLocation": "1"}');
+
     // call API
     return await _remoteDataSource.getFromUri(POST, inputData);
   }
@@ -41,6 +43,8 @@ class PostInfoRepository {
       'postWeather' : postModel.postWeather.toString(),
     };
 
+    return Success(response: '{"postId": "1", "postUserId": "00", "postImageUrl": "https://item.kakaocdn.net/do/493188dee481260d5c89790036be0e66c37d537a8f2c6f426591be6b8dc7b36a", "postIsPublic": "false", "postEditTime": "2022-05-10 15:47:12.924688", "postText": "hello", "postEmotion": "1", "postWeather": "1", "postLocation": "1"}');
+
     // call API
     return await _remoteDataSource.postToUri(POST, inputData);
   }
@@ -59,6 +63,8 @@ class PostInfoRepository {
       'postIsPublic' : postModel.postIsPublic.toString(),
       'postWeather' : postModel.postWeather.toString(),
     };
+
+    return Success(response: '{"postId": "1", "postUserId": "00", "postImageUrl": "https://item.kakaocdn.net/do/493188dee481260d5c89790036be0e66c37d537a8f2c6f426591be6b8dc7b36a", "postIsPublic": "false", "postEditTime": "2022-05-10 15:47:12.924688", "postText": "hello", "postEmotion": "1", "postWeather": "1", "postLocation": "1"}');
 
     // call API
     return await _remoteDataSource.putToUri(POST, inputData);

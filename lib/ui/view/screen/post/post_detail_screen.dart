@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:couple_seflie_app/ui/view/widget/main_drawer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../ui_setting.dart';
+import '../../../view_model/daily_couple_post_view_model.dart';
 import '../../../view_model/post_view_model.dart';
 import '../../widget/post/post_appbar_widget.dart';
 import '../../widget/post/post_daily_info_widget.dart';
@@ -12,20 +14,27 @@ import '../../widget/post/post_daily_info_widget.dart';
 class PostDetailScreen extends StatelessWidget {
   PostDetailScreen({Key? key}) : super(key: key);
   late PostViewModel _postViewModel;
+  late BuildContext _context;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    _postViewModel = Provider.of<PostViewModel>(context);
+    print("3호출");
+    _context = context;
+    DailyCouplePostViewModel _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(_context);
+    _dailyCouplePostViewModel.setScreenToDetail();
+    _postViewModel = Provider.of<PostViewModel>(_context);
     return ChangeNotifierProvider(
       create: (_) => PostViewModel(),
-      child: postDetailMainWidget(context),
+      child: postDetailMainWidget(),
     );
   }
 
-  Widget postDetailMainWidget(BuildContext context){
-    FocusScope.of(context).unfocus();
+  Widget postDetailMainWidget(){
+    FocusScope.of(_context).unfocus();
     return Scaffold(
-      body: SafeArea(
+      key: _scaffoldKey,
+      body: Container(
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
@@ -33,9 +42,9 @@ class PostDetailScreen extends StatelessWidget {
           child: Container(
             child: Column(
                 children: <Widget>[
-                  postAppBarWidget("/postDetailScreen", context),
-                  postDailyInfoWidget("/postDetailScreen", context),
-                  postDetailWidget(context),
+                  postAppBarWidget(_context, _scaffoldKey),
+                  postDailyInfoWidget(_context),
+                  postDetailWidget(),
                 ]
             ),
           ),
@@ -44,7 +53,7 @@ class PostDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget postDetailWidget(BuildContext context) {
+  Widget postDetailWidget() {
     return Container(
       margin: EdgeInsets.only(bottom: 5.w),
       child: Column(
@@ -56,7 +65,7 @@ class PostDetailScreen extends StatelessWidget {
             child: InkWell(
               onTap: (){
                 _postViewModel.setTempImageUrl(_postViewModel.post.postImageUrl);
-                Navigator.pushNamed(context, "/largeImageScreen");
+                Navigator.pushNamed(_context, "/largeImageScreen");
               },
               child: CachedNetworkImage(
                 imageUrl: _postViewModel.post.postImageUrl,
@@ -155,7 +164,7 @@ class PostDetailScreen extends StatelessWidget {
                       ),
                       Text(
                         // 오후 1시 30분
-                        DateFormat(TIME_FORMAT, krLocale).format(_postViewModel.post.postEditTime), // temp
+                        _postViewModel.dateTimeNow,
                         style: TextStyle(
                             fontSize: 9.w,
                             fontWeight: FontWeight.w400,

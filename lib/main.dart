@@ -6,7 +6,7 @@ import 'package:couple_seflie_app/ui/view/screen/login/find_pw_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/login/login_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/login/logout_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_edit_screen.dart';
-import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
+import 'package:couple_seflie_app/ui/view/screen/post/daily_couple_post_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_detail_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register/register_anniversary_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register/register_partner_screen.dart';
@@ -15,10 +15,10 @@ import 'package:couple_seflie_app/ui/view/screen/register/register_username_scre
 import 'package:couple_seflie_app/ui/view_model/daily_couple_post_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/login_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/user_view_model.dart';
-import 'package:couple_seflie_app/ui/view_model/post_daily_info_widget_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/register_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'amplifyconfiguration.dart';
@@ -28,6 +28,9 @@ String _initialRoute = "";
 late String username;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  await ScreenUtil.ensureScreenSize();
+
   // Add the Amplify category plugins, plugins should
   // be added here in order for configuration to work
   // DO NOT add plugins that you haven't configured via
@@ -53,7 +56,7 @@ Future<void> main() async {
 
   final AuthFlowStatus authFlowStatus = await AuthService().checkAuthStatusService();
   if(authFlowStatus == AuthFlowStatus.session) {
-    _initialRoute = "/mainScreen";
+    _initialRoute = "/dailyCouplePostScreen";
   }
   else{
     _initialRoute = "/loginScreen";
@@ -70,8 +73,6 @@ Future<void> main() async {
           create: (BuildContext context) => RegisterViewModel()),
       ChangeNotifierProvider(
           create: (BuildContext context) => PostViewModel()),
-      ChangeNotifierProvider(
-          create: (BuildContext context) => PostDailyInfoWidgetViewModel()),
       ChangeNotifierProvider(
           create: (BuildContext context) => DailyCouplePostViewModel()),
     ],
@@ -99,8 +100,6 @@ class MyApp extends StatelessWidget {
             scaffoldBackgroundColor: Color(0xFFFFFFFF),
           ),
           builder: (context, child) {
-            ScreenUtil.init(context);
-            // ScreenUtil.setContext(context);
             return MediaQuery(
               data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
               child: child!,
@@ -108,8 +107,7 @@ class MyApp extends StatelessWidget {
           },
           initialRoute: _initialRoute,
           routes: {
-            // '/mainScreen': (context) => PostMainScreen(),
-            '/mainScreen': (context) => LogoutScreen(),
+            '/dailyCouplePostScreen': (context) => DailyCouplePostScreen(),
             '/postEditScreen': (context) => PostEditScreen(),
             '/postDetailScreen': (context) => PostDetailScreen(),
             '/largeImageScreen': (context) => LargeImageScreen(),
@@ -131,7 +129,7 @@ class MyApp extends StatelessWidget {
     _amplify.addPlugins([AmplifyAuthCognito()]);
     final AuthFlowStatus authFlowStatus = await AuthService().checkAuthStatusService();
     if(authFlowStatus == AuthFlowStatus.session) {
-      _initialRoute = "/mainScreen";
+      _initialRoute = "/dailyCouplePostScreen";
     }
     else{
       _initialRoute = "/loginScreen";
