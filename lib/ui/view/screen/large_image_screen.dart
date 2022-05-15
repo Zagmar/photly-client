@@ -11,13 +11,6 @@ class LargeImageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _postViewModel = Provider.of<PostViewModel>(context);
-    return ChangeNotifierProvider(
-      create: (_) => PostViewModel(),
-      child: largeImageScreen(context),
-    );
-  }
-
-  Widget largeImageScreen(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xFF000000),

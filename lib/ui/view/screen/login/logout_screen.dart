@@ -12,13 +12,6 @@ class LogoutScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     _context = context;
     _userViewModel = Provider.of<UserViewModel>(_context);
-    return ChangeNotifierProvider(
-      create: (_) => UserViewModel(),
-      child: logoutScreen(),
-    );
-  }
-
-  Widget logoutScreen() {
     return Scaffold(
       backgroundColor: Theme.of(_context).scaffoldBackgroundColor,
       body: Center(

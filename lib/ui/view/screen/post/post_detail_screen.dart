@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
 import 'package:couple_seflie_app/ui/view/widget/main_drawer_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,42 +12,49 @@ import '../../../view_model/post_view_model.dart';
 import '../../widget/post/post_appbar_widget.dart';
 import '../../widget/post/post_daily_info_widget.dart';
 
+// temp
+String USER_ID = "rjsgy0815@naver.com";
+
 class PostDetailScreen extends StatelessWidget {
-  PostDetailScreen({Key? key}) : super(key: key);
   late PostViewModel _postViewModel;
-  late BuildContext _context;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  PostDetailScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    print("3호출");
-    _context = context;
-    DailyCouplePostViewModel _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(_context);
-    _dailyCouplePostViewModel.setScreenToDetail();
-    _postViewModel = Provider.of<PostViewModel>(_context);
-    return ChangeNotifierProvider(
-      create: (_) => PostViewModel(),
-      child: postDetailMainWidget(),
-    );
-  }
-
-  Widget postDetailMainWidget(){
-    FocusScope.of(_context).unfocus();
+    _postViewModel = Provider.of<PostViewModel>(context);
     return Scaffold(
-      key: _scaffoldKey,
-      body: Container(
+      body: SafeArea(
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
           primary: true,
-          child: Container(
-            child: Column(
-                children: <Widget>[
-                  postAppBarWidget(_context, _scaffoldKey),
-                  postDailyInfoWidget(_context),
-                  postDetailWidget(),
-                ]
-            ),
+          child: Column(
+              children: <Widget>[
+                PostScreensAppbar(),
+                PostDailyInfoWidget(
+                  topButton: IconButtonWidget(
+                    iconData: Icons.save_alt_outlined,
+                    onTap: (){
+                      FocusScope.of(context).unfocus();
+                      // temp
+                      /// 사진 다운로드
+                    },
+                  ),
+                  // bottomButton: _dailyCouplePostViewModel.isUserDone == true && _dailyCouplePostViewModel.isToday == true ?
+                  bottomButton: _postViewModel.post.postUserId == USER_ID && _postViewModel.post.postEditTime.year == DateTime.now().year && _postViewModel.post.postEditTime.month == DateTime.now().month && _postViewModel.post.postEditTime.day == DateTime.now().day ?
+                  TextButtonWidget(
+                      onTap: (){
+                        FocusScope.of(context).unfocus();
+                        // temp
+                        Navigator.popAndPushNamed(context, '/postEditScreen');
+                      },
+                      buttonText: "편집"
+                  )
+                      :
+                  Container(),
+                ),
+                postDetailWidget(),
+              ]
           ),
         ),
       ),
@@ -65,7 +73,7 @@ class PostDetailScreen extends StatelessWidget {
             child: InkWell(
               onTap: (){
                 _postViewModel.setTempImageUrl(_postViewModel.post.postImageUrl);
-                Navigator.pushNamed(_context, "/largeImageScreen");
+                //Navigator.pushNamed(context, "/largeImageScreen");
               },
               child: CachedNetworkImage(
                 imageUrl: _postViewModel.post.postImageUrl,
@@ -118,9 +126,9 @@ class PostDetailScreen extends StatelessWidget {
                           child: Text(
                             _postViewModel.post.postLocation!,
                             style: TextStyle(
-                              fontSize: 13.w,
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xFF000000)
+                                fontSize: 13.w,
+                                fontWeight: FontWeight.w400,
+                                color: Color(0xFF000000)
                             ),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1,
@@ -157,9 +165,9 @@ class PostDetailScreen extends StatelessWidget {
                       Text(
                         _postViewModel.post.postText ?? "",
                         style: TextStyle(
-                          fontSize: 16.w,
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xFF000000)
+                            fontSize: 16.w,
+                            fontWeight: FontWeight.w400,
+                            color: Color(0xFF000000)
                         ),
                       ),
                       Text(

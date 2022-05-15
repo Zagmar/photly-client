@@ -17,6 +17,7 @@ class PostViewModel extends ChangeNotifier {
   late DateTime _dateTimeNow;
   File? _postImage;
   late String _tempImageUrl;
+  String? _postText;
 
   // temp
   late PostModel _post = PostModel(postId: _postId, postUserId: "userId", postImageUrl: "", postEditTime: DateTime.now(), postIsPublic: false);
@@ -33,6 +34,20 @@ class PostViewModel extends ChangeNotifier {
   // set temp image
   setTempImageUrl(String imageUrl){
     _tempImageUrl = imageUrl;
+  }
+
+  setPostText(String postText){
+    _post.postText = postText;
+    notifyListeners();
+  }
+
+  setPostLocation(String location) {
+    _post.postLocation = location;
+    notifyListeners();
+  }
+  setPostWeather(int nWeather) {
+    _post.postWeather = nWeather;
+    notifyListeners();
   }
 
   // set postId

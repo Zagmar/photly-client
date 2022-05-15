@@ -1,18 +1,18 @@
+import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
 
-import '../../../view_model/daily_couple_post_view_model.dart';
+// Custom Appbars for post screens
 
-/// Main Appbar
-/// 기존 앱바는 스크롤시에 사라지지 않아 Widget으로 만들어 사용
-Widget postAppBarWidget(BuildContext context, _scaffoldKey) {
-  final DailyCouplePostViewModel _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context);
-  print("2호출");
-  print(_dailyCouplePostViewModel.screen);
-  return ChangeNotifierProvider(
-    create: (_) => DailyCouplePostViewModel(),
-    child: Container(
+class PostAppbarModel extends StatelessWidget {
+  final Widget? leadButton;
+  final Widget? actionButton;
+  const PostAppbarModel({Key? key, this.leadButton, this.actionButton}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 390.w,
       height: 90.w,
       padding: EdgeInsets.only(left: 20.w),
       child: Row(
@@ -20,24 +20,7 @@ Widget postAppBarWidget(BuildContext context, _scaffoldKey) {
           Container(
             width: 275.w,
             alignment: Alignment.centerLeft,
-            child: _dailyCouplePostViewModel.screen == "/dailyCouplePostScreen" ?
-            IconButton(
-              padding: EdgeInsets.only(left: 0, top: 0),
-              constraints: BoxConstraints(),
-              icon: Icon(
-                Icons.menu,
-                color: Color(0xFF667080),
-                size: 24.w,
-              ),
-              onPressed: () {
-                FocusScope.of(context).unfocus();
-                _scaffoldKey.currentState?.openDrawer();
-                // temp
-                /// show menu
-              },
-            )
-                :
-            Container(),
+            child: leadButton
           ),
           Container(
             color: Color(0xFF000000),
@@ -45,23 +28,68 @@ Widget postAppBarWidget(BuildContext context, _scaffoldKey) {
           ),
           Container(
             width: 94.w,
-            child: _dailyCouplePostViewModel.screen == "/dailyCouplePostScreen" ?
-            Container()
-                :
-            IconButton(
-              icon: Icon(
-                  Icons.clear,
-                  size: 37.w,
-                  color: Color(0xFF666666)
-              ),
-              onPressed: () {
-                FocusScope.of(context).unfocus();
-                Navigator.of(context).pop((route) => route.settings.name == "/dailyCouplePostScreen");
-              },
-            ),
+            child: actionButton
           ),
         ],
       ),
-    ),
-  );
+    );
+  }
+}
+
+class PostMainScreenAppbar extends StatelessWidget {
+  final GlobalKey<ScaffoldState> scaffoldKey;
+  const PostMainScreenAppbar({Key? key, required this.scaffoldKey}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    print("postAppbar 실행");
+
+    return PostAppbarModel(
+      leadButton: SingleButton(
+        icon: Icons.menu,
+        onTap: () {
+          FocusScope.of(scaffoldKey.currentContext!).unfocus();
+          scaffoldKey.currentState?.openDrawer();
+        },
+      ),
+    );
+  }
+}
+
+class PostScreensAppbar extends StatelessWidget {
+  const PostScreensAppbar({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return PostAppbarModel(
+      actionButton: SingleButton(
+        icon: Icons.clear,
+        onTap: () {
+          Navigator.of(context).pop((route) => PostMainScreen());
+        },
+      ),
+    );
+  }
+}
+
+class SingleButton extends StatelessWidget {
+  final IconData icon;
+  final Function() onTap;
+  const SingleButton({Key? key, required this.icon, required this.onTap}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      child: SizedBox(
+        height: 50.w,
+        width: 50.w,
+        child: Icon(
+          icon,
+          color: Color(0xFF667080),
+          size: 30.w,
+        ),
+      ),
+      onTap: onTap,
+    );
+  }
 }

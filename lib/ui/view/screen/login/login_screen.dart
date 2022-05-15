@@ -1,31 +1,28 @@
+import 'package:couple_seflie_app/ui/view/widget/route_button_widgets.dart';
 import 'package:couple_seflie_app/ui/view_model/login_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
+import '../../widget/text_form_field.dart';
+import '../../widget/top_widgets.dart';
+
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
   late LoginViewModel _loginViewModel;
-  late BuildContext _context;
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-    _context = context;
-    _loginViewModel = Provider.of<LoginViewModel>(_context);
-    return ChangeNotifierProvider(
-      create: (_) => LoginViewModel(),
-      child: loginScreen(),
-    );
-  }
-
-  Widget loginScreen() {
+    _loginViewModel = Provider.of<LoginViewModel>(context);
     return GestureDetector(
       onTap: (){
-        FocusScope.of(_context).unfocus();
+        FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-          backgroundColor: Theme.of(_context).scaffoldBackgroundColor,
-          body: Container(
+          key: _scaffoldKey,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          body: SafeArea(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -35,14 +32,16 @@ class LoginScreen extends StatelessWidget {
                   padding: EdgeInsetsDirectional.fromSTEB(35.w, 20.w, 35.w, 20.w),
                   child: Column(
                     children: <Widget>[
-                      topWidget(),
-                      Padding(padding: EdgeInsets.symmetric(vertical: 20.w)),
-                      loginWidget(),
+                      OneBlockTop(topText: "서로 남기는\n하루 한장\n시작해볼까요", bottomText: "로그인을 진행합니다",),
+                      LoginFormWidget(loginViewModel: _loginViewModel),
                     ],
                   ),
                 ),
-                MediaQuery.of(_context).viewInsets.bottom <= 50 ?
-                loginButtonWidget()
+                MediaQuery.of(context).viewInsets.bottom <= 50 ?
+                LargeButtonWidget(
+                    onTap: loginButtonFucntion(_scaffoldKey),
+                    buttonText: "로그인"
+                )
                     :
                 Container()
               ],
@@ -51,6 +50,34 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
+
+  loginButtonFucntion(GlobalKey _scaffoldKey) async {
+    FocusScope.of(_scaffoldKey.currentContext!).unfocus();
+    !_loginViewModel.isLoginOk ?
+    ScaffoldMessenger(
+      child: SnackBar(
+        content: Text(
+            _loginViewModel.idErrorMessage ?? _loginViewModel.pwErrorMessage ?? '입력된 정보가 올바르지 않습니다'
+        ),
+      ),
+    )
+        :
+    await _loginViewModel.doLogin() ?
+    {
+      _loginViewModel.clear(),
+      Navigator.pushNamedAndRemoveUntil(_scaffoldKey.currentContext!, "/postMainScreen", (route) => false)
+    }
+        :
+    ScaffoldMessenger.of(_scaffoldKey.currentContext!).showSnackBar(
+      SnackBar(
+        content: Text(
+            _loginViewModel.loginFailMessage!
+        ),
+      ),
+    );
+  }
+
+  /*
   /// login Button
   Widget loginButtonWidget() {
     return InkWell(
@@ -68,7 +95,7 @@ class LoginScreen extends StatelessWidget {
         await _loginViewModel.doLogin() ?
         {
           _loginViewModel.clear(),
-          Navigator.pushNamedAndRemoveUntil(_context, "/dailyCouplePostScreen", (route) => false)
+          Navigator.pushNamedAndRemoveUntil(_context, "/postMainScreen", (route) => false)
         }
             :
         ScaffoldMessenger.of(_context).showSnackBar(
@@ -131,7 +158,15 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget loginWidget() {
+   */
+}
+
+class LoginFormWidget extends StatelessWidget {
+  final LoginViewModel loginViewModel;
+  const LoginFormWidget({Key? key, required this.loginViewModel}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       width: 320.w,
       height: 200.w,
@@ -144,6 +179,25 @@ class LoginScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
+              TextInputWidget(
+                hintText: "아이디 입력",
+                maxLines: 1,
+                obscureText: false,
+                keyboardType: TextInputType.emailAddress,
+                onChanged: (value){
+                  loginViewModel.checkEmail(value);
+                },
+              ),
+              TextInputWidget(
+                hintText: "비밀번호 입력",
+                maxLines: 1,
+                obscureText: true,
+                keyboardType: TextInputType.visiblePassword,
+                onChanged: (value){
+                  loginViewModel.checkPassword(value);
+                },
+              ),
+              /*
               TextFormField(
                 decoration: InputDecoration(
                   hintText: "아이디 입력",
@@ -156,16 +210,16 @@ class LoginScreen extends StatelessWidget {
                 maxLines: 1,
                 keyboardType: TextInputType.emailAddress,
                 onFieldSubmitted: (_){
-                  FocusScope.of(_context).unfocus();
+                  FocusScope.of(context).unfocus();
                 },
                 obscureText: false,
                 validator: (_) {
-                  if(_loginViewModel.idErrorMessage != null) {
-                    return _loginViewModel.idErrorMessage;
+                  if(loginViewModel.idErrorMessage != null) {
+                    return loginViewModel.idErrorMessage;
                   }
                 },
                 onChanged: (value){
-                  _loginViewModel.checkEmail(value);
+                  loginViewModel.checkEmail(value);
                 },
               ),
               TextFormField(
@@ -180,18 +234,20 @@ class LoginScreen extends StatelessWidget {
                 maxLines: 1,
                 keyboardType: TextInputType.visiblePassword,
                 onFieldSubmitted: (_){
-                  FocusScope.of(_context).unfocus();
+                  FocusScope.of(context).unfocus();
                 },
                 obscureText: true,
                 validator: (_) {
-                  if(_loginViewModel.pwErrorMessage != null) {
-                    return _loginViewModel.pwErrorMessage;
+                  if(loginViewModel.pwErrorMessage != null) {
+                    return loginViewModel.pwErrorMessage;
                   }
                 },
                 onChanged: (value){
-                  _loginViewModel.checkPassword(value);
+                  loginViewModel.checkPassword(value);
                 },
               ),
+
+               */
             ],
           ),
           /// Other Functions
@@ -199,71 +255,72 @@ class LoginScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              TextButton(
+              SingleTextButton(
+                  buttonText: "아이디 찾기",
                   onPressed: (){
-                    FocusScope.of(_context).unfocus();
-                    _loginViewModel.clear();
-                    Navigator.pushNamed(_context, "/findIdScreen");
+                    FocusScope.of(context).unfocus();
+                    loginViewModel.clear();
+                    Navigator.pushNamed(context, "/findIdScreen");
                   },
-                  child: Text(
-                    "아이디 찾기",
-                    style: TextStyle(
-                      fontSize: 14.w,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF000000).withOpacity(0.5),
-                    ),
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                  )
               ),
-              Container(
-                width: 1.w,
-                height: 17.w,
-                color: Color(0xFF808080),
-              ),
-              TextButton(
+              BorderBetweenTextButtons(),
+              SingleTextButton(
+                  buttonText: "비밀번호 찾기",
                   onPressed: (){
-                    FocusScope.of(_context).unfocus();
-                    _loginViewModel.clear();
-                    Navigator.pushNamed(_context, "/findPwScreen");
+                    FocusScope.of(context).unfocus();
+                    loginViewModel.clear();
+                    Navigator.pushNamed(context, "/findPwScreen");
                   },
-                  child: Text(
-                    "비밀번호 찾기",
-                    style: TextStyle(
-                      fontSize: 14.w,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF000000).withOpacity(0.5),
-                    ),
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                  )
               ),
-              Container(
-                width: 1.w,
-                height: 17.w,
-                color: Color(0xFF808080),
-              ),
-              TextButton(
-                  onPressed: (){
-                    FocusScope.of(_context).unfocus();
-                    _loginViewModel.clear();
-                    Navigator.pushNamed(_context, "/registerScreen");
-                  },
-                  child: Text(
-                    "회원가입",
-                    style: TextStyle(
-                      fontSize: 14.w,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF000000).withOpacity(0.5),
-                    ),
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                  )
-              ),
+              BorderBetweenTextButtons(),
+              SingleTextButton(
+                buttonText: "회원가입",
+                onPressed: (){
+                  FocusScope.of(context).unfocus();
+                  loginViewModel.clear();
+                  Navigator.pushNamed(context, "/registerScreen");
+                },
+              )
             ],
           )
         ],
       ),
+    );
+  }
+}
+
+class SingleTextButton extends StatelessWidget {
+  final String buttonText;
+  final Function onPressed;
+  const SingleTextButton({Key? key, required this.buttonText, required this.onPressed}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+        onPressed: () => onPressed,
+        child: Text(
+          buttonText,
+          style: TextStyle(
+            fontSize: 14.w,
+            fontWeight: FontWeight.w400,
+            color: Color(0xFF000000).withOpacity(0.5),
+          ),
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.ellipsis,
+        )
+    );
+  }
+}
+
+class BorderBetweenTextButtons extends StatelessWidget {
+  const BorderBetweenTextButtons({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 1.w,
+      height: 17.w,
+      color: Color(0xFF808080),
     );
   }
 }

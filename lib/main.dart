@@ -4,20 +4,23 @@ import 'package:couple_seflie_app/ui/view/screen/large_image_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/login/find_id_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/login/find_pw_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/login/login_screen.dart';
-import 'package:couple_seflie_app/ui/view/screen/login/logout_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_edit_screen.dart';
-import 'package:couple_seflie_app/ui/view/screen/post/daily_couple_post_screen.dart';
+import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_detail_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register/register_anniversary_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register/register_partner_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register/register_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register/register_username_screen.dart';
+import 'package:couple_seflie_app/ui/view/widget/loading_widget.dart';
+import 'package:couple_seflie_app/ui/view/widget/main_drawer_widget.dart';
 import 'package:couple_seflie_app/ui/view_model/daily_couple_post_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/login_view_model.dart';
-import 'package:couple_seflie_app/ui/view_model/user_view_model.dart';
+import 'package:couple_seflie_app/ui/view_model/post_daily_info_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/register_view_model.dart';
+import 'package:couple_seflie_app/ui/view_model/user_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -25,6 +28,7 @@ import 'amplifyconfiguration.dart';
 import 'data/repository/auth_service.dart';
 
 String _initialRoute = "";
+bool _isLogined = false;
 late String username;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,28 +60,26 @@ Future<void> main() async {
 
   final AuthFlowStatus authFlowStatus = await AuthService().checkAuthStatusService();
   if(authFlowStatus == AuthFlowStatus.session) {
-    _initialRoute = "/dailyCouplePostScreen";
+    _initialRoute = "/postMainScreen";
+    _isLogined = true;
   }
   else{
     _initialRoute = "/loginScreen";
+    _isLogined = false;
   }
 
-
+  print("초기 설정 준비");
   runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(
-          create: (BuildContext context) => LoginViewModel()),
-      ChangeNotifierProvider(
-          create: (BuildContext context) => UserViewModel()), // count_provider.dart
-      ChangeNotifierProvider(
-          create: (BuildContext context) => RegisterViewModel()),
-      ChangeNotifierProvider(
-          create: (BuildContext context) => PostViewModel()),
-      ChangeNotifierProvider(
-          create: (BuildContext context) => DailyCouplePostViewModel()),
-    ],
-    child: MyApp(),
-  ));
+      providers: [
+        ChangeNotifierProvider(create: (context)=> DailyCouplePostViewModel(),),
+        ChangeNotifierProvider(create: (context)=> PostDailyInfoViewModel(),),
+        ChangeNotifierProvider(create: (context)=> PostViewModel()),
+        ChangeNotifierProvider(create: (context) => UserViewModel()),
+        ChangeNotifierProvider(create: (context) => LoginViewModel()),
+        ChangeNotifierProvider(create: (context) => RegisterViewModel()),
+      ],
+      child: MyApp())
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -85,6 +87,74 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("MyApp 실행");
+    return ScreenUtilInit(
+        splitScreenMode: false,
+        designSize: const Size(390, 840),
+        builder: (_) => MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Photly',
+          theme: ThemeData(
+            fontFamily: 'Noto_Sans_KR',
+            brightness: Brightness.light,
+            backgroundColor: Color(0xFFFFFFFF),
+            primaryColor: Colors.blueGrey,
+            primarySwatch: Colors.blueGrey,
+            scaffoldBackgroundColor: Color(0xFFFFFFFF),
+          ),
+          home: _isLogined ?
+          PostMainScreen()
+              :
+          LoadingScreen(),
+          routes: {
+            '/postMainScreen': (context) => PostMainScreen(),
+            '/postEditScreen': (context) => PostEditScreen(),
+            '/postDetailScreen': (context) => PostDetailScreen(),
+            '/largeImageScreen': (context) => LargeImageScreen(),
+            '/loginScreen': (context) => LoginScreen(),
+            '/findIdScreen': (context) => FindIdScreen(),
+            '/findPwScreen': (context) => FindPwScreen(),
+            '/registerScreen': (context) => RegisterScreen(),
+            '/registerUsernameScreen': (context) => RegisterUsernameScreen(),
+            '/registerPartnerScreen': (context) => RegisterPartnerScreen(),
+            '/registerAnniversaryScreen': (context) => RegisterAnniversaryScreen(),
+          },
+        )
+    );
+  }
+
+  /*
+  // Init AWS amplify
+  void _configureAmplify() async {
+    _amplify.addPlugins([AmplifyAuthCognito()]);
+    final AuthFlowStatus authFlowStatus = await AuthService().checkAuthStatusService();
+    if(authFlowStatus == AuthFlowStatus.session) {
+      _initialRoute = "/postMainScreen";
+    }
+    else{
+      _initialRoute = "/loginScreen";
+    }
+    try {
+      await _amplify.configure(amplifyconfig);
+      print('Successfully configured Amplify 🎉');
+    } on AmplifyAlreadyConfiguredException {
+      print("Amplify was already configured. Looks like app restarted on android.");
+    } catch (e) {
+      print('Could not configure Amplify ☠️');
+    }
+  }
+
+   */
+}
+/*
+class MyApp extends StatelessWidget {
+  late DailyCouplePostViewModel _dailyCouplePostViewModel;
+  MyApp({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    print("실행 한 번만");
+    print("초기 설정 완료");
     return ScreenUtilInit(
         splitScreenMode: false,
         designSize: const Size(390, 840),
@@ -107,7 +177,7 @@ class MyApp extends StatelessWidget {
           },
           initialRoute: _initialRoute,
           routes: {
-            '/dailyCouplePostScreen': (context) => DailyCouplePostScreen(),
+            '/postMainScreen': (context) => PostMainScreen(),
             '/postEditScreen': (context) => PostEditScreen(),
             '/postDetailScreen': (context) => PostDetailScreen(),
             '/largeImageScreen': (context) => LargeImageScreen(),
@@ -129,7 +199,7 @@ class MyApp extends StatelessWidget {
     _amplify.addPlugins([AmplifyAuthCognito()]);
     final AuthFlowStatus authFlowStatus = await AuthService().checkAuthStatusService();
     if(authFlowStatus == AuthFlowStatus.session) {
-      _initialRoute = "/dailyCouplePostScreen";
+      _initialRoute = "/postMainScreen";
     }
     else{
       _initialRoute = "/loginScreen";
@@ -146,3 +216,5 @@ class MyApp extends StatelessWidget {
 
    */
 }
+
+ */

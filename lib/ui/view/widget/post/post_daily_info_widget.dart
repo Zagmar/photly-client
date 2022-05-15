@@ -1,41 +1,44 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:couple_seflie_app/data/model/daily_couple_post_model.dart';
-import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
+import 'package:couple_seflie_app/ui/ui_setting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../data/model/daily_couple_post_model.dart';
 import '../../../view_model/daily_couple_post_view_model.dart';
 
 /// Screen Split Ratio
 /// 295 : 1 : 94
 
 /// Top widgets: date, suggested question, emoji
-Widget postDailyInfoWidget(BuildContext context) {
-  final PostViewModel _postViewModel = Provider.of<PostViewModel>(context);
-  final DailyCouplePostViewModel _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context);
-  return ChangeNotifierProvider(
-    create: (_) => DailyCouplePostViewModel(),
-    child: Container(
-      width: 390.w,
+class PostDailyInfoWidget extends StatelessWidget {
+  final Widget? topButton;
+  final Widget? bottomButton;
+
+  const PostDailyInfoWidget({Key? key, this.topButton, this.bottomButton}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    print("PostDailyInfoWidget 실행");
+    final DailyCouplePostViewModel _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context);
+    return Container(
+      width: FULL_WIDTH.w,
       height: 190.w,
-      padding: EdgeInsets.only(left: 20.w),
       child: Row(
         children: <Widget>[
-          /// Date
           Container(
-            width: 275.w,
+            width: MAIN_SPACE_WIDTH.w,
             margin: EdgeInsets.only(bottom: 30.w),
-            padding: EdgeInsets.only(right: 20.w),
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                /// 날짜 정보
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    // Date
                     Container(
                       width: 48.w,
                       height: 90.w,
@@ -147,113 +150,63 @@ Widget postDailyInfoWidget(BuildContext context) {
           ),
           Container(
             color: Color(0xFF000000),
-            width: 1.w,
+            width: BORDER_WIDTH.w,
           ),
           Container(
-            width: 94.w,
-            alignment: Alignment.bottomCenter,
-            padding: EdgeInsets.only(bottom: 40.w),
-            child: _dailyCouplePostViewModel.screen == "/postEditScreen" ?
-            /// PostEditScreen -> Save Post Button
-            Container(
-              width: 34.w,
-              height: 24.w,
-              child: TextButton(
-                onPressed: (){
-                  FocusScope.of(context).unfocus();
-                  print("저장");
-                  if(_postViewModel.postId == ""){
-                    _postViewModel.createPost(_postViewModel.post);
-                  }
-                  else{
-                    _postViewModel.editPost(_postViewModel.post);
-                  }
-                  // temp
-                  Navigator.popAndPushNamed(context, '/postDetailScreen');
-                },
-                style: TextButton.styleFrom(
-                  minimumSize: Size.zero, // Set this
-                  padding: EdgeInsets.zero, // and this
-                ),
-                child: Text(
-                  "저장",
-                  style: TextStyle(
-                      fontSize: 18.w,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF000000)
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            )
-                :
-            _dailyCouplePostViewModel.screen != "/postDetailScreen" ?
-            /// DailyCouplePostScreen -> Empty
-            Container()
-                :
-            /// PostDetailScreen ->
-            _dailyCouplePostViewModel.isMyPost == true && _dailyCouplePostViewModel.isToday == true ?
-            /// is my post & is today -> Download & Edit Button
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                IconButton(
-                  onPressed: (){
-                    FocusScope.of(context).unfocus();
-                    // temp
-                    /// 사진 다운로드
-                  },
-                  icon: Icon(
-                    Icons.save_alt_outlined,
-                    size: 37.w,
-                    color: Color(0xFF666666),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 35.w),
-                  width: 34.w,
-                  height: 24.w,
-                  child: TextButton(
-                    onPressed: (){
-                      FocusScope.of(context).unfocus();
-                      // temp
-                      Navigator.popAndPushNamed(context, '/postEditScreen');
-                    },
-                    style: TextButton.styleFrom(
-                      minimumSize: Size.zero, // Set this
-                      padding: EdgeInsets.zero, // and this
-                    ),
-                    child: Text(
-                      "편집",
-                      style: TextStyle(
-                          fontSize: 18.w,
-                          fontWeight: FontWeight.w400,
-                          color: Color(0xFF000000)
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                )
-              ],
-            )
-                :
-            /// is not my post | is not today -> Download Button
-            IconButton(
-              onPressed: (){
-                FocusScope.of(context).unfocus();
-                // temp
-                /// 사진 다운로드
-              },
-              icon: Icon(
-                Icons.save_alt_outlined,
-                size: 37.w,
-                color: Color(0xFF666666),
-              ),
-            ),
+              width: EMPTY_SPACE_WIDTH.w,
+              alignment: Alignment.bottomCenter,
+              padding: EdgeInsets.only(bottom: 40.w),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  topButton ?? Container(),
+                  bottomButton ?? Container(),
+                ],
+              )
           ),
         ],
       ),
-    ),
-  );
+    );
+  }
+}
+
+class IconButtonWidget extends StatelessWidget {
+  final Function onTap;
+  final IconData iconData;
+  const IconButtonWidget({Key? key, required this.onTap, required this.iconData}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => onTap,
+      child: Icon(
+        iconData,
+        size: 24.w,
+        color: Color(0xFF666666),
+      ),
+    );
+  }
+}
+
+class TextButtonWidget extends StatelessWidget {
+  final Function onTap;
+  final String buttonText;
+  const TextButtonWidget({Key? key, required this.onTap, required this.buttonText}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => onTap,
+      child: Text(
+        buttonText,
+        style: TextStyle(
+            fontSize: 18.w,
+            fontWeight: FontWeight.w400,
+            color: Color(0xFF000000)
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
 }

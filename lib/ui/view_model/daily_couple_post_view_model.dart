@@ -1,79 +1,64 @@
 
 import 'package:couple_seflie_app/data/model/daily_couple_post_model.dart';
 import 'package:couple_seflie_app/data/repository/daily_couple_post_repository.dart';
-import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
 import 'package:flutter/material.dart';
 
 import '../../data/datasource/remote_datasource.dart';
 
+const USER_ID = "rjsgy0815@naver.com"; // temp
+
 class DailyCouplePostViewModel extends ChangeNotifier {
-  bool _loading = true;
-  String? _errorMessage;
-  late String _screen;
-
   final DailyCouplePostRepository _dailyCouplePostRepository = DailyCouplePostRepository();
-  final int _nDailyCouplePosts = 5;
+  // List of name of months in English
+  List<String> months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  List<DailyCouplePostModel> _dailyCouplePosts = []; // Data list for page view
 
-  String userId = "rjsgy0815@naver.com"; // temp
-  List<DailyCouplePostModel> _dailyCouplePosts = [];
+  final int _nDailyCouplePosts = 5; // Number of request data via API
+  String? _errorMessage; // Error message when fail to load data through repository
+  int? _index;
+
+  bool _loading = true; // Set state to load screen until true (default : true)
 
   late String _year;
   late String _month;
   late String _day;
   late int _questionType;
   late String _questionText;
-  late bool _isToday;
-  late bool _isMyPost;
-
-  String? _userPostId;
-  String? _userPostImageUrl;
-  String? _partnerPostId;
-  String? _partnerPostImageUrl;
   String? _questionImageUrl;
-  List<String> months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
   List<DailyCouplePostModel> get dailyCouplePosts => _dailyCouplePosts;
   bool get loading => _loading;
+  int? get index => _index;
 
-  String get screen => _screen;
   String get year => _year;
   String get month => _month;
   String get day => _day;
   int get questionType => _questionType;
   String get questionText => _questionText;
   String? get questionImageUrl => _questionImageUrl;
-  bool get isToday => _isToday;
-  bool get isMyPost => _isMyPost;
 
-  String? get userPostId => _userPostId;
-  String? get userPostImageUrl => _userPostImageUrl;
-  String? get partnerPostId => _partnerPostId;
-  String? get partnerPostImageUrl => _partnerPostImageUrl;
-
-  // set default of mainScreen
-  DailyCouplePostViewModel() {
+  // Init mainScreen
+  Future<void> initDailyCouplePosts() async {
+    print("DailyCouplePostViewModel 생성자 실행");
+    print(_dailyCouplePosts.length.toString() + "개 있음");
     if(_dailyCouplePosts.isEmpty){
+      print("DailyCouplePostViewModel IF문 통과");
       // set mainScreen to default
-      loadDailyCouplePosts();
+      await loadDailyCouplePosts();
+      //print(_dailyCouplePosts.length.toString() + "개 있음");
+      await setDailyInfo(0);
     }
-  }
-
-  // Whether the process is in progress
-  setLoading(bool loading) async {
-    _loading = loading;
-    notifyListeners();
   }
 
   // create today's couple post
   // temp
-  // auto
   createTodayCouplePost() async {
     // request (_nDailyCouplePosts) days' posts before last loaded day
-    var response = await _dailyCouplePostRepository.createDailyCouplePost(userId);
+    var response = await _dailyCouplePostRepository.createDailyCouplePost(USER_ID);
 
     // failure -> put errorCode to failure
     if(response is Failure) {
-      print("합치기 실패");
+      print("createTodayCouplePost 합치기 실패");
       _errorMessage = response.errorResponse;
       notifyListeners();
     }
@@ -81,17 +66,19 @@ class DailyCouplePostViewModel extends ChangeNotifier {
     // success -> add new data to DailyCouplePosts & load
     if(response is Success) {
       print(response.response);
-      print("합치기 성공");
-      _dailyCouplePosts = dailyCouplePostListFromJson(response.response) + _dailyCouplePosts;
-      notifyListeners();
+      print("createTodayCouplePost 합치기 성공");
+      List<DailyCouplePostModel> newDailyCouplePostList = dailyCouplePostListFromJson(response.response);
+      await setPages(newDailyCouplePostList);
+      _dailyCouplePosts = newDailyCouplePostList + _dailyCouplePosts;
+      //print(_dailyCouplePosts.length.toString() + "개 있음");
+      //notifyListeners();
     }
   }
 
   // refresh today's couple post
   refreshTodayCouplePost() async {
-
     // call API
-    var response =  await _dailyCouplePostRepository.getDailyCouplePosts(userId, DateTime.now(), 1);
+    var response =  await _dailyCouplePostRepository.getDailyCouplePosts(USER_ID, DateTime.now(), 1);
 
     // success -> update data to DailyCouplePosts
     if(response is Success) {
@@ -108,10 +95,9 @@ class DailyCouplePostViewModel extends ChangeNotifier {
 
   // load couple posts
   loadDailyCouplePosts() async {
-    // loading...start
-    setLoading(true);
+    print("loadDailyCouplePosts 실행");
     // request (_nDailyCouplePosts) days' posts before last loaded day
-    var response =  await _dailyCouplePostRepository.getDailyCouplePosts(userId, DateTime.now().subtract(Duration(days: _dailyCouplePosts.length)), _nDailyCouplePosts);
+    var response = await _dailyCouplePostRepository.getDailyCouplePosts(USER_ID, DateTime.now().subtract(Duration(days: _dailyCouplePosts.length)), _nDailyCouplePosts);
 
     // failure -> put errorCode to failure
     if(response is Failure) {
@@ -121,94 +107,77 @@ class DailyCouplePostViewModel extends ChangeNotifier {
 
     // success -> put data to DailyCouplePosts
     if(response is Success) {
+      print("loadDailyCouplePosts 응답");
       print(response.response);
       // temp
+      List<DailyCouplePostModel> newDailyCouplePostList = dailyCouplePostListFromJson(response.response);
+      await setPages(newDailyCouplePostList);
       // Auto refresh today's couple post
-      _dailyCouplePosts += dailyCouplePostListFromJson(response.response);
-      notifyListeners();
+      _dailyCouplePosts += newDailyCouplePostList;
+      print(_dailyCouplePosts.length.toString() + "개 있음");
+
 
       print(_dailyCouplePosts.first.questionText);
       print(_dailyCouplePosts.last.questionText);
       if(_dailyCouplePosts.first.dailyPostDate.year != DateTime.now().year || _dailyCouplePosts.first.dailyPostDate.month != DateTime.now().month || _dailyCouplePosts.first.dailyPostDate.day != DateTime.now().day) {
         await createTodayCouplePost();
       }
-      // setDailyCouplePosts(dailyCouplePostListFromJson(response.response));
-      setPage(0);
     }
-
-    // loading...end
-    setLoading(false);
   }
 
-
-  setIsMeUploaded(int index){
-    if(_dailyCouplePosts[index].userPostId != null){
-      _isMyPost = true;
-    }
-    else{
-      _isMyPost = false;
-    }
+  setLoading(bool state) {
+    _loading = state;
     notifyListeners();
   }
 
-  setDate(int index) {
-    DateTime dateTime = _dailyCouplePosts[index].dailyPostDate;
 
-    if(DateTime.now().year == dateTime.year && DateTime.now().month == dateTime.month && DateTime.now().day == dateTime.day){
-      _isToday = true;
-      print("변경");
-    }
-    else{
-      _isToday = false;
-    }
+  setDailyInfo(index) async {
+    _index = index;
+    DateTime dateTime = _dailyCouplePosts[index].dailyPostDate;
 
     _year = dateTime.year.toString();
     _month = months[dateTime.month - 1];
     _day = dateTime.day.toString();
-    notifyListeners();
-  }
 
-  setQuestion(int index){
+    // Set question data
     _questionType = _dailyCouplePosts[index].questionType;
     _questionText = _dailyCouplePosts[index].questionText;
     _questionImageUrl = _dailyCouplePosts[index].questionImageUrl;
+
     notifyListeners();
   }
 
-  setPosts(int index){
-    _userPostId = _dailyCouplePosts[index].userPostId;
-    _userPostImageUrl = _dailyCouplePosts[index].userPostImageUrl;
-    _partnerPostId = _dailyCouplePosts[index].partnerPostId;
-    _partnerPostImageUrl = _dailyCouplePosts[index].partnerPostImageUrl;
-    notifyListeners();
-  }
+  setPages(List<DailyCouplePostModel> newDailyCouplePosts) async {
+    setLoading(true);
 
-  setPage(int index) {
-    setDate(index);
-    setIsMeUploaded(index);
-    setQuestion(index);
-    setPosts(index);
-    setPosts(index);
-  }
+    print("페이지 세팅");
+    //for (int index = 0; index < _dailyCouplePosts.length; index++) {
+    for (DailyCouplePostModel _dailyCouplePostModel in newDailyCouplePosts) {
+      // Set date data
+      if(DateTime.now().year == _dailyCouplePostModel.dailyPostDate.year && DateTime.now().month == _dailyCouplePostModel.dailyPostDate.month && DateTime.now().day == _dailyCouplePostModel.dailyPostDate.day){
+        _dailyCouplePostModel.isToday = true;
+      }
+      else{
+        _dailyCouplePostModel.isToday = false;
+      }
 
-  setPost() async {
-    await PostViewModel().getPost(_userPostId!);
-    print("송신");
-    //PostDailyInfoWidgetViewModel().setPostId(_userPostId!);
-  }
+      // CheckIsUserDone
+      if(_dailyCouplePostModel.userPostId != null){
+        _dailyCouplePostModel.isUserDone = true;
+      }
+      else{
+        _dailyCouplePostModel.isUserDone = false;
+      }
 
-  setScreenToMain(){
-    _screen = "/dailyCouplePostScreen";
-    notifyListeners();
-  }
+      // CheckIsPartnerDone
+      if(_dailyCouplePostModel.partnerPostId != null){
+        _dailyCouplePostModel.isPartnerDone = true;
+      }
+      else{
+        _dailyCouplePostModel.isPartnerDone = false;
+      }
+    }
 
-  setScreenToDetail(){
-    _screen = "/postDetailScreen";
-    notifyListeners();
-  }
-
-  setScreenToEdit(){
-    _screen = "/postEditScreen";
-    notifyListeners();
+    setLoading(false);
   }
 }

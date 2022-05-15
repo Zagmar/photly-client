@@ -13,14 +13,6 @@ class RegisterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     _context = context;
     _registerViewModel = Provider.of<RegisterViewModel>(_context);
-    return ChangeNotifierProvider(
-      create: (_) => RegisterViewModel(),
-      child: registerScreen(),
-    );
-
-  }
-
-  Widget registerScreen() {
     return GestureDetector(
       onTap: (){
         FocusScope.of(_context).unfocus();
@@ -74,6 +66,7 @@ class RegisterScreen extends StatelessWidget {
       ),
     );
   }
+
   /// register Button
   Widget registerButtonWidget() {
     return InkWell(

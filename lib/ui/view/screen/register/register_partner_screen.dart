@@ -14,13 +14,6 @@ class RegisterPartnerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     _context = context;
     _registerViewModel = Provider.of<RegisterViewModel>(context);
-    return ChangeNotifierProvider(
-      create: (_) => RegisterViewModel(),
-      child: registerScreen(),
-    );
-  }
-
-  Widget registerScreen() {
     return Container(
         child: GestureDetector(
           onTap: (){
@@ -49,26 +42,28 @@ class RegisterPartnerScreen extends StatelessWidget {
               ],
             ),
             backgroundColor: Theme.of(_context).scaffoldBackgroundColor,
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(),
-                Container(
-                  padding: EdgeInsetsDirectional.fromSTEB(35.w, 20.w, 35.w, 20.w),
-                  child: Column(
-                    children: <Widget>[
-                      topWidget(),
-                      Padding(padding: EdgeInsets.symmetric(vertical: 20.w)),
-                      registerWidget(),
-                    ],
+            body: SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(),
+                  Container(
+                    padding: EdgeInsetsDirectional.fromSTEB(35.w, 20.w, 35.w, 20.w),
+                    child: Column(
+                      children: <Widget>[
+                        topWidget(),
+                        Padding(padding: EdgeInsets.symmetric(vertical: 20.w)),
+                        registerWidget(),
+                      ],
+                    ),
                   ),
-                ),
-                MediaQuery.of(_context).viewInsets.bottom <= 50 ?
-                routeButtonWidget()
-                    :
-                Container()
-              ],
+                  MediaQuery.of(_context).viewInsets.bottom <= 50 ?
+                  routeButtonWidget()
+                      :
+                  Container()
+                ],
+              ),
             ),
           ),
         )
