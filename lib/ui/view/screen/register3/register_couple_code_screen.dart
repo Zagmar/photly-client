@@ -1,3 +1,4 @@
+import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
 import 'package:couple_seflie_app/ui/view/widget/route_button_widgets.dart';
 import 'package:couple_seflie_app/ui/view/widget/text_form_field.dart';
 import 'package:couple_seflie_app/ui/view/widget/top_widgets.dart';
@@ -5,17 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-
-import '../../../view_model/register_view_model.dart';
+import '../../../view_model/register3_view_model.dart';
 
 class RegisterCoupleCodeScreen extends StatelessWidget {
   RegisterCoupleCodeScreen({Key? key}) : super(key: key);
-  late RegisterViewModel _registerViewModel;
+  late Register3ViewModel _register3ViewModel;
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    _registerViewModel = Provider.of<RegisterViewModel>(context);
+    _register3ViewModel = Provider.of<Register3ViewModel>(context);
     return Container(
         child: GestureDetector(
           onTap: (){
@@ -29,7 +29,7 @@ class RegisterCoupleCodeScreen extends StatelessWidget {
               actions: <Widget>[
                 InkWell(
                   onTap: (){
-                    _registerViewModel.clear();
+                    _register3ViewModel.clear();
                     FocusScope.of(context).unfocus();
                     Navigator.popUntil(context, (route) => route.isFirst);
                   },
@@ -44,63 +44,49 @@ class RegisterCoupleCodeScreen extends StatelessWidget {
               ],
             ),
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            body: SafeArea(
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(),
-                    Container(
-                      padding: EdgeInsetsDirectional.fromSTEB(35.w, 20.w, 35.w, 20.w),
-                      child: Column(
-                        children: <Widget>[
-                          OneBlockTop(
-                              topText: "이제\n서로를\n연결해봐요",
-                              bottomText: "초대 링크를 함께하고 싶은 사람에게"
-                          ),
-                          RegisterCoupleCodeWidget(registerViewModel: _registerViewModel,),
-                        ],
-                      ),
+            body: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(),
+                  Container(
+                    padding: EdgeInsetsDirectional.fromSTEB(35.w, 20.w, 35.w, 20.w),
+                    child: Column(
+                      children: <Widget>[
+                        OneBlockTop(
+                            topText: "이제\n서로를\n연결해봐요",
+                            bottomText: "초대 링크를 함께하고 싶은 사람에게"
+                        ),
+                        RegisterCoupleCodeWidget(register3ViewModel: _register3ViewModel,),
+                      ],
                     ),
-                    MediaQuery.of(context).viewInsets.bottom <= 50 ?
-                    BothButtonsWidget(
-                        onTapLeft: () {
-                          FocusScope.of(context).unfocus();
-                          Navigator.pop(context);
-                        },
-                        buttonTextLeft: "이전",
-                        onTapRight: () async {
-                          _formKey.currentState!.save();
-                          FocusScope.of(context).unfocus();
-                          await _registerViewModel.doRegistration() ?
-                          {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                    _registerViewModel.registrationResultMessage
-                                ),
-                                duration: Duration(seconds: 1),
-                              ),
+                  ),
+                  MediaQuery.of(context).viewInsets.bottom <= 50 ?
+                  LargeButtonWidget(
+                      onTap: () async {
+                        _formKey.currentState!.save();
+                        FocusScope.of(context).unfocus();
+                         _register3ViewModel.isCoupleCodeMatched ?
+                        {
+                          _register3ViewModel.clear(),
+                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false)
+                        }
+                            :
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                _register3ViewModel.coupleCodeErrorMessage!
                             ),
-                            Navigator.pushNamedAndRemoveUntil(context, "/loginScreen", (route) => false)
-                          }
-                              :
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  _registerViewModel.registrationResultMessage
-                              ),
-                            ),
-                          );
-                        },
-                        buttonTextRight: "완료"
-                    )
-                        :
-                    Container()
-                  ],
-                ),
+                          ),
+                        );
+                      },
+                      buttonText: "등록하기"
+                  )
+                      :
+                  Container()
+                ],
               ),
             ),
           ),
@@ -110,8 +96,8 @@ class RegisterCoupleCodeScreen extends StatelessWidget {
 }
 
 class RegisterCoupleCodeWidget extends StatelessWidget {
-  final RegisterViewModel registerViewModel;
-  const RegisterCoupleCodeWidget({Key? key, required this.registerViewModel}) : super(key: key);
+  final Register3ViewModel register3ViewModel;
+  const RegisterCoupleCodeWidget({Key? key, required this.register3ViewModel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +115,7 @@ class RegisterCoupleCodeWidget extends StatelessWidget {
               keyboardType: TextInputType.text,
               obscureText: false,
               onSaved: (value) async {
-                await registerViewModel.checkCode(value??"");
+                await register3ViewModel.checkCode(value??"");
               },
           ),
           Padding(padding: EdgeInsets.only(bottom: 10.w)),
@@ -154,7 +140,7 @@ class RegisterCoupleCodeWidget extends StatelessWidget {
                     width: 255.w,
                     height: 20.w,
                     child: Text(
-                      registerViewModel.userCode,
+                      register3ViewModel.userCode,
                       style: TextStyle(
                         fontSize: 16.w,
                         fontWeight: FontWeight.w400,
@@ -165,7 +151,7 @@ class RegisterCoupleCodeWidget extends StatelessWidget {
                   InkWell(
                     onTap: (){
                       FocusScope.of(context).unfocus();
-                      Clipboard.setData(ClipboardData(text: registerViewModel.userCode));
+                      Clipboard.setData(ClipboardData(text: register3ViewModel.userCode));
                     },
                     child: Container(
                       width: 45.w,

@@ -1,4 +1,4 @@
-import 'package:couple_seflie_app/ui/view/screen/register/register_anniversary_screen.dart';
+import 'package:couple_seflie_app/ui/view/screen/register2/register_anniversary_screen.dart';
 import 'package:couple_seflie_app/ui/view/widget/route_button_widgets.dart';
 import 'package:couple_seflie_app/ui/view/widget/text_form_field.dart';
 import 'package:couple_seflie_app/ui/view/widget/top_widgets.dart';
@@ -6,16 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-import '../../../view_model/register_view_model.dart';
+import '../../../view_model/register2_view_model.dart';
 
 class RegisterUsernameScreen extends StatelessWidget {
   RegisterUsernameScreen({Key? key}) : super(key: key);
-  late RegisterViewModel _registerViewModel;
+  late Register2ViewModel _register2ViewModel;
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    _registerViewModel = Provider.of<RegisterViewModel>(context);
+    _register2ViewModel = Provider.of<Register2ViewModel>(context);
     return Container(
         child: GestureDetector(
           onTap: (){
@@ -30,7 +30,7 @@ class RegisterUsernameScreen extends StatelessWidget {
               actions: <Widget>[
                 InkWell(
                   onTap: (){
-                    _registerViewModel.clear();
+                    _register2ViewModel.clear();
                     FocusScope.of(context).unfocus();
                     Navigator.popUntil(context, (route) => route.isFirst);
                   },
@@ -70,7 +70,7 @@ class RegisterUsernameScreen extends StatelessWidget {
                               },
                               obscureText: false,
                               onSaved: (value) {
-                                _registerViewModel.checkUsername(value??"");
+                                _register2ViewModel.checkUsername(value??"");
                               },
                             ),
                           ),
@@ -88,13 +88,13 @@ class RegisterUsernameScreen extends StatelessWidget {
                         onTapRight: () {
                           _formKey.currentState!.save();
                           FocusScope.of(context).unfocus();
-                          _registerViewModel.isUsernameOk ?
+                          _register2ViewModel.isUsernameOk ?
                           Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterAnniversaryScreen()))
                               :
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                  _registerViewModel.usernameErrorMessage!
+                                  _register2ViewModel.usernameErrorMessage!
                               ),
                             ),
                           );

@@ -1,23 +1,12 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:couple_seflie_app/ui/view/screen/large_image_screen.dart';
-import 'package:couple_seflie_app/ui/view/screen/login/find_id_screen.dart';
-import 'package:couple_seflie_app/ui/view/screen/login/find_pw_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/login/login_screen.dart';
-import 'package:couple_seflie_app/ui/view/screen/post/post_edit_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
-import 'package:couple_seflie_app/ui/view/screen/post/post_detail_screen.dart';
-import 'package:couple_seflie_app/ui/view/screen/register/register_anniversary_screen.dart';
-import 'package:couple_seflie_app/ui/view/screen/register/register_couple_code_screen.dart';
-import 'package:couple_seflie_app/ui/view/screen/register/register_screen.dart';
-import 'package:couple_seflie_app/ui/view/screen/register/register_username_screen.dart';
-import 'package:couple_seflie_app/ui/view/widget/loading_widget.dart';
-import 'package:couple_seflie_app/ui/view/widget/main_drawer_widget.dart';
 import 'package:couple_seflie_app/ui/view_model/daily_couple_post_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/login_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/post_daily_info_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
-import 'package:couple_seflie_app/ui/view_model/register_view_model.dart';
+import 'package:couple_seflie_app/ui/view_model/register1_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/user_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -76,7 +65,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context)=> PostViewModel()),
         ChangeNotifierProvider(create: (context) => UserViewModel()),
         ChangeNotifierProvider(create: (context) => LoginViewModel()),
-        ChangeNotifierProvider(create: (context) => RegisterViewModel()),
+        ChangeNotifierProvider(create: (context) => Register1ViewModel()),
       ],
       child: MyApp())
   );
@@ -106,19 +95,6 @@ class MyApp extends StatelessWidget {
           PostMainScreen()
               :
           LoginScreen(),
-          routes: {
-            '/postMainScreen': (context) => PostMainScreen(),
-            '/postEditScreen': (context) => PostEditScreen(),
-            '/postDetailScreen': (context) => PostDetailScreen(),
-            '/largeImageScreen': (context) => LargeImageScreen(),
-            '/loginScreen': (context) => LoginScreen(),
-            '/findIdScreen': (context) => FindIdScreen(),
-            '/findPwScreen': (context) => FindPwScreen(),
-            '/registerScreen': (context) => RegisterScreen(),
-            '/registerUsernameScreen': (context) => RegisterUsernameScreen(),
-            '/registerPartnerScreen': (context) => RegisterCoupleCodeScreen(),
-            '/registerAnniversaryScreen': (context) => RegisterAnniversaryScreen(),
-          },
         )
     );
   }

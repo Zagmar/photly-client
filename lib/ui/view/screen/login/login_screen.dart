@@ -1,7 +1,7 @@
 import 'package:couple_seflie_app/ui/view/screen/login/find_id_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/login/find_pw_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
-import 'package:couple_seflie_app/ui/view/screen/register/register_screen.dart';
+import 'package:couple_seflie_app/ui/view/screen/register2/register_username_screen.dart';
 import 'package:couple_seflie_app/ui/view/widget/route_button_widgets.dart';
 import 'package:couple_seflie_app/ui/view_model/login_view_model.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 
 import '../../widget/text_form_field.dart';
 import '../../widget/top_widgets.dart';
+import '../register1/register_screen.dart';
+import '../register1/register_vertification_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -58,19 +60,31 @@ class LoginScreen extends StatelessWidget {
                         ),
                       )
                           :
-                      await _loginViewModel.doLogin() ?
-                      {
-                        _loginViewModel.clear(),
-                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false)
+                      await _loginViewModel.doLogin();
+
+                      switch (_loginViewModel.loginFail) {
+                        case null : break;
+                        case "success" :
+                          _loginViewModel.clear();
+                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false);
+                          break;
+                        case "nonVerification" :
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterVertificationScreen()));
+                          break;
+                        case "nonUserInfo" :
+                          _loginViewModel.clear();
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterUsernameScreen()));
+                          break;
+                        case "fail" :
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  _loginViewModel.loginFailMessage!
+                              ),
+                            ),
+                          );
+                          break;
                       }
-                          :
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                              _loginViewModel.loginFailMessage??"실패"
-                          ),
-                        ),
-                      );
                     },
                     buttonText: "로그인"
                 )

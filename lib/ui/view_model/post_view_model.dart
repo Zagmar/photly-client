@@ -9,7 +9,7 @@ import '../../data/datasource/remote_datasource.dart';
 import '../ui_setting.dart';
 
 class PostViewModel extends ChangeNotifier {
-  final PostInfoRepository _postInfoRepository = PostInfoRepository();
+  final _postInfoRepository = PostInfoRepository();
   bool _loading = false;
   late Failure _failure;
   int _postId = 0;

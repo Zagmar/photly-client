@@ -1,4 +1,3 @@
-import 'package:couple_seflie_app/data/datasource/remote_datasource.dart';
 import 'package:couple_seflie_app/data/repository/auth_service.dart';
 import 'package:flutter/material.dart';
 
@@ -9,15 +8,21 @@ class LoginViewModel with ChangeNotifier {
   String _password = "";
   bool _isIdOk = false;
   bool _isPwOk = false;
+  String? _loginFail;
+  bool _isVerified = false;
   String? _idErrorMessage = '이메일은 필수사항입니다.';
   String? _pwErrorMessage = '비밀번호는 필수사항입니다.';
   String? _loginFailMessage;
+  String? _verificationFailMessage;
   late AuthService _authService;
 
   String? get idErrorMessage => _idErrorMessage;
   String? get pwErrorMessage => _pwErrorMessage;
   String? get loginFailMessage => _loginFailMessage;
+  String? get verificationFailMessage => _verificationFailMessage;
   bool get isLoginOk => _isIdOk && _isPwOk;
+  String? get loginFail => _loginFail;
+  bool get isVerified => _isVerified;
 
   // Check Email Input
   checkEmail(String val){
@@ -60,21 +65,52 @@ class LoginViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> doLogin() async {
+  Future<void> checkVerification() async {
     _authService = AuthService();
-    final credentials = LoginCredential(email: _email, password: _password);
+    final credentials = UserCredentialsModel(email: _email, password: _password);
     final result = await _authService.loginService(credentials);
 
-    if(result is Failure){
-      _loginFailMessage = result.errorResponse;
+    if(result == LoginStatus.success){
+      _verificationFailMessage = null;
+      _isVerified = true;
       notifyListeners();
-      return false;
     }
     else {
-      // result = Success
-      _loginFailMessage = null;
+      _verificationFailMessage = "인증이 완료되지 않았습니다";
+      _isVerified = false;
       notifyListeners();
-      return true;
+    }
+  }
+
+  Future<void> doLogin() async {
+    _authService = AuthService();
+    final credentials = UserCredentialsModel(email: _email, password: _password);
+    final result = await _authService.loginService(credentials);
+
+    if(result == LoginStatus.success){
+      _loginFailMessage = null;
+      _loginFail = "success";
+      notifyListeners();
+    }
+    else if(result == LoginStatus.nonVerification) {
+      _loginFailMessage = "인증을 완료해주세요";
+      _loginFail = "nonVerification";
+      notifyListeners();
+    }
+    else if(result == LoginStatus.nonUserInfo) {
+      _loginFailMessage = "사용자 정보 입력을 완료해주세요";
+      _loginFail = "nonUserInfo";
+      notifyListeners();
+    }
+    else if(result == LoginStatus.fail){
+      _loginFailMessage = "일치하는 사용자 정보가 없습니다";
+      _loginFail = "fail";
+      notifyListeners();
+    }
+    else {
+      _loginFailMessage = "재시도 후 지속적으로 오류가 발생 시 문의해주세요";
+      _loginFail = "fail";
+      notifyListeners();
     }
   }
 

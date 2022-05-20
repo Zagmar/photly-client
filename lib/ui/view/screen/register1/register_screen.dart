@@ -1,21 +1,21 @@
-import 'package:couple_seflie_app/ui/view/screen/register/register_username_screen.dart';
+import 'package:couple_seflie_app/ui/view/screen/register1/register_vertification_screen.dart';
 import 'package:couple_seflie_app/ui/view/widget/route_button_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-import '../../../view_model/register_view_model.dart';
+import '../../../view_model/register1_view_model.dart';
 import '../../widget/text_form_field.dart';
 import '../../widget/top_widgets.dart';
 
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({Key? key}) : super(key: key);
-  late RegisterViewModel _registerViewModel;
+  late Register1ViewModel _registerViewModel;
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    _registerViewModel = Provider.of<RegisterViewModel>(context);
+    _registerViewModel = Provider.of<Register1ViewModel>(context);
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).unfocus();
@@ -30,7 +30,7 @@ class RegisterScreen extends StatelessWidget {
               onTap: (){
                 _registerViewModel.clear();
                 FocusScope.of(context).unfocus();
-                Navigator.pop(context);
+                Navigator.popUntil(context, (route) => route.isFirst);
               },
               child: SizedBox(
                 width: 50.w,
@@ -66,16 +66,30 @@ class RegisterScreen extends StatelessWidget {
                 MediaQuery.of(context).viewInsets.bottom <= 50 ?
                 // Register Button
                 LargeButtonWidget(
-                    onTap: (){
+                    onTap: () async {
                       _formKey.currentState!.save();
                       FocusScope.of(context).unfocus();
-                      _registerViewModel.isRegisterOk ?
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterUsernameScreen()))
+                      !_registerViewModel.isRegisterOk ?
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                              _registerViewModel.idErrorMessage ?? _registerViewModel.pwErrorMessage ?? '입력된 정보가 올바르지 않습니다'
+                          ),
+                        ),
+                      )
+                          :
+                      await _registerViewModel.doRegistration();
+
+                      _registerViewModel.isRegistered ?
+                      {
+                        _registerViewModel.clear(),
+                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => RegisterVertificationScreen()), (route) => false)
+                      }
                           :
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                              _registerViewModel.idErrorMessage ?? _registerViewModel.pwErrorMessage ?? _registerViewModel.pwCheckErrorMessage ?? '입력된 정보가 올바르지 않습니다'
+                              _registerViewModel.registrationFailMessage!
                           ),
                         ),
                       );
@@ -94,7 +108,7 @@ class RegisterScreen extends StatelessWidget {
 }
 
 class RegisterFormWidget extends StatelessWidget {
-  final RegisterViewModel registerViewModel;
+  final Register1ViewModel registerViewModel;
   const RegisterFormWidget({Key? key, required this.registerViewModel}) : super(key: key);
 
   @override

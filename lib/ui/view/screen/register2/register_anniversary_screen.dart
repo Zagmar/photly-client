@@ -1,20 +1,20 @@
-import 'package:couple_seflie_app/ui/view/screen/register/register_couple_code_screen.dart';
+import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-import '../../../view_model/register_view_model.dart';
+import '../../../view_model/register2_view_model.dart';
 import '../../widget/route_button_widgets.dart';
 import '../../widget/top_widgets.dart';
 
 class RegisterAnniversaryScreen extends StatelessWidget {
   RegisterAnniversaryScreen({Key? key}) : super(key: key);
-  late RegisterViewModel _registerViewModel;
+  late Register2ViewModel _register2ViewModel;
 
   @override
   Widget build(BuildContext context) {
-    _registerViewModel = Provider.of<RegisterViewModel>(context);
+    _register2ViewModel = Provider.of<Register2ViewModel>(context);
     return Container(
         child: GestureDetector(
           onTap: (){
@@ -29,7 +29,7 @@ class RegisterAnniversaryScreen extends StatelessWidget {
               actions: <Widget>[
                 InkWell(
                   onTap: (){
-                    _registerViewModel.clear();
+                    _register2ViewModel.clear();
                     FocusScope.of(context).unfocus();
                     Navigator.popUntil(context, (route) => route.isFirst);
                   },
@@ -67,7 +67,7 @@ class RegisterAnniversaryScreen extends StatelessWidget {
                               initialDateTime: DateTime.now(),
                               maximumDate: DateTime.now(),
                               onDateTimeChanged: (DateTime value) {
-                                _registerViewModel.setAnniversary(value);
+                                _register2ViewModel.setAnniversary(value);
                               },
                               mode: CupertinoDatePickerMode.date,
                             )
@@ -83,12 +83,14 @@ class RegisterAnniversaryScreen extends StatelessWidget {
                       buttonTextLeft: "이전",
                       onTapRight: () async {
                         FocusScope.of(context).unfocus();
-                        _registerViewModel.isAnniversaryOk ?
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterCoupleCodeScreen()))
+                        _register2ViewModel.isAnniversaryOk ?
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => PostMainScreen()))
                             :
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('날짜를 올바르게 선택해주세요'),
+                            content: Text(
+                                _register2ViewModel.anniversaryFailMessage!
+                            )
                           ),
                         );
                       },
