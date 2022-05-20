@@ -74,7 +74,7 @@ class PostScreensAppbar extends StatelessWidget {
 
 class SingleButton extends StatelessWidget {
   final IconData icon;
-  final Function() onTap;
+  final GestureTapCallback onTap;
   const SingleButton({Key? key, required this.icon, required this.onTap}) : super(key: key);
 
   @override

@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 
 import '../../../view_model/register_view_model.dart';
 
-class RegisterPartnerScreen extends StatelessWidget {
-  RegisterPartnerScreen({Key? key}) : super(key: key);
+class RegisterCoupleCodeScreen extends StatelessWidget {
+  RegisterCoupleCodeScreen({Key? key}) : super(key: key);
   late RegisterViewModel _registerViewModel;
   late BuildContext _context;
 

@@ -10,7 +10,7 @@ class OneBlockTop extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 320.w,
-      height: 150.w,
+      height: 170.w,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,

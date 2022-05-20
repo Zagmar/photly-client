@@ -1,6 +1,4 @@
 import 'package:blur/blur.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:couple_seflie_app/data/model/daily_couple_post_model.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_detail_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_edit_screen.dart';
 import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
@@ -86,7 +84,7 @@ class PostMainScreen extends StatelessWidget {
 }
 
 class ImageButtonWidget extends StatelessWidget {
-  final String postId;
+  final int postId;
   final String postImageUrl;
   const ImageButtonWidget({Key? key, required this.postId, required this.postImageUrl}) : super(key: key);
 
@@ -293,7 +291,7 @@ class PartnerDailyPostWidget extends StatelessWidget {
 }
 
 class EmptyPostButton extends StatelessWidget {
-  final Function? onTap;
+  final GestureTapCallback? onTap;
   final String iconImagePath;
   final String mainText;
   final String subText;

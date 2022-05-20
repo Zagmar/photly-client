@@ -461,8 +461,8 @@ class PostTextFormWidget extends StatelessWidget {
   final String? initialPostText;
   final String weatherImagePath;
   final String dateTimeNow;
-  final Function weatherButtonOnTap;
-  final Function placeButtonOnTap;
+  final GestureTapCallback weatherButtonOnTap;
+  final GestureTapCallback placeButtonOnTap;
   final Function postInputTextOnChanged;
   late TextEditingController _postTextController;
   PostTextFormWidget({Key? key, this.initialPostText, required this.weatherImagePath, required this.dateTimeNow, required this.weatherButtonOnTap, required this.placeButtonOnTap, required this.postInputTextOnChanged}) : super(key: key);

@@ -24,9 +24,9 @@ class DailyCouplePostModel {
   int questionType;
   String questionText;
   String? questionImageUrl;
-  String? userPostId;
+  int? userPostId;
   String? userPostImageUrl;
-  String? partnerPostId;
+  int? partnerPostId;
   String? partnerPostImageUrl;
   bool? isToday;
   bool? isUserDone;
@@ -54,50 +54,3 @@ class DailyCouplePostModel {
     "partnerPostImageUrl": partnerPostImageUrl,
   };
 }
-
-/*
-class DailyCouplePostModel {
-  DailyCouplePostModel({
-    required this.dailyPostDate,
-    required this.questionType,
-    required this.questionText,
-    this.questionImageUrl,
-    this.userPostId,
-    this.userPostImageUrl,
-    this.partnerPostId,
-    this.partnerPostImageUrl,
-  });
-
-  DateTime dailyPostDate;
-  int questionType;
-  String questionText;
-  String? questionImageUrl;
-  String? userPostId;
-  String? userPostImageUrl;
-  String? partnerPostId;
-  String? partnerPostImageUrl;
-
-  factory DailyCouplePostModel.fromJson(Map<String, dynamic> json) => DailyCouplePostModel(
-    dailyPostDate: DateTime.parse(json['dailyPostDate']),
-    questionType: int.parse(json["questionType"]),
-    questionText: json["questionText"],
-    questionImageUrl: json["questionImageUrl"],
-    userPostId: json["userPostId"],
-    userPostImageUrl: json["userPostImageUrl"],
-    partnerPostId: json["partnerPostId"],
-    partnerPostImageUrl: json["partnerPostImageUrl"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "dailyPostDate": dailyPostDate.toString(),
-    "questionType": questionType.toString(),
-    "questionText": questionText,
-    "questionImageUrl": questionImageUrl,
-    "userPostId": userPostId,
-    "userPostImageUrl": userPostImageUrl,
-    "partnerPostId": partnerPostId,
-    "partnerPostImageUrl": partnerPostImageUrl,
-  };
-}
-
- */

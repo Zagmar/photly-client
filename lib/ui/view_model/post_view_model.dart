@@ -12,7 +12,7 @@ class PostViewModel extends ChangeNotifier {
   final PostInfoRepository _postInfoRepository = PostInfoRepository();
   bool _loading = false;
   late Failure _failure;
-  String _postId = "";
+  int _postId = 0;
   String? _errorMessage;
   late DateTime _dateTimeNow;
   File? _postImage;
@@ -27,7 +27,7 @@ class PostViewModel extends ChangeNotifier {
   Failure get failure => _failure;
   bool get loading => _loading;
   String? get errorMessage => _errorMessage;
-  String get postId => _postId;
+  int get postId => _postId;
   String get tempImageUrl => _tempImageUrl;
   String get dateTimeNow => (DateTime.now().hour > 12 ? "PM " +  (DateTime.now().hour - 12).toString() : "AM " +  DateTime.now().hour.toString()) + "시 " + DateTime.now().minute.toString() + "분";
 
@@ -51,7 +51,7 @@ class PostViewModel extends ChangeNotifier {
   }
 
   // set postId
-  setPostId(String postId) {
+  setPostId(int postId) {
     _postId = postId;
     // notifyListeners();
   }
@@ -74,7 +74,7 @@ class PostViewModel extends ChangeNotifier {
 
   setNewPost(){
     _post = PostModel(
-        postId: "",
+        postId: 0,
         postUserId: "",
         postImageUrl: "",
         postEditTime: DateTime.now(),
@@ -104,7 +104,7 @@ class PostViewModel extends ChangeNotifier {
   }
   
   // get post via postId
-  getPost(String postId) async {
+  getPost(int postId) async {
     // loading...start
     setLoading(true);
     print("이거");
@@ -112,14 +112,17 @@ class PostViewModel extends ChangeNotifier {
     _postId = postId;
     // request add new post
     var response = await _postInfoRepository.getPost(_postId);
+    print(response);
 
     // success -> add new data to Post
     if(response is Success) {
+      print("성공");
       setPost(postFromJson(response.response));
     }
 
     // failure -> put errorCode to failure
     if(response is Failure) {
+      print("실패");
       setFailure(response);
     }
 

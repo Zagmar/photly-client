@@ -26,7 +26,7 @@ class RouteButton extends StatelessWidget {
 }
 
 class SingleButton extends StatelessWidget {
-  final Function onTap;
+  final GestureTapCallback onTap;
   final String buttonText;
   const SingleButton({Key? key, required this.onTap, required this.buttonText}) : super(key: key);
 
@@ -60,7 +60,7 @@ class SingleButton extends StatelessWidget {
 }
 
 class LeftButtonOnlyWidget extends StatelessWidget {
-  final Function onTap;
+  final GestureTapCallback onTap;
   final String buttonText;
   const LeftButtonOnlyWidget({Key? key, required this.onTap, required this.buttonText}) : super(key: key);
 
@@ -71,7 +71,7 @@ class LeftButtonOnlyWidget extends StatelessWidget {
 }
 
 class RightButtonOnlyWidget extends StatelessWidget {
-  final Function onTap;
+  final GestureTapCallback onTap;
   final String buttonText;
   const RightButtonOnlyWidget({Key? key, required this.onTap, required this.buttonText}) : super(key: key);
 
@@ -82,9 +82,9 @@ class RightButtonOnlyWidget extends StatelessWidget {
 }
 
 class BothButtonsWidget extends StatelessWidget {
-  final Function() onTapLeft;
+  final GestureTapCallback onTapLeft;
   final String buttonTextLeft;
-  final Function() onTapRight;
+  final GestureTapCallback onTapRight;
   final String buttonTextRight;
   const BothButtonsWidget({Key? key, required this.onTapLeft, required this.buttonTextLeft, required this.onTapRight, required this.buttonTextRight}) : super(key: key);
 
@@ -98,7 +98,7 @@ class BothButtonsWidget extends StatelessWidget {
 }
 
 class LargeButtonWidget extends StatelessWidget {
-  final Function onTap;
+  final GestureTapCallback onTap;
   final String buttonText;
   const LargeButtonWidget({Key? key, required this.onTap, required this.buttonText}) : super(key: key);
 

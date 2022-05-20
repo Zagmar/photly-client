@@ -172,7 +172,7 @@ class PostDailyInfoWidget extends StatelessWidget {
 }
 
 class IconButtonWidget extends StatelessWidget {
-  final Function onTap;
+  final GestureTapCallback onTap;
   final IconData iconData;
   const IconButtonWidget({Key? key, required this.onTap, required this.iconData}) : super(key: key);
 
@@ -190,7 +190,7 @@ class IconButtonWidget extends StatelessWidget {
 }
 
 class TextButtonWidget extends StatelessWidget {
-  final Function onTap;
+  final GestureTapCallback onTap;
   final String buttonText;
   const TextButtonWidget({Key? key, required this.onTap, required this.buttonText}) : super(key: key);
 

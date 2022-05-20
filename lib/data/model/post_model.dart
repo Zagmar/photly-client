@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 List<PostModel> postListFromJson(String str) => List<PostModel>.from(json.decode(str).map((x) => PostModel.fromJson(x)));
-PostModel postFromJson(String str) => PostModel.fromJson(json.decode(str));
+PostModel postFromJson(var str) => PostModel.fromJson(str);
 
 String postInfoModelToJson(List<PostModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
@@ -18,7 +18,7 @@ class PostModel {
     this.postLocation,
   });
 
-  String postId;
+  int postId;
   String postUserId;
   String postImageUrl;
   DateTime postEditTime;
@@ -32,11 +32,11 @@ class PostModel {
     postId: json["postId"],
     postUserId: json["postUserId"],
     postImageUrl: json["postImageUrl"],
-    postIsPublic: json["postIsPublic"] == "true",
+    postIsPublic: json["postIsPublic"] == 1,
     postEditTime: DateTime.parse(json['postEditTime']),
     postText: json["postText"],
-    postEmotion: int.parse(json["postEmotion"]),
-    postWeather: int.parse(json["postWeather"]),
+    postEmotion: json["postEmotion"],
+    postWeather: json["postWeather"],
     postLocation: json["postLocation"],
   );
 
@@ -47,8 +47,8 @@ class PostModel {
     "postIsPublic": postIsPublic,
     "postEditTime": postEditTime.toString(),
     "postText": postText,
-    "postEmotion": postEmotion.toString(),
-    "postWeather": postWeather.toString(),
+    "postEmotion": postEmotion,
+    "postWeather": postWeather,
     "postLocation": postLocation,
   };
 }

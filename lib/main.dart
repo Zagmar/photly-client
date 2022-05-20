@@ -8,7 +8,7 @@ import 'package:couple_seflie_app/ui/view/screen/post/post_edit_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_detail_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register/register_anniversary_screen.dart';
-import 'package:couple_seflie_app/ui/view/screen/register/register_partner_screen.dart';
+import 'package:couple_seflie_app/ui/view/screen/register/register_couple_code_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register/register_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register/register_username_screen.dart';
 import 'package:couple_seflie_app/ui/view/widget/loading_widget.dart';
@@ -105,7 +105,7 @@ class MyApp extends StatelessWidget {
           home: _isLogined ?
           PostMainScreen()
               :
-          LoadingScreen(),
+          LoginScreen(),
           routes: {
             '/postMainScreen': (context) => PostMainScreen(),
             '/postEditScreen': (context) => PostEditScreen(),
@@ -116,7 +116,7 @@ class MyApp extends StatelessWidget {
             '/findPwScreen': (context) => FindPwScreen(),
             '/registerScreen': (context) => RegisterScreen(),
             '/registerUsernameScreen': (context) => RegisterUsernameScreen(),
-            '/registerPartnerScreen': (context) => RegisterPartnerScreen(),
+            '/registerPartnerScreen': (context) => RegisterCoupleCodeScreen(),
             '/registerAnniversaryScreen': (context) => RegisterAnniversaryScreen(),
           },
         )

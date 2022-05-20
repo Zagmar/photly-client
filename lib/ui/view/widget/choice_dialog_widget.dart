@@ -32,7 +32,7 @@ class ThreeOptionsDialogWidget extends StatelessWidget {
 
 class SingleDialogOption extends StatelessWidget {
   final String dialogText;
-  final Function onPressed;
+  final GestureTapCallback onPressed;
   const SingleDialogOption({Key? key, required this.dialogText, required this.onPressed}) : super(key: key);
 
   @override

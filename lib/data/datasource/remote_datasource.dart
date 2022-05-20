@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 
 /// Status Code
@@ -10,12 +11,11 @@ const INVALID_FORMAT = 102;
 const UNKNOWN_ERROR = 103;
 
 /// API URL
-const PHOTLY = "https://0tijhj3s8l.execute-api.ap-northeast-2.amazonaws.com/A1";
-//const PHOTLY = "https://0tijhj3s8l.execute-api.ap-northeast-2.amazonaws.com/A1";
+const PHOTLY = "https://0tijhj3s8l.execute-api.ap-northeast-2.amazonaws.com/A1/photly";
 
 // Success to get response
 class Success {
-  String response;
+  var response;
   Success({required this.response});
 }
 
@@ -32,33 +32,42 @@ class RemoteDataSource {
   final int timeout = 5;
 
   // Get data from API by inputData
-  Future<Object> getFromUri(String uri, Map<String, String>? inputData) async {
+  Future<Object> getFromUri(String uri, Map<String, dynamic>? inputData) async {
     try{
-      var url = Uri.parse(uri);
-      var response = inputData != null ?
-      await http.get(url, headers: inputData).timeout(Duration(seconds: timeout))
-          :
-      await http.get(url).timeout(Duration(seconds: timeout))
-      ;
-      if(response.statusCode == OK) {
-        print(response.body);
-        print("테스트1");
+      print("호출");
+      print(uri);
+      //var url = Uri.parse(uri);
+      final response = await Dio()
+          .get(
+          uri,
+          queryParameters: inputData).timeout(const Duration(seconds: 600))
+          .catchError((e) {
+        print(e.message);
+      });
+      print(response);
 
-        return Success(response: response.body);
+      if(response.statusCode == OK) {
+        print(response.data);
+        print("테스트 성공");
+        return Success(response: response.data);
       }
+      print("테스트 실패");
       return Failure(code: INVALID_RESPONSE, errorResponse: "Invalid Response");
     } on HttpException{
+      print("에러1");
       return Failure(code: NO_INTERNET, errorResponse: "No Internet");
     } on FormatException{
+      print("에러2");
       return Failure(code: INVALID_FORMAT, errorResponse: "Invalid Format");
     }
     catch(e) {
+      print("에러3");
       return Failure(code: UNKNOWN_ERROR, errorResponse: "Unknown Error");
     }
   }
 
   // Post inputData to database through API
-  Future<Object> postToUri(String uri, Map<String, String> inputData) async {
+  Future<Object> postToUri(String uri, Map<String, dynamic> inputData) async {
     try{
       var url = Uri.parse(uri);
       var response = await http.post(url, body: inputData).timeout(Duration(seconds: timeout));
@@ -77,7 +86,7 @@ class RemoteDataSource {
   }
 
   // Edit data in database into inputData through API
-  Future<Object> putToUri(String uri, Map<String, String> inputData) async {
+  Future<Object> putToUri(String uri, Map<String, dynamic> inputData) async {
     try{
       var url = Uri.parse(uri);
       var response = await http.put(
@@ -100,10 +109,10 @@ class RemoteDataSource {
   }
 
   // Delete pointed to by the input data in the database through API
-  Future<Object> deleteFromUri(String uri, Map<String, String> inputData) async {
+  Future<Object> deleteFromUri(String uri, Map<String, dynamic> inputData) async {
     try{
       var url = Uri.parse(uri);
-      var response = await http.delete(url, headers: inputData).timeout(Duration(seconds: timeout));
+      var response = await http.delete(url,).timeout(Duration(seconds: timeout));
       if(response.statusCode == OK) {
         return Success(response: response.body);
       }

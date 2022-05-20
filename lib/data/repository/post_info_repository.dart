@@ -15,15 +15,20 @@ class PostInfoRepository {
   /// Get post
   // input : postId
   // output : postModel
-  Future<Object> getPost(String postId) async {
+  Future<Object> getPost(int postId) async {
     // convert inputData to use for API
-    Map<String, String> inputData = {
-      'postId' : postId,
+    Map<String, dynamic> inputData = {
+      //'postId' : postId,
+      'post_id' : 15, // test
     };
 
-    return Success(response: '{"postId": "1", "postUserId": "00", "postImageUrl": "https://item.kakaocdn.net/do/493188dee481260d5c89790036be0e66c37d537a8f2c6f426591be6b8dc7b36a", "postIsPublic": "false", "postEditTime": "2022-05-10 15:47:12.924688", "postText": "hello", "postEmotion": "1", "postWeather": "1", "postLocation": "1"}');
+    //return Success(response: '{"postId": "1", "postUserId": "00", "postImageUrl": "https://item.kakaocdn.net/do/493188dee481260d5c89790036be0e66c37d537a8f2c6f426591be6b8dc7b36a", "postIsPublic": "false", "postEditTime": "2022-05-10 15:47:12.924688", "postText": "hello", "postEmotion": "1", "postWeather": "1", "postLocation": "1"}');
 
     // call API
+    var response = await _remoteDataSource.getFromUri(POST, inputData);
+    print("PostInfoRepository성공");
+    print(response);
+    return response;
     return await _remoteDataSource.getFromUri(POST, inputData);
   }
 
@@ -31,7 +36,7 @@ class PostInfoRepository {
   // input : postModel
   Future<Object> createPost(PostModel postModel) async {
     // convert inputData to use for API
-    Map<String, String> inputData = {
+    Map<String, dynamic> inputData = {
       'postId' : postModel.postId,
       'postUserId' : postModel.postUserId,
       'postImageUrl' : postModel.postImageUrl,
@@ -53,7 +58,7 @@ class PostInfoRepository {
   // input : postModel
   Future<Object> editPost(PostModel postModel) async {
     // convert inputData to use for API
-    Map<String, String> inputData = {
+    Map<String, dynamic> inputData = {
       'postId' : postModel.postId,
       'postImageUrl' : postModel.postImageUrl,
       'postText' : postModel.postText.toString(),

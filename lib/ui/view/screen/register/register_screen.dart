@@ -27,7 +27,7 @@ class RegisterScreen extends StatelessWidget {
               onTap: (){
                 _registerViewModel.clear();
                 FocusScope.of(_context).unfocus();
-                Navigator.popUntil(_context, ModalRoute.withName("/loginScreen"));
+                Navigator.pop(context);
               },
               child: SizedBox(
                 width: 50.w,
