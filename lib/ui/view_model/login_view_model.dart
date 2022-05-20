@@ -19,8 +19,8 @@ class LoginViewModel with ChangeNotifier {
   String? get loginFailMessage => _loginFailMessage;
   bool get isLoginOk => _isIdOk && _isPwOk;
 
+  // Check Email Input
   checkEmail(String val){
-    _email = val;
     if(val.isEmpty) {
       _idErrorMessage = '이메일은 필수사항입니다.';
       _isIdOk = false;
@@ -32,19 +32,28 @@ class LoginViewModel with ChangeNotifier {
       _isIdOk = false;
     }
     else{
+      _email = val;
       _idErrorMessage = null;
       _isIdOk = true;
     }
     notifyListeners();
   }
 
+  // Check Password Input
   checkPassword(String val){
-    _password = val;
+    print(val);
     if(val.isEmpty) {
       _pwErrorMessage = '비밀번호는 필수사항입니다.';
       _isPwOk = false;
     }
+    else if(!RegExp(
+        r'^([A-Za-z0-9]{8,})$')
+        .hasMatch(val)){
+      _pwErrorMessage = '비밀번호는 숫자와 문자가 포함된 8자 이상입니다';
+      _isPwOk = false;
+    }
     else{
+      _password = val;
       _pwErrorMessage = null;
       _isPwOk = true;
     }

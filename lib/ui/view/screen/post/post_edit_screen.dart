@@ -629,7 +629,10 @@ class LocationDialogWidget extends StatelessWidget {
             obscureText: false,
             onFieldSubmitted: (value) {
               Provider.of<PostViewModel>(context).setPostLocation(value);
-            }
+            },
+          onSaved: (_) {
+              // temp
+          },
         )
       ],
     );

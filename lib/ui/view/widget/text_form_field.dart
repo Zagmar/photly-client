@@ -6,10 +6,10 @@ class TextInputWidget extends StatelessWidget {
   final int maxLines;
   final int? maxLength;
   final bool obscureText;
-  final Function? onChanged;
+  final FormFieldSetter<String> onSaved;
   final TextInputType? keyboardType;
   final Function? onFieldSubmitted;
-  const TextInputWidget({Key? key, this.hintText, required this.maxLines, this.maxLength, required this.obscureText, this.onChanged, this.keyboardType, this.onFieldSubmitted}) : super(key: key);
+  const TextInputWidget({Key? key, this.hintText, required this.maxLines, this.maxLength, required this.obscureText, required this.onSaved, this.keyboardType, this.onFieldSubmitted}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class TextInputWidget extends StatelessWidget {
       keyboardType: keyboardType,
       onFieldSubmitted: (value) => onFieldSubmitted ?? FocusScope.of(context).unfocus(),
       obscureText: obscureText,
-      onChanged: (value) => onChanged,
+      onSaved: onSaved,
     );
   }
 }

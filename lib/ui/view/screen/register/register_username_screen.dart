@@ -11,6 +11,7 @@ import '../../../view_model/register_view_model.dart';
 class RegisterUsernameScreen extends StatelessWidget {
   RegisterUsernameScreen({Key? key}) : super(key: key);
   late RegisterViewModel _registerViewModel;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +24,7 @@ class RegisterUsernameScreen extends StatelessWidget {
           child: Scaffold(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             appBar: AppBar(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               elevation: 0,
               leading: Container(),
               actions: <Widget>[
@@ -43,58 +45,66 @@ class RegisterUsernameScreen extends StatelessWidget {
               ],
             ),
             body: SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(),
-                  Container(
-                    padding: EdgeInsetsDirectional.fromSTEB(35.w, 20.w, 35.w, 20.w),
-                    child: Column(
-                      children: <Widget>[
-                        OneBlockTop(topText: "서로 불러줄\n닉네임을\n정해주세요", bottomText: "나중에 수정이 가능해요!"),
-                        Container(
-                          height: 150.w,
-                          alignment: Alignment.center,
-                          child: TextInputWidget(
-                            hintText: "서로 부르는 애칭, 별명 다 좋아요!",
-                            maxLines: 1,
-                            maxLength: 6,
-                            keyboardType: TextInputType.text,
-                            onFieldSubmitted: (_){
-                              FocusScope.of(context).unfocus();
-                            },
-                            obscureText: false,
-                            onSaved: (value) {
-                              _registerViewModel.checkUsername(value??"");
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  BothButtonsWidget(
-                      onTapLeft: (){
-                        FocusScope.of(context).unfocus();
-                        Navigator.pop(context);
-                      },
-                      buttonTextLeft: "이전",
-                      onTapRight: (){
-                        FocusScope.of(context).unfocus();
-                        _registerViewModel.isUsernameOk ?
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterAnniversaryScreen()))
-                            :
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                                _registerViewModel.usernameErrorMessage!
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(),
+                    Container(
+                      padding: EdgeInsetsDirectional.fromSTEB(35.w, 20.w, 35.w, 20.w),
+                      child: Column(
+                        children: <Widget>[
+                          OneBlockTop(topText: "서로 불러줄\n닉네임을\n정해주세요", bottomText: "나중에 수정이 가능해요!"),
+                          Container(
+                            height: 150.w,
+                            alignment: Alignment.center,
+                            child: TextInputWidget(
+                              hintText: "서로 부르는 애칭, 별명 다 좋아요!",
+                              maxLines: 1,
+                              maxLength: 6,
+                              keyboardType: TextInputType.text,
+                              onFieldSubmitted: (_){
+                                FocusScope.of(context).unfocus();
+                              },
+                              obscureText: false,
+                              onSaved: (value) {
+                                _registerViewModel.checkUsername(value??"");
+                              },
                             ),
                           ),
-                        );
-                      },
-                      buttonTextRight: "다음"
-                  )
-                ],
+                        ],
+                      ),
+                    ),
+                    MediaQuery.of(context).viewInsets.bottom <= 50 ?
+                    // Hide button when use keyboard
+                    BothButtonsWidget(
+                        onTapLeft: () {
+                          FocusScope.of(context).unfocus();
+                          Navigator.pop(context);
+                        },
+                        buttonTextLeft: "이전",
+                        onTapRight: () {
+                          _formKey.currentState!.save();
+                          FocusScope.of(context).unfocus();
+                          _registerViewModel.isUsernameOk ?
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterAnniversaryScreen()))
+                              :
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  _registerViewModel.usernameErrorMessage!
+                              ),
+                            ),
+                          );
+                        },
+                        buttonTextRight: "다음",
+                    )
+                        :
+                    Container()
+                  ],
+                ),
               ),
             ),
           ),

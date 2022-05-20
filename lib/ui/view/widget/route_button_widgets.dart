@@ -28,12 +28,12 @@ class RouteButton extends StatelessWidget {
 class SingleButton extends StatelessWidget {
   final GestureTapCallback onTap;
   final String buttonText;
-  const SingleButton({Key? key, required this.onTap, required this.buttonText}) : super(key: key);
+  const SingleButton({Key? key, required this.onTap, required this.buttonText,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => onTap,
+      onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(28.w),
@@ -45,14 +45,22 @@ class SingleButton extends StatelessWidget {
         width: 90.w,
         height: 48.w,
         alignment: Alignment.center,
-        child: Text(
-          buttonText,
-          style: TextStyle(
-              fontSize: 16.w,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF050505)
-          ),
-          textAlign: TextAlign.center,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            buttonText == "이전" ? Icon(Icons.chevron_left_outlined, size: 30.w, color: Color(0xFF050505),) : Container(),
+            Text(
+              buttonText,
+              style: TextStyle(
+                  fontSize: 16.w,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF050505)
+              ),
+              textAlign: TextAlign.center,
+            ),
+            buttonText == "다음" ? Icon(Icons.chevron_right_outlined, size: 30.w, color: Color(0xFF050505),) : Container(),
+          ],
         ),
       ),
     );
@@ -105,7 +113,7 @@ class LargeButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => onTap,
+      onTap: onTap,
       child: Container(
         width: 390.w,
         height: 60.w,

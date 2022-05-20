@@ -25,60 +25,58 @@ class LoginScreen extends StatelessWidget {
       },
       child: Scaffold(
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          body: SafeArea(
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(),
-                  Container(
-                    padding: EdgeInsetsDirectional.fromSTEB(35.w, 20.w, 35.w, 20.w),
-                    child: Column(
-                      children: <Widget>[
-                        OneBlockTop(
-                          topText: "서로 남기는\n하루 한장\n시작해볼까요",
-                          bottomText: "로그인을 진행합니다",
-                        ),
-                        LoginFormWidget(loginViewModel: _loginViewModel),
-                      ],
-                    ),
+          body: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(),
+                Container(
+                  padding: EdgeInsetsDirectional.fromSTEB(35.w, 20.w, 35.w, 20.w),
+                  child: Column(
+                    children: <Widget>[
+                      OneBlockTop(
+                        topText: "서로 남기는\n하루 한장\n시작해볼까요",
+                        bottomText: "로그인을 진행합니다",
+                      ),
+                      LoginFormWidget(loginViewModel: _loginViewModel),
+                    ],
                   ),
-                  MediaQuery.of(context).viewInsets.bottom <= 50 ?
-                  LargeButtonWidget(
-                      onTap: () async {
-                        _formKey.currentState!.save();
-                        FocusScope.of(context).unfocus();
-                        !_loginViewModel.isLoginOk ?
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                                _loginViewModel.idErrorMessage ?? _loginViewModel.pwErrorMessage ?? '입력된 정보가 올바르지 않습니다'
-                            ),
+                ),
+                MediaQuery.of(context).viewInsets.bottom <= 50 ?
+                LargeButtonWidget(
+                    onTap: () async {
+                      _formKey.currentState!.save();
+                      FocusScope.of(context).unfocus();
+                      !_loginViewModel.isLoginOk ?
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                              _loginViewModel.idErrorMessage ?? _loginViewModel.pwErrorMessage ?? '입력된 정보가 올바르지 않습니다'
                           ),
-                        )
-                            :
-                        await _loginViewModel.doLogin() ?
-                        {
-                          _loginViewModel.clear(),
-                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false)
-                        }
-                            :
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                                _loginViewModel.loginFailMessage??"실패"
-                            ),
+                        ),
+                      )
+                          :
+                      await _loginViewModel.doLogin() ?
+                      {
+                        _loginViewModel.clear(),
+                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false)
+                      }
+                          :
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                              _loginViewModel.loginFailMessage??"실패"
                           ),
-                        );
-                      },
-                      buttonText: "로그인"
-                  )
-                      :
-                  Container()
-                ],
-              ),
+                        ),
+                      );
+                    },
+                    buttonText: "로그인"
+                )
+                    :
+                Container()
+              ],
             ),
           )
       ),
