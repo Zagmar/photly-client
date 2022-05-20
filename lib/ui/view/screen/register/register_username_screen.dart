@@ -21,8 +21,8 @@ class RegisterUsernameScreen extends StatelessWidget {
             FocusScope.of(context).unfocus();
           },
           child: Scaffold(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             appBar: AppBar(
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               elevation: 0,
               leading: Container(),
               actions: <Widget>[
@@ -30,7 +30,7 @@ class RegisterUsernameScreen extends StatelessWidget {
                   onTap: (){
                     _registerViewModel.clear();
                     FocusScope.of(context).unfocus();
-                    Navigator.popUntil(context, ModalRoute.withName("/loginScreen"));
+                    Navigator.popUntil(context, (route) => route.isFirst);
                   },
                   child: SizedBox(
                     width: 50.w,
@@ -42,7 +42,6 @@ class RegisterUsernameScreen extends StatelessWidget {
                 )
               ],
             ),
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             body: SafeArea(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -66,8 +65,8 @@ class RegisterUsernameScreen extends StatelessWidget {
                               FocusScope.of(context).unfocus();
                             },
                             obscureText: false,
-                            onChanged: (value){
-                              _registerViewModel.checkUsername(value);
+                            onSaved: (value) {
+                              _registerViewModel.checkUsername(value??"");
                             },
                           ),
                         ),
