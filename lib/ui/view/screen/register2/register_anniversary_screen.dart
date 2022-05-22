@@ -22,27 +22,6 @@ class RegisterAnniversaryScreen extends StatelessWidget {
           },
           child: Scaffold(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            appBar: AppBar(
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              elevation: 0,
-              leading: Container(),
-              actions: <Widget>[
-                InkWell(
-                  onTap: (){
-                    _register2ViewModel.clear();
-                    FocusScope.of(context).unfocus();
-                    Navigator.popUntil(context, (route) => route.isFirst);
-                  },
-                  child: SizedBox(
-                    width: 50.w,
-                    child: Icon(
-                      Icons.clear,
-                      color: Color(0xFF000000),
-                    ),
-                  ),
-                )
-              ],
-            ),
             body: SafeArea(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -84,6 +63,7 @@ class RegisterAnniversaryScreen extends StatelessWidget {
                       onTapRight: () async {
                         FocusScope.of(context).unfocus();
                         _register2ViewModel.isAnniversaryOk ?
+
                         Navigator.push(context, MaterialPageRoute(builder: (context) => PostMainScreen()))
                             :
                         ScaffoldMessenger.of(context).showSnackBar(

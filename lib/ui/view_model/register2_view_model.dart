@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 
 import '../../data/datasource/remote_datasource.dart';
 import '../../data/repository/auth_service.dart';
+import '../../data/repository/user_info_repository.dart';
 
 class Register2ViewModel with ChangeNotifier {
+  final _userInfoRepository = UserInfoRepository();
+
+  String _userId = "rjsgy0815@naver.com";
   String _username = "";
   DateTime? _anniversary;
   bool _isUsernameOk = false;
@@ -39,8 +43,7 @@ class Register2ViewModel with ChangeNotifier {
   }
 
   Future<void> uploadUserInfoToDB() async {
-    // temp
-    // user 등록
+    var response = await _userInfoRepository.createUser(_userId, _username, _anniversary!);
   }
 
   clear() {

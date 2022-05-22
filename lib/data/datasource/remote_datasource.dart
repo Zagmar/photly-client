@@ -34,9 +34,6 @@ class RemoteDataSource {
   // Get data from API by inputData
   Future<Object> getFromUri(String uri, Map<String, dynamic>? inputData) async {
     try{
-      print("호출");
-      print(uri);
-      //var url = Uri.parse(uri);
       final response = await Dio()
           .get(
           uri,
@@ -69,10 +66,16 @@ class RemoteDataSource {
   // Post inputData to database through API
   Future<Object> postToUri(String uri, Map<String, dynamic> inputData) async {
     try{
-      var url = Uri.parse(uri);
-      var response = await http.post(url, body: inputData).timeout(Duration(seconds: timeout));
+      final response = await Dio()
+          .post(
+          uri,
+          data: inputData,
+      ).timeout(const Duration(seconds: 600))
+          .catchError((e) {
+        print(e.message);
+      });
       if(response.statusCode == OK) {
-        return Success(response: response.body);
+        return Success(response: response.data);
       }
       return Failure(code: INVALID_RESPONSE, errorResponse: "Invalid Response");
     } on HttpException{

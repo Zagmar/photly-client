@@ -90,21 +90,25 @@ class LoginViewModel with ChangeNotifier {
     if(result == LoginStatus.success){
       _loginFailMessage = null;
       _loginFail = "success";
+      print(_loginFail);
       notifyListeners();
     }
     else if(result == LoginStatus.nonVerification) {
       _loginFailMessage = "인증을 완료해주세요";
       _loginFail = "nonVerification";
+      print(_loginFail);
       notifyListeners();
     }
     else if(result == LoginStatus.nonUserInfo) {
       _loginFailMessage = "사용자 정보 입력을 완료해주세요";
       _loginFail = "nonUserInfo";
+      print(_loginFail);
       notifyListeners();
     }
     else if(result == LoginStatus.fail){
       _loginFailMessage = "일치하는 사용자 정보가 없습니다";
       _loginFail = "fail";
+      print(_loginFail);
       notifyListeners();
     }
     else {

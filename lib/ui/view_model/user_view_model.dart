@@ -1,4 +1,5 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:couple_seflie_app/data/repository/user_info_repository.dart';
 import 'package:flutter/material.dart';
 
 import '../../data/datasource/remote_datasource.dart';

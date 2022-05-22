@@ -23,27 +23,6 @@ class RegisterUsernameScreen extends StatelessWidget {
           },
           child: Scaffold(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            appBar: AppBar(
-              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              elevation: 0,
-              leading: Container(),
-              actions: <Widget>[
-                InkWell(
-                  onTap: (){
-                    _register2ViewModel.clear();
-                    FocusScope.of(context).unfocus();
-                    Navigator.popUntil(context, (route) => route.isFirst);
-                  },
-                  child: SizedBox(
-                    width: 50.w,
-                    child: Icon(
-                      Icons.clear,
-                      color: Color(0xFF000000),
-                    ),
-                  ),
-                )
-              ],
-            ),
             body: SafeArea(
               child: Form(
                 key: _formKey,
@@ -79,13 +58,8 @@ class RegisterUsernameScreen extends StatelessWidget {
                     ),
                     MediaQuery.of(context).viewInsets.bottom <= 50 ?
                     // Hide button when use keyboard
-                    BothButtonsWidget(
-                        onTapLeft: () {
-                          FocusScope.of(context).unfocus();
-                          Navigator.pop(context);
-                        },
-                        buttonTextLeft: "이전",
-                        onTapRight: () {
+                    RightButtonOnlyWidget(
+                        onTap: () {
                           _formKey.currentState!.save();
                           FocusScope.of(context).unfocus();
                           _register2ViewModel.isUsernameOk ?
@@ -99,7 +73,7 @@ class RegisterUsernameScreen extends StatelessWidget {
                             ),
                           );
                         },
-                        buttonTextRight: "다음",
+                        buttonText: "다음"
                     )
                         :
                     Container()

@@ -7,6 +7,8 @@ import 'package:couple_seflie_app/ui/view_model/login_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/post_daily_info_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/register1_view_model.dart';
+import 'package:couple_seflie_app/ui/view_model/register2_view_model.dart';
+import 'package:couple_seflie_app/ui/view_model/register3_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/user_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -16,7 +18,6 @@ import 'package:provider/provider.dart';
 import 'amplifyconfiguration.dart';
 import 'data/repository/auth_service.dart';
 
-String _initialRoute = "";
 bool _isLogined = false;
 late String username;
 Future<void> main() async {
@@ -49,15 +50,12 @@ Future<void> main() async {
 
   final AuthFlowStatus authFlowStatus = await AuthService().checkAuthStatusService();
   if(authFlowStatus == AuthFlowStatus.session) {
-    _initialRoute = "/postMainScreen";
     _isLogined = true;
   }
   else{
-    _initialRoute = "/loginScreen";
     _isLogined = false;
   }
 
-  print("초기 설정 준비");
   runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context)=> DailyCouplePostViewModel(),),
@@ -66,6 +64,8 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => UserViewModel()),
         ChangeNotifierProvider(create: (context) => LoginViewModel()),
         ChangeNotifierProvider(create: (context) => Register1ViewModel()),
+        ChangeNotifierProvider(create: (context) => Register2ViewModel()),
+        ChangeNotifierProvider(create: (context) => Register3ViewModel()),
       ],
       child: MyApp())
   );
