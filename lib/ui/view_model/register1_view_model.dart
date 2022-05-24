@@ -92,6 +92,11 @@ class Register1ViewModel with ChangeNotifier {
       _registrationFailMessage = null;
       notifyListeners();
     }
+    else if(response == SignUpStatus.existUser) {
+      _isRegistered = false;
+      _registrationFailMessage = "이미 가입된 사용자입니다";
+      notifyListeners();
+    }
     else {
       _isRegistered = false;
       _registrationFailMessage = "재시도 후 지속적으로 오류가 발생 시 문의해주세요";

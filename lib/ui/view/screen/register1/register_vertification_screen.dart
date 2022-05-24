@@ -62,7 +62,8 @@ class RegisterVertificationScreen extends StatelessWidget {
                       ),
                       Container(
                         child: Text(
-                          "이메일 인증이 완료되면 \n저희 Photly를\n즐길 수 있어요"
+                          "이메일 인증이 완료되면 \n저희 Photly를 즐길 수 있어요",
+                          textAlign: TextAlign.center,
                         ),
                       )
                     ],

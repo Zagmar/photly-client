@@ -83,7 +83,7 @@ class RegisterScreen extends StatelessWidget {
                       _registerViewModel.isRegistered ?
                       {
                         _registerViewModel.clear(),
-                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => RegisterVertificationScreen()), (route) => false)
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterVertificationScreen()))
                       }
                           :
                       ScaffoldMessenger.of(context).showSnackBar(

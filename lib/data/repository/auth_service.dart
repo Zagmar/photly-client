@@ -12,7 +12,7 @@ import '../model/auth_credentials_model.dart';
 // AuthFlowStatus는 로그인 페이지, 등록 페이지, 확인 페이지 또는 세션의 네 가지 인증 흐름을 포함할 수 있는 열거형
 enum AuthFlowStatus { login, session }
 enum LoginStatus { success, fail, nonVerification, nonUserInfo, unknownFail}
-enum SignUpStatus { success, fail }
+enum SignUpStatus { success, fail, nonVerification, existUser }
 
 class AuthService {
   final _userInfoRepository = UserInfoRepository();
@@ -37,7 +37,7 @@ class AuthService {
         return LoginStatus.fail;
         return Failure(code: INVALID_RESPONSE, errorResponse: "일치하는 회원정보가 없습니다");
       }
-    } on UserNotConfirmedException catch (authError) {
+    } on UserNotConfirmedException {
       // Non-verification user
       return LoginStatus.nonVerification;
       return Failure(code: UNKNOWN_ERROR, errorResponse: "이메일을 확인하여 인증을 완료해주세요");
@@ -51,8 +51,8 @@ class AuthService {
   Future<Object> registerService(UserCredentialsModel credentials) async {
     try {
       final userAttributes = {CognitoUserAttributeKey.email: credentials.email};
-      final result = await Amplify.Auth.signUp(username: credentials.email, password: credentials.password, options: CognitoSignUpOptions(userAttributes: userAttributes));
 
+      final result = await Amplify.Auth.signUp(username: credentials.email, password: credentials.password, options: CognitoSignUpOptions(userAttributes: userAttributes));
       // 4
       if (result.isSignUpComplete) {
         return SignUpStatus.success;
@@ -68,6 +68,10 @@ class AuthService {
       }
 
       // 7
+    } on UsernameExistsException {
+      // Non-verification user
+      return SignUpStatus.existUser;
+      return Failure(code: UNKNOWN_ERROR, errorResponse: "이메일을 확인하여 인증을 완료해주세요");
     } on AuthException catch (authError) {
       return SignUpStatus.fail;
       return Failure(code: UNKNOWN_ERROR, errorResponse: "회원가입에 실패하였습니다 - ${authError.message}");
