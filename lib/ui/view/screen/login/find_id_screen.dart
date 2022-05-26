@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../widget/route_button_widgets.dart';
 
 class FindIdScreen extends StatelessWidget {

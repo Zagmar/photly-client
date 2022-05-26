@@ -5,36 +5,40 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:couple_seflie_app/data/datasource/remote_datasource.dart';
 import 'package:couple_seflie_app/data/repository/user_info_repository.dart';
 import 'package:couple_seflie_app/main.dart';
-
-import '../../amplifyconfiguration.dart';
 import '../model/auth_credentials_model.dart';
 
 // AuthFlowStatus는 로그인 페이지, 등록 페이지, 확인 페이지 또는 세션의 네 가지 인증 흐름을 포함할 수 있는 열거형
 enum AuthFlowStatus { login, session }
 enum LoginStatus { success, fail, nonVerification, nonUserInfo, unknownFail}
 enum SignUpStatus { success, fail, nonVerification, existUser }
+enum VerifyStatus { success, fail }
 
 class AuthService {
-  final _userInfoRepository = UserInfoRepository();
+  final RemoteDataSource _remoteDataSource = RemoteDataSource();
+  static const String USER = "$PHOTLY/user/info";
+
 
   Future<Object> loginService(UserCredentialsModel credentials) async {
     try {
       final response = await Amplify.Auth.signIn(username: credentials.email, password: credentials.password);
 
       if (response.isSignedIn) {
-        final dbResponse = await _userInfoRepository.getUserInfo(credentials.email);
+        print(credentials.email);
+        final dbResponse = await getUserInfo(credentials.email);
         if(dbResponse is Success) {
+          print("성공");
           // Success to login
           return LoginStatus.success;
         }
         else {
+          print("유저 정보 없음");
           // No uploaded user information in DB
           return LoginStatus.nonUserInfo;
         }
         return Success(response: "로그인에 성공하였습니다");
       } else {
         // Fail to login
-        return LoginStatus.fail;
+        return LoginStatus.unknownFail;
         return Failure(code: INVALID_RESPONSE, errorResponse: "일치하는 회원정보가 없습니다");
       }
     } on UserNotConfirmedException {
@@ -42,8 +46,9 @@ class AuthService {
       return LoginStatus.nonVerification;
       return Failure(code: UNKNOWN_ERROR, errorResponse: "이메일을 확인하여 인증을 완료해주세요");
     } on AuthException catch (authError) {
+      print(authError.message);
       // Fail to login
-      return LoginStatus.unknownFail;
+      return LoginStatus.fail;
       return Failure(code: UNKNOWN_ERROR, errorResponse: "로그인에 실패하였습니다 - ${authError.message}");
     }
   }
@@ -78,6 +83,35 @@ class AuthService {
     }
   }
 
+  Future<Object> verificationService(String userId, String verificationCode) async {
+    try {
+      final result = await Amplify.Auth.confirmSignUp(
+          username: userId, confirmationCode: verificationCode);
+
+      if (result.isSignUpComplete) {
+        print("성공");
+        return VerifyStatus.success;
+        return Success(response: "회원가입이 완료되었습니다");
+      }
+      else {
+        print("실패");
+        print(result);
+        // verificationService;
+        //_authCredentialsModel = credentials;
+        // _authFlowStatus = AuthFlowStatus.verification;
+        return VerifyStatus.success;
+        return Success(response: "이메일을 확인하여 인증을 완료주세요");
+      }
+
+      // 7
+    } on AuthException catch (authError) {
+      print("실패");
+      print(authError.message);
+      return VerifyStatus.fail;
+      return Failure(code: UNKNOWN_ERROR, errorResponse: "회원가입에 실패하였습니다 - ${authError.message}");
+    }
+  }
+
   // Logout
   Future<Object> logOutService() async {
     try {
@@ -99,12 +133,35 @@ class AuthService {
     try {
       await Amplify.Auth.fetchAuthSession();
       // username = (await Amplify.Auth.getCurrentUser()).username;
-      username = (await AmplifyAuthCognito().getCurrentUser()).username;
-      print(username);
-      return AuthFlowStatus.session;
+      String userId = await AuthService().getCurrentUserId();
+      print("아이디: " + userId);
+      var response = await getUserInfo(userId);
+      if(response is Success) {
+        return AuthFlowStatus.session;
+      }
+      else{
+        await logOutService();
+        return AuthFlowStatus.login;
+      }
     } catch (_) {
-      username = "";
       return AuthFlowStatus.login;
     }
+  }
+
+  Future<Object> getUserInfo(String userId) async {
+    // convert inputData to use for API
+    Map<String, dynamic> inputData = {
+      'user_id' : userId,
+    };
+
+    print(inputData);
+    // call API
+    var response = await _remoteDataSource.getFromUri(USER, inputData);
+    return response;
+  }
+
+  Future<String> getCurrentUserId() async {
+    String userId = (await Amplify.Auth.fetchUserAttributes()).firstWhere((element) => element.userAttributeKey.key == "email").value;
+    return userId;
   }
 }

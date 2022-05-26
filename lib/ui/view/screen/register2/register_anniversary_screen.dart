@@ -63,13 +63,24 @@ class RegisterAnniversaryScreen extends StatelessWidget {
                       onTapRight: () async {
                         FocusScope.of(context).unfocus();
                         _register2ViewModel.isAnniversaryOk ?
-
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => PostMainScreen()))
+                        {
+                          await _register2ViewModel.uploadUserInfoToDB(),
+                          _register2ViewModel.isUploaded ?
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => PostMainScreen()))
+                              :
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text(
+                                    _register2ViewModel.uploadFailMessage !
+                                )
+                            ),
+                          )
+                        }
                             :
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                                _register2ViewModel.anniversaryFailMessage!
+                                _register2ViewModel.anniversaryErrorMessage!
                             )
                           ),
                         );

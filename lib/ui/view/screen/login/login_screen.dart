@@ -3,11 +3,11 @@ import 'package:couple_seflie_app/ui/view/screen/login/find_pw_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register2/register_username_screen.dart';
 import 'package:couple_seflie_app/ui/view/widget/route_button_widgets.dart';
-import 'package:couple_seflie_app/ui/view_model/login_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
+import '../../../view_model/user_info_view_model.dart';
 import '../../widget/text_form_field.dart';
 import '../../widget/top_widgets.dart';
 import '../register1/register_screen.dart';
@@ -15,12 +15,12 @@ import '../register1/register_vertification_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
-  late LoginViewModel _loginViewModel;
+  late UserInfoViewModel _userInfoViewModel;
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    _loginViewModel = Provider.of<LoginViewModel>(context);
+    _userInfoViewModel = Provider.of<UserInfoViewModel>(context);
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).unfocus();
@@ -42,7 +42,7 @@ class LoginScreen extends StatelessWidget {
                         topText: "서로 남기는\n하루 한장\n시작해볼까요",
                         bottomText: "로그인을 진행합니다",
                       ),
-                      LoginFormWidget(loginViewModel: _loginViewModel),
+                      LoginFormWidget(userInfoViewModel: _userInfoViewModel),
                     ],
                   ),
                 ),
@@ -51,35 +51,36 @@ class LoginScreen extends StatelessWidget {
                     onTap: () async {
                       _formKey.currentState!.save();
                       FocusScope.of(context).unfocus();
-                      !_loginViewModel.isLoginOk ?
+                      !_userInfoViewModel.isLoginOk ?
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                              _loginViewModel.idErrorMessage ?? _loginViewModel.pwErrorMessage ?? '입력된 정보가 올바르지 않습니다'
+                              _userInfoViewModel.idErrorMessage ?? _userInfoViewModel.pwErrorMessage ?? '입력된 정보가 올바르지 않습니다'
                           ),
                         ),
                       )
                           :
-                      await _loginViewModel.doLogin();
+                      await _userInfoViewModel.doLogin();
 
-                      switch (_loginViewModel.loginFail) {
+                      switch (_userInfoViewModel.loginFail) {
                         case null : break;
                         case "success" :
-                          _loginViewModel.clear();
+                          _userInfoViewModel.clear();
                           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false);
                           break;
                         case "nonVerification" :
+                          _userInfoViewModel.clearSecret();
                           Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterVertificationScreen()));
                           break;
                         case "nonUserInfo" :
-                          _loginViewModel.clear();
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterUsernameScreen()));
+                          _userInfoViewModel.clearSecret();
+                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => RegisterUsernameScreen()), (route) => false);
                           break;
                         case "fail" :
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                  _loginViewModel.loginFailMessage!
+                                  _userInfoViewModel.loginFailMessage!
                               ),
                             ),
                           );
@@ -99,8 +100,8 @@ class LoginScreen extends StatelessWidget {
 }
 
 class LoginFormWidget extends StatelessWidget {
-  final LoginViewModel loginViewModel;
-  LoginFormWidget({Key? key, required this.loginViewModel}) : super(key: key);
+  final UserInfoViewModel userInfoViewModel;
+  LoginFormWidget({Key? key, required this.userInfoViewModel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -122,7 +123,7 @@ class LoginFormWidget extends StatelessWidget {
                 obscureText: false,
                 keyboardType: TextInputType.emailAddress,
                 onSaved: (value) async {
-                  await loginViewModel.checkEmail(value??"");
+                  await userInfoViewModel.checkEmail(value??"");
                 },
               ),
               TextInputWidget(
@@ -131,7 +132,7 @@ class LoginFormWidget extends StatelessWidget {
                 obscureText: true,
                 keyboardType: TextInputType.visiblePassword,
                 onSaved: (value) async {
-                  await loginViewModel.checkPassword(value??"");
+                  await userInfoViewModel.checkPassword(value??"");
                 },
               ),
             ],
@@ -145,7 +146,7 @@ class LoginFormWidget extends StatelessWidget {
                   buttonText: "아이디 찾기",
                   onPressed: (){
                     FocusScope.of(context).unfocus();
-                    loginViewModel.clear();
+                    userInfoViewModel.clear();
                     Navigator.push(context, MaterialPageRoute(builder: (context) => FindIdScreen()));
                   },
               ),
@@ -154,7 +155,7 @@ class LoginFormWidget extends StatelessWidget {
                   buttonText: "비밀번호 찾기",
                   onPressed: (){
                     FocusScope.of(context).unfocus();
-                    loginViewModel.clear();
+                    userInfoViewModel.clear();
                     Navigator.push(context, MaterialPageRoute(builder: (context) => FindPwScreen()));
                   },
               ),
@@ -163,7 +164,7 @@ class LoginFormWidget extends StatelessWidget {
                 buttonText: "회원가입",
                 onPressed: () {
                   FocusScope.of(context).unfocus();
-                  loginViewModel.clear();
+                  userInfoViewModel.clear();
                   Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen()));
                 },
               )

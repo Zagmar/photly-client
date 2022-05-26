@@ -1,21 +1,20 @@
 import 'package:couple_seflie_app/ui/view/screen/register1/register_vertification_screen.dart';
 import 'package:couple_seflie_app/ui/view/widget/route_button_widgets.dart';
+import 'package:couple_seflie_app/ui/view_model/user_info_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-
-import '../../../view_model/register1_view_model.dart';
 import '../../widget/text_form_field.dart';
 import '../../widget/top_widgets.dart';
 
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({Key? key}) : super(key: key);
-  late Register1ViewModel _registerViewModel;
+  late UserInfoViewModel _userInfoViewModel;
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    _registerViewModel = Provider.of<Register1ViewModel>(context);
+    _userInfoViewModel = Provider.of<UserInfoViewModel>(context);
     return GestureDetector(
       onTap: (){
         FocusScope.of(context).unfocus();
@@ -28,7 +27,7 @@ class RegisterScreen extends StatelessWidget {
           actions: <Widget>[
             InkWell(
               onTap: (){
-                _registerViewModel.clear();
+                _userInfoViewModel.clear();
                 FocusScope.of(context).unfocus();
                 Navigator.popUntil(context, (route) => route.isFirst);
               },
@@ -59,7 +58,7 @@ class RegisterScreen extends StatelessWidget {
                         topText: "서로 남기는\n하루 한장\n시작해볼까요",
                         bottomText: "회원가입을 진행합니다",
                       ),
-                      RegisterFormWidget(registerViewModel: _registerViewModel),
+                      RegisterFormWidget(userInfoViewModel: _userInfoViewModel),
                     ],
                   ),
                 ),
@@ -69,27 +68,27 @@ class RegisterScreen extends StatelessWidget {
                     onTap: () async {
                       _formKey.currentState!.save();
                       FocusScope.of(context).unfocus();
-                      !_registerViewModel.isRegisterOk ?
+                      !_userInfoViewModel.isRegisterOk ?
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                              _registerViewModel.idErrorMessage ?? _registerViewModel.pwErrorMessage ?? '입력된 정보가 올바르지 않습니다'
+                              _userInfoViewModel.idErrorMessage ?? _userInfoViewModel.pwErrorMessage ?? '입력된 정보가 올바르지 않습니다'
                           ),
                         ),
                       )
                           :
-                      await _registerViewModel.doRegistration();
+                      await _userInfoViewModel.doRegistration();
 
-                      _registerViewModel.isRegistered ?
+                      _userInfoViewModel.isRegistered ?
                       {
-                        _registerViewModel.clear(),
+                        _userInfoViewModel.clearSecret(),
                         Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterVertificationScreen()))
                       }
                           :
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text(
-                              _registerViewModel.registrationFailMessage!
+                              _userInfoViewModel.registrationFailMessage!
                           ),
                         ),
                       );
@@ -108,8 +107,8 @@ class RegisterScreen extends StatelessWidget {
 }
 
 class RegisterFormWidget extends StatelessWidget {
-  final Register1ViewModel registerViewModel;
-  const RegisterFormWidget({Key? key, required this.registerViewModel}) : super(key: key);
+  final UserInfoViewModel userInfoViewModel;
+  const RegisterFormWidget({Key? key, required this.userInfoViewModel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +126,7 @@ class RegisterFormWidget extends StatelessWidget {
             obscureText: false,
             keyboardType: TextInputType.emailAddress,
             onSaved: (value) async {
-              await registerViewModel.checkEmail(value??"");
+              await userInfoViewModel.checkEmail(value??"");
             },
           ),
           TextInputWidget(
@@ -136,7 +135,7 @@ class RegisterFormWidget extends StatelessWidget {
             obscureText: true,
             keyboardType: TextInputType.visiblePassword,
             onSaved: (value) async {
-              await registerViewModel.checkPassword(value??"");
+              await userInfoViewModel.checkPassword(value??"");
             },
           ),
           TextInputWidget(
@@ -145,7 +144,7 @@ class RegisterFormWidget extends StatelessWidget {
             obscureText: true,
             keyboardType: TextInputType.visiblePassword,
             onSaved: (value) async {
-              await registerViewModel.checkPasswordCheck(value??"");
+              await userInfoViewModel.checkPasswordCheck(value??"");
             },
           ),
         ],

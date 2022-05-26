@@ -1,0 +1,25 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-photly-dev-03829-authRole",
+      "UnauthRoleArn": "arn:aws:iam::630483499643:role/amplify-photly-dev-03829-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::630483499643:role/amplify-photly-dev-03829-authRole",
+      "Region": "ap-northeast-2",
+      "DeploymentBucketName": "amplify-photly-dev-03829-deployment",
+      "UnauthRoleName": "amplify-photly-dev-03829-unauthRole",
+      "StackName": "amplify-photly-dev-03829",
+      "StackId": "arn:aws:cloudformation:ap-northeast-2:630483499643:stack/amplify-photly-dev-03829/ba27a220-dc40-11ec-bac4-069df0887dd0",
+      "AmplifyAppId": "d1rzq597yatck4"
+    },
+    "categories": {
+      "auth": {
+        "photly": {
+          "userPoolId": "ap-northeast-2_VX4UB4Vr3",
+          "userPoolName": "photly_userpool_test1",
+          "webClientId": "4gmrm0cgmc7mo367jfhplm6f1c",
+          "nativeClientId": "4gmrm0cgmc7mo367jfhplm6f1c"
+        }
+      }
+    }
+  }
+}
