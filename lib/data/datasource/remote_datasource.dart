@@ -44,7 +44,6 @@ class RemoteDataSource {
       print(response);
 
       if(response.statusCode == OK) {
-        print(response.data);
         print("테스트 성공");
         return Success(response: response.data);
       }
@@ -74,6 +73,8 @@ class RemoteDataSource {
           .catchError((e) {
         print(e.message);
       });
+      print(response);
+
       if(response.statusCode == OK) {
         return Success(response: response.data);
       }
@@ -91,14 +92,19 @@ class RemoteDataSource {
   // Edit data in database into inputData through API
   Future<Object> putToUri(String uri, Map<String, dynamic> inputData) async {
     try{
-      var url = Uri.parse(uri);
-      var response = await http.put(
-          url,
-          headers: {"Content-Type": "application/json"},
-          body: inputData
-      ).timeout(Duration(seconds: timeout));
+      final response = await Dio()
+          .put(
+        uri,
+        data: inputData,
+      ).timeout(const Duration(seconds: 600))
+          .catchError((e) {
+        print(e.message);
+      });
+      print(response);
+
       if(response.statusCode == OK) {
-        return Success(response: response.body);
+        print("Success");
+        return Success(response: response.data);
       }
       return Failure(code: INVALID_RESPONSE, errorResponse: "Invalid Response");
     } on HttpException{
@@ -114,10 +120,17 @@ class RemoteDataSource {
   // Delete pointed to by the input data in the database through API
   Future<Object> deleteFromUri(String uri, Map<String, dynamic> inputData) async {
     try{
-      var url = Uri.parse(uri);
-      var response = await http.delete(url,).timeout(Duration(seconds: timeout));
+      final response = await Dio()
+          .get(
+          uri,
+          queryParameters: inputData).timeout(const Duration(seconds: 600))
+          .catchError((e) {
+        print(e.message);
+      });
+      print(response);
+
       if(response.statusCode == OK) {
-        return Success(response: response.body);
+        return Success(response: response.data);
       }
       return Failure(code: INVALID_RESPONSE, errorResponse: "Invalid Response");
     } on HttpException{

@@ -92,9 +92,9 @@ class ImageButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () async {
+        print(postId);
         final PostViewModel _postViewModel = Provider.of<PostViewModel>(context, listen: false);
         await _postViewModel.getPost(postId);
-        //Navigator.pushNamed(context, '/postDetailScreen');
         Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => PostDetailScreen())
@@ -166,11 +166,8 @@ class UserDailyPostWidget extends StatelessWidget {
           iconImagePath: 'images/icons/icon_edit.svg',
           onTap: () async {
             FocusScope.of(context).unfocus();
-            if(_dailyCouplePostViewModel.dailyCouplePosts[index].userPostId != null){
-              final PostViewModel _postViewModel = Provider.of<PostViewModel>(context, listen: false);
-              await _postViewModel.getPost(_dailyCouplePostViewModel.dailyCouplePosts[index].userPostId!);
-            };
-            //Navigator.pushNamed(context, '/postEditScreen');
+            final PostViewModel _postViewModel = Provider.of<PostViewModel>(context, listen: false);
+            await _postViewModel.setEmptyPost();
             Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => PostEditScreen())
@@ -189,6 +186,7 @@ class UserDailyPostWidget extends StatelessWidget {
     );
   }
 }
+
 
 class PartnerDailyPostWidget extends StatelessWidget {
   final int index;
@@ -289,6 +287,7 @@ class PartnerDailyPostWidget extends StatelessWidget {
    );
   }
 }
+
 
 class EmptyPostButton extends StatelessWidget {
   final GestureTapCallback? onTap;

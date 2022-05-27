@@ -8,6 +8,7 @@ import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../../../ui_setting.dart';
@@ -26,7 +27,7 @@ class PostEditScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     DailyCouplePostViewModel _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context);
     _postViewModel = Provider.of<PostViewModel>(context);
-    _postTextController = TextEditingController()..text = _postViewModel.post.postText ?? ""; // temp
+    _postTextController = TextEditingController()..text = _postViewModel.post!.postText ?? ""; // temp
     return Scaffold(
       body: GestureDetector(
         onTap: (){
@@ -43,17 +44,21 @@ class PostEditScreen extends StatelessWidget {
                     PostDailyInfoWidget(
                       bottomButton: TextButtonWidget(
                         buttonText: "저장",
-                        onTap: (){
+                        onTap: () async {
                           FocusScope.of(context).unfocus();
                           print("저장");
-                          if(_postViewModel.postId == ""){
-                            _postViewModel.createPost(_postViewModel.post);
+                          if(_postViewModel.postId == 0){
+                            print("새로");
+                            await _postViewModel.createPost(_postViewModel.post!);
                           }
                           else{
-                            _postViewModel.editPost(_postViewModel.post);
+                            print("편집");
+                            await _postViewModel.editPost(_postViewModel.post!);
                           }
                           // temp
                           //Navigator.popAndPushNamed(context, '/postDetailScreen');
+                          print("성공");
+
                           Navigator.pushReplacement(
                               context, 
                               MaterialPageRoute(builder: (context) => PostDetailScreen()),
@@ -82,7 +87,7 @@ class PostEditScreen extends StatelessWidget {
                                             dialogText: "갤러리에서 이미지 추가하기",
                                             onPressed: (){
                                               Navigator.pop(context);
-                                              _postViewModel.pickImage("gallery");
+                                              _postViewModel.pickImage(ImageSource.gallery);
                                             },
                                           ),
                                           // Take a picture with camera
@@ -90,7 +95,7 @@ class PostEditScreen extends StatelessWidget {
                                             dialogText: "카메라로 이미지 촬영하기",
                                             onPressed: (){
                                               Navigator.pop(context);
-                                              _postViewModel.pickImage("camera");
+                                              _postViewModel.pickImage(ImageSource.camera);
                                             },
                                           ),
                                           // cancel
@@ -113,10 +118,10 @@ class PostEditScreen extends StatelessWidget {
                                 fit: BoxFit.cover,
                               )
                                   :
-                              _postViewModel.post.postId != "" ?
+                              _postViewModel.post!.postId != 0 ?
                               // Image from DB
                               CashedNetworkImageWidget(
-                                imageUrl: _postViewModel.post.postImageUrl,
+                                imageUrl: _postViewModel.post!.postImageUrl,
                                 width: 390,
                                 height: 390 * IMAGE_RATIO,
                               )
@@ -130,7 +135,7 @@ class PostEditScreen extends StatelessWidget {
                           child: HorizontalBorder(),
                         ),
                         PostTextFormWidget(
-                          initialPostText: _postViewModel.post.postText,
+                          initialPostText: _postViewModel.post!.postText,
                           weatherButtonOnTap: (){
                             Focus.of(context).unfocus();
                             showDialog(
@@ -155,7 +160,7 @@ class PostEditScreen extends StatelessWidget {
                             _postViewModel.setPostText(value);
                           },
                           dateTimeNow: _postViewModel.dateTimeNow,
-                          weatherImagePath: "assets/images/weathers/weather_" + (_postViewModel.post.postWeather ?? 0).toString() + ".svg",
+                          weatherImagePath: "assets/images/weathers/weather_" + (_postViewModel.post!.postWeather ?? 0).toString() + ".svg",
                         )
                       ],
                     ),

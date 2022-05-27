@@ -3,13 +3,13 @@ import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../view_model/user_view_model.dart';
+import '../../view_model/user_info_view_model.dart';
 
 class MainDrawerWidget extends StatelessWidget {
-  late UserViewModel _userViewModel;
+  late UserInfoViewModel _userInfoViewModel;
   @override
   Widget build(BuildContext context) {
-    _userViewModel = Provider.of<UserViewModel>(context);
+    _userInfoViewModel = Provider.of<UserInfoViewModel>(context);
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -27,7 +27,7 @@ class MainDrawerWidget extends StatelessWidget {
           ListTile(
             title: Text('로그아웃'),
             onTap: () async {
-              await Provider.of<UserViewModel>(context, listen: false).doLogout() ?
+              await Provider.of<UserInfoViewModel>(context, listen: false).doLogout() ?
               {
                 //Navigator.pushNamedAndRemoveUntil(context, "/loginScreen", (route) => false)
                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false)
@@ -36,7 +36,7 @@ class MainDrawerWidget extends StatelessWidget {
               ScaffoldMessenger(
                 child: SnackBar(
                   content: Text(
-                      _userViewModel.logoutFailMessage!
+                      _userInfoViewModel.logoutFailMessage!
                   ),
                 ),
               );

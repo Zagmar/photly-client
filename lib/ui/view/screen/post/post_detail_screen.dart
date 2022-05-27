@@ -1,19 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
-import 'package:couple_seflie_app/ui/view/widget/main_drawer_widget.dart';
+import 'package:couple_seflie_app/ui/view/screen/post/post_edit_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../ui_setting.dart';
-import '../../../view_model/daily_couple_post_view_model.dart';
 import '../../../view_model/post_view_model.dart';
 import '../../widget/post/post_appbar_widget.dart';
 import '../../widget/post/post_daily_info_widget.dart';
-
-// temp
-String USER_ID = "rjsgy0815@naver.com";
 
 class PostDetailScreen extends StatelessWidget {
   late PostViewModel _postViewModel;
@@ -41,10 +35,11 @@ class PostDetailScreen extends StatelessWidget {
                     },
                   ),
                   // bottomButton: _dailyCouplePostViewModel.isUserDone == true && _dailyCouplePostViewModel.isToday == true ?
-                  bottomButton: _postViewModel.post.postUserId == USER_ID && _postViewModel.post.postEditTime.year == DateTime.now().year && _postViewModel.post.postEditTime.month == DateTime.now().month && _postViewModel.post.postEditTime.day == DateTime.now().day ?
+                  bottomButton: _postViewModel.post!.postUserId == _postViewModel.currentUserId && _postViewModel.post!.postEditTime.year == DateTime.now().year && _postViewModel.post!.postEditTime.month == DateTime.now().month && _postViewModel.post!.postEditTime.day == DateTime.now().day ?
                   TextButtonWidget(
                       onTap: (){
                         FocusScope.of(context).unfocus();
+                        print("누름");
                         // temp
                         Navigator.popAndPushNamed(context, '/postEditScreen');
                       },
@@ -72,23 +67,13 @@ class PostDetailScreen extends StatelessWidget {
             height: 390.w * IMAGE_RATIO,
             child: InkWell(
               onTap: (){
-                _postViewModel.setTempImageUrl(_postViewModel.post.postImageUrl);
+                _postViewModel.setTempImageUrl(_postViewModel.post!.postImageUrl);
                 //Navigator.pushNamed(context, "/largeImageScreen");
               },
-              child: CachedNetworkImage(
-                imageUrl: _postViewModel.post.postImageUrl,
-                width: 390.w,
-                height: 390.w * IMAGE_RATIO,
-                progressIndicatorBuilder: (context, url, downloadProgress) =>
-                    Center(
-                      child: SizedBox(
-                          width: 30.w,
-                          height: 30.w,
-                          child: CircularProgressIndicator(value: downloadProgress.progress)
-                      ),
-                    ),
-                errorWidget: (context, url, error) => Icon(Icons.error),
-                fit: BoxFit.cover,
+              child: CashedNetworkImageWidget(
+                  imageUrl: _postViewModel.post!.postImageUrl,
+                  width: 390.w,
+                  height: 390.w * IMAGE_RATIO
               ),
             ),
           ),
@@ -101,30 +86,20 @@ class PostDetailScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    _postViewModel.post.postLocation != null ?
+                    _postViewModel.post!.postLocation != null ?
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        SizedBox(
-                          height: 30.w,
-                          width: 30.w,
-                          child: IconButton(
-                              onPressed: (){},
-                              padding: EdgeInsets.zero,
-                              constraints: BoxConstraints(),
-                              icon: Icon(
-                                Icons.place_outlined,
-                                size: 24.w,
-                                color: Color(0xFFAAAAAA),
-                              )
-                          ),
+                        PostButtonWidget(
+                            iconData: Icons.place_outlined,
+                            onTap: (){}
                         ),
                         Container(
                           width: 280.w,
                           padding: EdgeInsets.only(left: 5.w),
                           child: Text(
-                            _postViewModel.post.postLocation!,
+                            _postViewModel.post!.postLocation!,
                             style: TextStyle(
                                 fontSize: 13.w,
                                 fontWeight: FontWeight.w400,
@@ -138,20 +113,9 @@ class PostDetailScreen extends StatelessWidget {
                     )
                         :
                     Container(),
-                    SizedBox(
-                      height: 30.w,
-                      width: 30.w,
-                      // temp
-                      child: IconButton(
-                        onPressed: (){},
-                        padding: EdgeInsets.zero,
-                        constraints: BoxConstraints(),
-                        icon: Icon(
-                          Icons.wb_sunny_outlined,
-                          size: 24.w,
-                          color: Color(0xFFAAAAAA),
-                        ),
-                      ),
+                    PostButtonWidget(
+                        iconData: Icons.wb_sunny_outlined,
+                        onTap: (){}
                     ),
                   ],
                 ),
@@ -163,7 +127,7 @@ class PostDetailScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        _postViewModel.post.postText ?? "",
+                        _postViewModel.post!.postText ?? "",
                         style: TextStyle(
                             fontSize: 16.w,
                             fontWeight: FontWeight.w400,
@@ -186,6 +150,32 @@ class PostDetailScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class PostButtonWidget extends StatelessWidget {
+  final IconData iconData;
+  final GestureTapCallback onTap;
+  const PostButtonWidget({Key? key, required this.iconData, required this.onTap}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 30.w,
+      width: 30.w,
+      child: InkWell(
+          onTap: onTap,
+          child: Container(
+            padding: EdgeInsets.zero,
+            constraints: BoxConstraints(),
+            child: Icon(
+              iconData,
+              size: 24.w,
+              color: Color(0xFF292929),
+            ),
+          )
       ),
     );
   }

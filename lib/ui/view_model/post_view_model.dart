@@ -1,29 +1,26 @@
 import 'dart:io';
 
 import 'package:couple_seflie_app/data/model/post_model.dart';
+import 'package:couple_seflie_app/data/repository/auth_service.dart';
 import 'package:couple_seflie_app/data/repository/post_info_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
+import 'package:image_picker/image_picker.dart';
 import '../../data/datasource/remote_datasource.dart';
-import '../ui_setting.dart';
 
 class PostViewModel extends ChangeNotifier {
+  late String _currentUserId;
   final _postInfoRepository = PostInfoRepository();
   bool _loading = false;
   late Failure _failure;
   int _postId = 0;
   String? _errorMessage;
-  late DateTime _dateTimeNow;
   File? _postImage;
   late String _tempImageUrl;
-  String? _postText;
+  PostModel? _post;
 
-  // temp
-  late PostModel _post = PostModel(postId: _postId, postUserId: "userId", postImageUrl: "", postEditTime: DateTime.now(), postIsPublic: false);
-
+  String get currentUserId => _currentUserId;
   File? get postImage => _postImage;
-  PostModel get post => _post;
+  PostModel? get post => _post;
   Failure get failure => _failure;
   bool get loading => _loading;
   String? get errorMessage => _errorMessage;
@@ -37,16 +34,16 @@ class PostViewModel extends ChangeNotifier {
   }
 
   setPostText(String postText){
-    _post.postText = postText;
+    _post!.postText = postText;
     notifyListeners();
   }
 
   setPostLocation(String location) {
-    _post.postLocation = location;
+    _post!.postLocation = location;
     notifyListeners();
   }
   setPostWeather(int nWeather) {
-    _post.postWeather = nWeather;
+    _post!.postWeather = nWeather;
     notifyListeners();
   }
 
@@ -57,7 +54,7 @@ class PostViewModel extends ChangeNotifier {
   }
 
   //get image from local
-  pickImage(String imageSource) async {
+  pickImage(ImageSource imageSource) async {
     setLoading(true);
     var response = await _postInfoRepository.getImage(imageSource);
     if(response != null){
@@ -72,7 +69,7 @@ class PostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  setNewPost(){
+  setEmptyPost(){
     _post = PostModel(
         postId: 0,
         postUserId: "",
@@ -104,12 +101,15 @@ class PostViewModel extends ChangeNotifier {
   }
   
   // get post via postId
-  getPost(int postId) async {
+  Future<void> getPost(int postId) async {
     // loading...start
     setLoading(true);
+    _currentUserId = await AuthService().getCurrentUserId();
     print("이거");
 
     _postId = postId;
+    print(_postId);
+
     // request add new post
     var response = await _postInfoRepository.getPost(_postId);
     print(response);
@@ -158,17 +158,20 @@ class PostViewModel extends ChangeNotifier {
   }
   
   // edit post
-  editPost(PostModel postModel) async {
+  Future<void> editPost(PostModel postModel) async {
     // loading...start
     setLoading(true);
 
+    print("postId${postModel.postId}");
     // request edit post
     var response = await _postInfoRepository.editPost(postModel);
 
     // success -> update new data to Post
     if(response is Success) {
       setPostImage(null);
-      setPost(postFromJson(response.response));
+      print("성공");
+      await getPost(_postId);
+      //setPost(postFromJson(response.response));
     }
 
     // failure -> put errorCode to failure

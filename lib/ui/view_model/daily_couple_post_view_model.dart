@@ -1,19 +1,20 @@
 
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:couple_seflie_app/data/model/daily_couple_post_model.dart';
+import 'package:couple_seflie_app/data/repository/auth_service.dart';
 import 'package:couple_seflie_app/data/repository/daily_couple_post_repository.dart';
 import 'package:flutter/material.dart';
 
 import '../../data/datasource/remote_datasource.dart';
-
-const USER_ID = "rjsgy0815@naver.com"; // temp
 
 class DailyCouplePostViewModel extends ChangeNotifier {
   final DailyCouplePostRepository _dailyCouplePostRepository = DailyCouplePostRepository();
   // List of name of months in English
   List<String> months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   List<DailyCouplePostModel> _dailyCouplePosts = []; // Data list for page view
+  String? _userId;
 
-  final int _nDailyCouplePosts = 5; // Number of request data via API
+  final int _nDailyCouplePosts = 3; // Number of request data via API
   String? _errorMessage; // Error message when fail to load data through repository
   int? _index;
 
@@ -39,6 +40,8 @@ class DailyCouplePostViewModel extends ChangeNotifier {
 
   // Init mainScreen
   Future<void> initDailyCouplePosts() async {
+    _userId = await AuthService().getCurrentUserId();
+    print(_userId);
     print("DailyCouplePostViewModel 생성자 실행");
     print(_dailyCouplePosts.length.toString() + "개 있음");
     if(_dailyCouplePosts.isEmpty){
@@ -52,9 +55,11 @@ class DailyCouplePostViewModel extends ChangeNotifier {
 
   // create today's couple post
   // temp
-  createTodayCouplePost() async {
+  Future<void> createTodayCouplePost() async {
+    print("createTodayCouplePost 실행");
     // request (_nDailyCouplePosts) days' posts before last loaded day
-    var response = await _dailyCouplePostRepository.createDailyCouplePost(USER_ID);
+    var response = await _dailyCouplePostRepository.createDailyCouplePost(_userId!);
+    print(response);
 
     // failure -> put errorCode to failure
     if(response is Failure) {
@@ -67,22 +72,25 @@ class DailyCouplePostViewModel extends ChangeNotifier {
     if(response is Success) {
       print(response.response);
       print("createTodayCouplePost 합치기 성공");
-      List<DailyCouplePostModel> newDailyCouplePostList = dailyCouplePostListFromJson(response.response);
-      await setPages(newDailyCouplePostList);
-      _dailyCouplePosts = newDailyCouplePostList + _dailyCouplePosts;
+      DailyCouplePostModel newDailyCouplePostModel = DailyCouplePostModel.fromJson(response.response);
+      //List<DailyCouplePostModel> newDailyCouplePostList = DailyCouplePostModel(response.response);
+      //await setPages(newDailyCouplePostList);
+      _dailyCouplePosts = [newDailyCouplePostModel] + _dailyCouplePosts;
+      print(_dailyCouplePosts);
       //print(_dailyCouplePosts.length.toString() + "개 있음");
       //notifyListeners();
     }
   }
 
+
   // refresh today's couple post
   refreshTodayCouplePost() async {
     // call API
-    var response =  await _dailyCouplePostRepository.getDailyCouplePosts(USER_ID, DateTime.now(), 1);
+    var response =  await _dailyCouplePostRepository.getDailyCouplePosts(_userId!, DateTime.now(), 1);
 
     // success -> update data to DailyCouplePosts
     if(response is Success) {
-      _dailyCouplePosts.first = dailyCouplePostListFromJson(response.response).first;
+      _dailyCouplePosts.first = DailyCouplePostModel.fromJson((response.response as List).first);
     }
 
     // failure -> put errorCode to failure
@@ -94,34 +102,51 @@ class DailyCouplePostViewModel extends ChangeNotifier {
   }
 
   // load couple posts
-  loadDailyCouplePosts() async {
+  Future<void> loadDailyCouplePosts() async {
     print("loadDailyCouplePosts 실행");
     // request (_nDailyCouplePosts) days' posts before last loaded day
-    var response = await _dailyCouplePostRepository.getDailyCouplePosts(USER_ID, DateTime.now().subtract(Duration(days: _dailyCouplePosts.length)), _nDailyCouplePosts);
+    var response = await _dailyCouplePostRepository.getDailyCouplePosts(_userId!, DateTime.now().subtract(Duration(days: _dailyCouplePosts.length)), _nDailyCouplePosts);
 
     // failure -> put errorCode to failure
     if(response is Failure) {
+      print("실패");
+      await createTodayCouplePost();
       _errorMessage = response.errorResponse;
       notifyListeners();
     }
 
     // success -> put data to DailyCouplePosts
     if(response is Success) {
+      List<DailyCouplePostModel> newDailyCouplePostList = [];
       print("loadDailyCouplePosts 응답");
       print(response.response);
       // temp
-      List<DailyCouplePostModel> newDailyCouplePostList = dailyCouplePostListFromJson(response.response);
-      await setPages(newDailyCouplePostList);
+      if((response.response as List).isNotEmpty){
+        List list = response.response as List;
+        print("(response.response as List).isNotEmpty");
+        //newDailyCouplePostList = dailyCouplePostListFromJson(response.response);
+        for (var element in list) {
+          newDailyCouplePostList.add(DailyCouplePostModel.fromJson(element));
+        }
+        print("dailyCouplePostListFromJson 성공");
+        _dailyCouplePosts += newDailyCouplePostList;
+
+      }
+      else{
+        print("createTodayCouplePost실행");
+        await createTodayCouplePost();
+      }
+      print("newDailyCouplePostList");
+      //await setPages(newDailyCouplePostList);
       // Auto refresh today's couple post
-      _dailyCouplePosts += newDailyCouplePostList;
       print(_dailyCouplePosts.length.toString() + "개 있음");
 
 
       print(_dailyCouplePosts.first.questionText);
-      print(_dailyCouplePosts.last.questionText);
       if(_dailyCouplePosts.first.dailyPostDate.year != DateTime.now().year || _dailyCouplePosts.first.dailyPostDate.month != DateTime.now().month || _dailyCouplePosts.first.dailyPostDate.day != DateTime.now().day) {
         await createTodayCouplePost();
       }
+      await setPages(newDailyCouplePostList);
     }
   }
 
@@ -134,10 +159,19 @@ class DailyCouplePostViewModel extends ChangeNotifier {
   setDailyInfo(index) async {
     _index = index;
     DateTime dateTime = _dailyCouplePosts[index].dailyPostDate;
+    print(dateTime);
 
     _year = dateTime.year.toString();
+    print(_year);
+
+
     _month = months[dateTime.month - 1];
+    print(_month);
+
+
     _day = dateTime.day.toString();
+    print(_day);
+
 
     // Set question data
     _questionType = _dailyCouplePosts[index].questionType;

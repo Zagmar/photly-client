@@ -18,8 +18,7 @@ class PostInfoRepository {
   Future<Object> getPost(int postId) async {
     // convert inputData to use for API
     Map<String, dynamic> inputData = {
-      //'postId' : postId,
-      'post_id' : 15, // test
+      'post_id' : postId,
     };
 
     //return Success(response: '{"postId": "1", "postUserId": "00", "postImageUrl": "https://item.kakaocdn.net/do/493188dee481260d5c89790036be0e66c37d537a8f2c6f426591be6b8dc7b36a", "postIsPublic": "false", "postEditTime": "2022-05-10 15:47:12.924688", "postText": "hello", "postEmotion": "1", "postWeather": "1", "postLocation": "1"}');
@@ -37,18 +36,16 @@ class PostInfoRepository {
   Future<Object> createPost(PostModel postModel) async {
     // convert inputData to use for API
     Map<String, dynamic> inputData = {
-      'postId' : postModel.postId,
-      'postUserId' : postModel.postUserId,
-      'postImageUrl' : postModel.postImageUrl,
-      'postText' : postModel.postText.toString(),
-      'postEmotion' : postModel.postEmotion.toString(),
-      'postLocation' : postModel.postLocation.toString(),
-      'postEditTime' : postModel.postEditTime.toString(),
-      'postIsPublic' : postModel.postIsPublic.toString(),
-      'postWeather' : postModel.postWeather.toString(),
+      'user_id' : postModel.postUserId,
+      'post_text' : postModel.postText.toString(),
+      'post_emotion' : postModel.postEmotion.toString(),
+      'post_location' : postModel.postLocation.toString(),
+      'post_time' : postModel.postEditTime.toString(),
+      'post_is_public' : postModel.postIsPublic.toString(),
+      'post_weather' : postModel.postWeather.toString(),
     };
 
-    return Success(response: '{"postId": "1", "postUserId": "00", "postImageUrl": "https://item.kakaocdn.net/do/493188dee481260d5c89790036be0e66c37d537a8f2c6f426591be6b8dc7b36a", "postIsPublic": "false", "postEditTime": "2022-05-10 15:47:12.924688", "postText": "hello", "postEmotion": "1", "postWeather": "1", "postLocation": "1"}');
+    //return Success(response: '{"postId": "1", "postUserId": "00", "postImageUrl": "https://item.kakaocdn.net/do/493188dee481260d5c89790036be0e66c37d537a8f2c6f426591be6b8dc7b36a", "postIsPublic": "false", "postEditTime": "2022-05-10 15:47:12.924688", "postText": "hello", "postEmotion": "1", "postWeather": "1", "postLocation": "1"}');
 
     // call API
     return await _remoteDataSource.postToUri(POST, inputData);
@@ -59,17 +56,19 @@ class PostInfoRepository {
   Future<Object> editPost(PostModel postModel) async {
     // convert inputData to use for API
     Map<String, dynamic> inputData = {
-      'postId' : postModel.postId,
-      'postImageUrl' : postModel.postImageUrl,
-      'postText' : postModel.postText.toString(),
-      'postEmotion' : postModel.postEmotion.toString(),
-      'postLocation' : postModel.postLocation.toString(),
-      'postEditTime' : postModel.postEditTime.toString(),
-      'postIsPublic' : postModel.postIsPublic.toString(),
-      'postWeather' : postModel.postWeather.toString(),
+      'post_id' : postModel.postId,
+      'user_id' : postModel.postUserId,
+      'post_text' : postModel.postText,
+      'post_emotion' : postModel.postEmotion,
+      'post_location' : postModel.postLocation,
+      'post_time' : DateTime.now().toString(),
+      'post_is_public' : postModel.postIsPublic ? 1 : 0,
+      'post_weather' : postModel.postWeather,
     };
 
-    return Success(response: '{"postId": "1", "postUserId": "00", "postImageUrl": "https://item.kakaocdn.net/do/493188dee481260d5c89790036be0e66c37d537a8f2c6f426591be6b8dc7b36a", "postIsPublic": "false", "postEditTime": "2022-05-10 15:47:12.924688", "postText": "hello", "postEmotion": "1", "postWeather": "1", "postLocation": "1"}');
+    print(inputData);
+
+    //return Success(response: '{"postId": "1", "postUserId": "00", "postImageUrl": "https://item.kakaocdn.net/do/493188dee481260d5c89790036be0e66c37d537a8f2c6f426591be6b8dc7b36a", "postIsPublic": "false", "postEditTime": "2022-05-10 15:47:12.924688", "postText": "hello", "postEmotion": "1", "postWeather": "1", "postLocation": "1"}');
 
     // call API
     return await _remoteDataSource.putToUri(POST, inputData);
@@ -78,10 +77,10 @@ class PostInfoRepository {
 
   /// Local
   /// Get Image From Gallery or Camera
-  Future<File?> getImage(String source) async {
+  Future<File?> getImage(ImageSource source) async {
     ImageSource imageSource;
     // get image from gallery
-    if(source == "gallery") {
+    if(source == ImageSource.gallery) {
       imageSource = ImageSource.gallery;
       return await _localDataSource.getImage(imageSource);
     }

@@ -1,7 +1,6 @@
 import 'dart:convert';
 
-List<DailyCouplePostModel> dailyCouplePostListFromJson(String str) => List<DailyCouplePostModel>.from(json.decode(str).map((x) => DailyCouplePostModel.fromJson(x)));
-
+//List<DailyCouplePostModel> dailyCouplePostListFromJson(String str) => List<DailyCouplePostModel>.from(json.decode(str).map((x) => DailyCouplePostModel.fromJson(x)));
 String dailyCouplePostModelToJson(List<DailyCouplePostModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
 
@@ -34,7 +33,7 @@ class DailyCouplePostModel {
 
   factory DailyCouplePostModel.fromJson(Map<String, dynamic> json) => DailyCouplePostModel(
     dailyPostDate: DateTime.parse(json['dailyPostDate']),
-    questionType: int.parse(json["questionType"]),
+    questionType: json["questionType"],
     questionText: json["questionText"],
     questionImageUrl: json["questionImageUrl"],
     userPostId: json["userPostId"],
