@@ -91,7 +91,6 @@ class ImageButtonWidget extends StatelessWidget {
     return InkWell(
       highlightColor: null,
       onTap: () async {
-        print(postId);
         final PostViewModel _postViewModel = Provider.of<PostViewModel>(context, listen: false);
         await _postViewModel.getPost(postId);
         Navigator.push(

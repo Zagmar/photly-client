@@ -12,7 +12,6 @@ import 'package:couple_seflie_app/ui/view/screen/register2/register_anniversary_
 import 'package:couple_seflie_app/ui/view/screen/register2/register_username_screen.dart';
 import 'package:couple_seflie_app/ui/view/widget/loading_widget.dart';
 import 'package:couple_seflie_app/ui/view_model/daily_couple_post_view_model.dart';
-import 'package:couple_seflie_app/ui/view_model/post_daily_info_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/register2_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/register3_view_model.dart';
@@ -65,7 +64,6 @@ Future<void> main() async {
   runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context)=> DailyCouplePostViewModel(),),
-        ChangeNotifierProvider(create: (context)=> PostDailyInfoViewModel(),),
         ChangeNotifierProvider(create: (context)=> PostViewModel()),
         ChangeNotifierProvider(create: (context) => UserInfoViewModel()),
         ChangeNotifierProvider(create: (context) => Register2ViewModel()),

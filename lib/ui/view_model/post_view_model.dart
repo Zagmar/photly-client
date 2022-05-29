@@ -11,9 +11,13 @@ class PostViewModel extends ChangeNotifier {
   late String _currentUserId;
   final _postInfoRepository = PostInfoRepository();
   bool _loading = false;
-  late Failure _failure;
+  bool _isPostReady = false;
+  bool _isPostOk = false;
+  bool _isNewPost = false;
+  bool _isNewImage = false;
   int _postId = 0;
-  String? _errorMessage;
+  String? _postFailMessage;
+  String? _postErrorMessage;
   File? _postImage;
   late String _tempImageUrl;
   PostModel? _post;
@@ -21,13 +25,43 @@ class PostViewModel extends ChangeNotifier {
   String get currentUserId => _currentUserId;
   File? get postImage => _postImage;
   PostModel? get post => _post;
-  Failure get failure => _failure;
   bool get loading => _loading;
-  String? get errorMessage => _errorMessage;
+  bool get isNewPost => _isNewPost;
+  bool get isPostReady => _isPostReady;
+  bool get isPostOk => _isPostOk;
+  bool get isNewImage => _isNewImage;
+  String? get postErrorMessage => _postErrorMessage;
+  String? get postFailMessage => _postFailMessage;
   int get postId => _postId;
   String get tempImageUrl => _tempImageUrl;
   String get dateTimeNow => (DateTime.now().hour > 12 ? "PM " +  (DateTime.now().hour - 12).toString() : "AM " +  DateTime.now().hour.toString()) + "시 " + DateTime.now().minute.toString() + "분";
 
+  checkIsPostOk(){
+    if(postId == 0){
+      _isNewPost = true;
+      _isNewImage = true;
+      if(_postImage == null) {
+        _isPostReady = true;
+        _postErrorMessage = null;
+      }
+      else {
+        _isPostReady = false;
+        _postErrorMessage = "사진을 등록해주세요";
+      }
+    }
+    else{
+      _isNewPost = false;
+      if(_postImage == null){
+        _isNewImage = false;
+        _postErrorMessage = null;
+      }
+      else{
+        _isNewImage = true;
+        _postErrorMessage = null;
+      }
+    }
+    notifyListeners();
+  }
   // set temp image
   setTempImageUrl(String imageUrl){
     _tempImageUrl = imageUrl;
@@ -47,56 +81,28 @@ class PostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // set postId
-  setPostId(int postId) {
-    _postId = postId;
-    // notifyListeners();
-  }
-
   //get image from local
   pickImage(ImageSource imageSource) async {
-    setLoading(true);
-    var response = await _postInfoRepository.getImage(imageSource);
+    var response = await _postInfoRepository.readImage(imageSource);
     if(response != null){
-      setPostImage(response);
+      _postImage = response;
     }
-    setLoading(false);
   }
 
-  // set postImage
-  setPostImage(File? postImage) {
-    _postImage = postImage;
-    notifyListeners();
-  }
-
-  setEmptyPost(){
+  setEmptyPost() async {
     _post = PostModel(
         postId: 0,
-        postUserId: "",
+        postUserId: await AuthService().getCurrentUserId(),
         postImageUrl: "",
         postEditTime: DateTime.now(),
-        postIsPublic: true,
+        postIsPublic: false,
     );
-    notifyListeners();
-  }
-
-  // set post
-  setPost(PostModel post) {
-    _post = post;
-    print("성공");
-    //PostDailyInfoWidgetViewModel().setPostDate(post.postEditTime);
     notifyListeners();
   }
 
   // Whether the process is in progress
   setLoading(bool loading){
     _loading = loading;
-    notifyListeners();
-  }
-
-  // when error observed in process
-  setFailure(Failure failure){
-    _failure = failure;
     notifyListeners();
   }
   
@@ -111,46 +117,50 @@ class PostViewModel extends ChangeNotifier {
     print(_postId);
 
     // request add new post
-    var response = await _postInfoRepository.getPost(_postId);
+    var response = await _postInfoRepository.readPost(_postId);
     print(response);
 
     // success -> add new data to Post
     if(response is Success) {
       print("성공");
-      setPost(postFromJson(response.response));
+      _post = postFromJson(response.response);
+      notifyListeners();
     }
 
     // failure -> put errorCode to failure
     if(response is Failure) {
-      print("실패");
-      setFailure(response);
+      _postFailMessage = response.errorResponse;
+      notifyListeners();
     }
 
     // loading...end
     setLoading(false);
   }
+
+  Future<void> createS3(File image, String url) async {
+    // temp
+    // S3 업로드 기능
+  }
   
   // creat new post
-  createPost(PostModel postModel) async {
+  createPost() async {
     // loading...start
     setLoading(true);
 
-    // temp
-    ///S3 업로드 -> get 주소
-
-    // request add new post
-    // postId = ""
-    var response = await _postInfoRepository.createPost(postModel);
+    var response = await _postInfoRepository.createPost(_post!);
 
     // success -> add new data to Post
     if(response is Success) {
-      setPostImage(null);
-      setPost(postFromJson(response.response));
+      await createS3(_postImage!, response.response["postImageUrl"]);
+      _postImage = null;
+      await getPost(response.response["postId"]);
+      _isPostOk = true;
     }
 
     // failure -> put errorCode to failure
     if(response is Failure) {
-      setFailure(response);
+      _postFailMessage = response.errorResponse;
+      _isPostOk = false;
     }
 
     // loading...end
@@ -158,27 +168,30 @@ class PostViewModel extends ChangeNotifier {
   }
   
   // edit post
-  Future<void> editPost(PostModel postModel) async {
+  Future<void> editPost() async {
     // loading...start
     setLoading(true);
 
-    print("postId${postModel.postId}");
+    print("postId ${_post!.postId}");
     // request edit post
-    var response = await _postInfoRepository.editPost(postModel);
+
+    var response = await _postInfoRepository.updatePost(_post!);
+
+    if(postImage != null) {
+      await createS3(_postImage!, _post!.postImageUrl);
+    }
 
     // success -> update new data to Post
     if(response is Success) {
-      setPostImage(null);
-      print("성공");
+      _postImage = null;
       await getPost(_postId);
-      //setPost(postFromJson(response.response));
+      _isPostOk = true;
     }
 
     // failure -> put errorCode to failure
     if(response is Failure) {
-      _errorMessage = response.errorResponse;
-      notifyListeners();
-      setFailure(response);
+      _postFailMessage = response.errorResponse;
+      _isPostOk = false;
     }
 
     // loading...end

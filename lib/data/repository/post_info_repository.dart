@@ -15,7 +15,7 @@ class PostInfoRepository {
   /// Get post
   // input : postId
   // output : postModel
-  Future<Object> getPost(int postId) async {
+  Future<Object> readPost(int postId) async {
     // convert inputData to use for API
     Map<String, dynamic> inputData = {
       'post_id' : postId,
@@ -53,7 +53,7 @@ class PostInfoRepository {
 
   /// Edit post
   // input : postModel
-  Future<Object> editPost(PostModel postModel) async {
+  Future<Object> updatePost(PostModel postModel) async {
     // convert inputData to use for API
     Map<String, dynamic> inputData = {
       'post_id' : postModel.postId,
@@ -77,7 +77,7 @@ class PostInfoRepository {
 
   /// Local
   /// Get Image From Gallery or Camera
-  Future<File?> getImage(ImageSource source) async {
+  Future<File?> readImage(ImageSource source) async {
     ImageSource imageSource;
     // get image from gallery
     if(source == ImageSource.gallery) {

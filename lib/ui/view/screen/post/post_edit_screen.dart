@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_detail_screen.dart';
 import 'package:couple_seflie_app/ui/view/widget/choice_dialog_widget.dart';
+import 'package:couple_seflie_app/ui/view/widget/loading_widget.dart';
 import 'package:couple_seflie_app/ui/view/widget/text_form_field.dart';
 import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
 import 'package:flutter/material.dart';
@@ -21,14 +22,16 @@ class PostEditScreen extends StatelessWidget {
   PostEditScreen({Key? key}) : super(key: key);
   late PostViewModel _postViewModel;
   late DailyCouplePostViewModel _dailyCouplePostViewModel;
-  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context);
     _postViewModel = Provider.of<PostViewModel>(context);
 
-    return Scaffold(
+    return _postViewModel.loading ?
+    LoadingScreen()
+        :
+    Scaffold(
       body: GestureDetector(
         onTap: (){
           FocusScope.of(context).unfocus();
@@ -37,138 +40,147 @@ class PostEditScreen extends StatelessWidget {
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-            child: Container(
-              key: _formKey,
-              child: Column(
-                  children: <Widget>[
-                    PostScreensAppbar(),
-                    PostDailyInfoWidget(
-                      bottomButton: TextButtonWidget(
-                        buttonText: "저장",
-                        onTap: () async {
-                          _formKey.currentState!.save();
-                          FocusScope.of(context).unfocus();
-                          print("저장");
-                          if(_postViewModel.postId == 0){
-                            print("새로");
-                            await _postViewModel.createPost(_postViewModel.post!);
-                          }
-                          else{
-                            print("편집");
-                            await _postViewModel.editPost(_postViewModel.post!);
-                          }
-                          // temp
-                          //Navigator.popAndPushNamed(context, '/postDetailScreen');
-                          print("성공");
-
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => PostDetailScreen()),
-                          );
-
-                        },
-                      ),
-                    ),
-                    Column(
-                      children: <Widget>[
-                        // Image area
-                        Container(
-                          width: 390.w,
-                          height: 390.w * IMAGE_RATIO,
-                          child: InkWell(
-                              onTap: (){
-                                FocusScope.of(context).unfocus();
-                                // show dialog to pick the way to get image
-                                showDialog(
-                                    context: context,
-                                    builder: (context){
-                                      return ThreeOptionsDialogWidget(
-                                          title: "이미지 추가",
-                                          // Get image from Gallery
-                                          firstDialogOption: SingleDialogOption(
-                                            dialogText: "갤러리에서 이미지 추가하기",
-                                            onPressed: (){
-                                              Navigator.pop(context);
-                                              _postViewModel.pickImage(ImageSource.gallery);
-                                            },
-                                          ),
-                                          // Take a picture with camera
-                                          secondDialogOption: SingleDialogOption(
-                                            dialogText: "카메라로 이미지 촬영하기",
-                                            onPressed: (){
-                                              Navigator.pop(context);
-                                              _postViewModel.pickImage(ImageSource.camera);
-                                            },
-                                          ),
-                                          // cancel
-                                          thirdDialogOption: SingleDialogOption(
-                                            dialogText: "취소",
-                                            onPressed: (){
-                                              Navigator.pop(context);
-                                            },
-                                          ),
-                                      );
-                                    }
-                                );
-                              },
-                              child: _postViewModel.postImage != null ?
-                              // Image from local
-                              Image.file(
-                                _postViewModel.postImage!,
-                                width: 390.w,
-                                height: 390.w * IMAGE_RATIO,
-                                fit: BoxFit.cover,
-                              )
-                                  :
-                              _postViewModel.post!.postId != 0 ?
-                              // Image from DB
-                              CashedNetworkImageWidget(
-                                imageUrl: _postViewModel.post!.postImageUrl,
-                                width: 390,
-                                height: 390 * IMAGE_RATIO,
-                              )
-                                  :
-                              // Default image
-                              EmptyImageWidget()
+            child: Column(
+                children: <Widget>[
+                  PostScreensAppbar(),
+                  PostDailyInfoWidget(
+                    bottomButton: TextButtonWidget(
+                      buttonText: "저장",
+                      onTap: () async {
+                        FocusScope.of(context).unfocus();
+                        await _postViewModel.checkIsPostOk();
+                        _postViewModel.isPostReady ?
+                        _postViewModel.isNewPost ?
+                        await _postViewModel.createPost()
+                            :
+                        await _postViewModel.editPost()
+                            :
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                _postViewModel.postErrorMessage!
+                            ),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(bottom: 10.w),
-                          child: HorizontalBorder(),
-                        ),
-                        PostTextFormWidget(
-                          initialPostText: _postViewModel.post!.postText,
-                          weatherButtonOnTap: (){
-                            Focus.of(context).unfocus();
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return WeatherDialogWidget(nWeathers: 3);
-                                }
-                            );
-                          },
-                          placeButtonOnTap: (){
-                            Focus.of(context).unfocus();
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return LocationDialogWidget();
-                                }
-                            );
-                            // temp
-                            // 장소 추가 dialog
-                          },
-                          postInputTextOnChanged: (value) {
-                            _postViewModel.setPostText(value);
-                          },
-                          dateTimeNow: _postViewModel.dateTimeNow,
-                          weatherImagePath: "assets/images/weathers/weather_" + (_postViewModel.post!.postWeather ?? 0).toString() + ".svg",
+                        );
+                        print("시도");
+
+                        _postViewModel.isPostOk ?
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => PostDetailScreen()),
                         )
-                      ],
+                            :
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                _postViewModel.postFailMessage!
+                            ),
+                          ),
+                        )
+                        ;
+
+                      },
                     ),
-                    AddBannerWidget()
-                  ]
-              ),
+                  ),
+                  Column(
+                    children: <Widget>[
+                      // Image area
+                      Container(
+                        width: 390.w,
+                        height: 390.w * IMAGE_RATIO,
+                        child: InkWell(
+                            onTap: (){
+                              FocusScope.of(context).unfocus();
+                              // show dialog to pick the way to get image
+                              showDialog(
+                                  context: context,
+                                  builder: (context){
+                                    return ThreeOptionsDialogWidget(
+                                        title: "이미지 추가",
+                                        // Get image from Gallery
+                                        firstDialogOption: SingleDialogOption(
+                                          dialogText: "갤러리에서 이미지 추가하기",
+                                          onPressed: (){
+                                            Navigator.pop(context);
+                                            _postViewModel.pickImage(ImageSource.gallery);
+                                          },
+                                        ),
+                                        // Take a picture with camera
+                                        secondDialogOption: SingleDialogOption(
+                                          dialogText: "카메라로 이미지 촬영하기",
+                                          onPressed: (){
+                                            Navigator.pop(context);
+                                            _postViewModel.pickImage(ImageSource.camera);
+                                          },
+                                        ),
+                                        // cancel
+                                        thirdDialogOption: SingleDialogOption(
+                                          dialogText: "취소",
+                                          onPressed: (){
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                    );
+                                  }
+                              );
+                            },
+                            child: _postViewModel.postImage != null ?
+                            // Image from local
+                            Image.file(
+                              _postViewModel.postImage!,
+                              width: 390.w,
+                              height: 390.w * IMAGE_RATIO,
+                              fit: BoxFit.cover,
+                            )
+                                :
+                            _postViewModel.post!.postId != 0 ?
+                            // Image from DB
+                            CashedNetworkImageWidget(
+                              imageUrl: _postViewModel.post!.postImageUrl,
+                              width: 390,
+                              height: 390 * IMAGE_RATIO,
+                            )
+                                :
+                            // Default image
+                            EmptyImageWidget()
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 10.w),
+                        child: HorizontalBorder(),
+                      ),
+                      PostTextFormWidget(
+                        initialPostText: _postViewModel.post!.postText,
+                        weatherButtonOnTap: (){
+                          Focus.of(context).unfocus();
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return WeatherDialogWidget(nWeathers: 3);
+                              }
+                          );
+                        },
+                        placeButtonOnTap: (){
+                          Focus.of(context).unfocus();
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return LocationDialogWidget();
+                              }
+                          );
+                          // temp
+                          // 장소 추가 dialog
+                        },
+                        postInputTextOnChanged: (value) {
+                          _postViewModel.setPostText(value);
+                        },
+                        dateTimeNow: _postViewModel.dateTimeNow,
+                        weatherImagePath: "assets/images/weathers/weather_" + (_postViewModel.post!.postWeather ?? 0).toString() + ".svg",
+                      )
+                    ],
+                  ),
+                  AddBannerWidget()
+                ]
             ),
           ),
         ),
