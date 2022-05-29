@@ -21,13 +21,13 @@ class PostEditScreen extends StatelessWidget {
   PostEditScreen({Key? key}) : super(key: key);
   late PostViewModel _postViewModel;
   late DailyCouplePostViewModel _dailyCouplePostViewModel;
-  late TextEditingController _postTextController;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    DailyCouplePostViewModel _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context);
+    _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context);
     _postViewModel = Provider.of<PostViewModel>(context);
-    _postTextController = TextEditingController()..text = _postViewModel.post!.postText ?? ""; // temp
+
     return Scaffold(
       body: GestureDetector(
         onTap: (){
@@ -38,6 +38,7 @@ class PostEditScreen extends StatelessWidget {
             scrollDirection: Axis.vertical,
             physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
             child: Container(
+              key: _formKey,
               child: Column(
                   children: <Widget>[
                     PostScreensAppbar(),
@@ -45,6 +46,7 @@ class PostEditScreen extends StatelessWidget {
                       bottomButton: TextButtonWidget(
                         buttonText: "저장",
                         onTap: () async {
+                          _formKey.currentState!.save();
                           FocusScope.of(context).unfocus();
                           print("저장");
                           if(_postViewModel.postId == 0){
@@ -60,7 +62,7 @@ class PostEditScreen extends StatelessWidget {
                           print("성공");
 
                           Navigator.pushReplacement(
-                              context, 
+                              context,
                               MaterialPageRoute(builder: (context) => PostDetailScreen()),
                           );
 
@@ -468,13 +470,11 @@ class PostTextFormWidget extends StatelessWidget {
   final String dateTimeNow;
   final GestureTapCallback weatherButtonOnTap;
   final GestureTapCallback placeButtonOnTap;
-  final Function postInputTextOnChanged;
-  late TextEditingController _postTextController;
+  final ValueChanged<String> postInputTextOnChanged;
   PostTextFormWidget({Key? key, this.initialPostText, required this.weatherImagePath, required this.dateTimeNow, required this.weatherButtonOnTap, required this.placeButtonOnTap, required this.postInputTextOnChanged}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    _postTextController = TextEditingController()..text = initialPostText ?? "";
     return Column(
       children: <Widget>[
         Row(
@@ -516,8 +516,8 @@ class PostTextFormWidget extends StatelessWidget {
             ),
             Container(
               width: 320.w,
-              child: TextField(
-                controller: _postTextController,
+              child: TextFormField(
+                initialValue: initialPostText ?? "",
                 decoration: InputDecoration(
                     border: InputBorder.none,
                     focusedBorder: InputBorder.none,
@@ -531,7 +531,7 @@ class PostTextFormWidget extends StatelessWidget {
                         color: Color(0xFFC4C4C4)
                     ),
                 ),
-                onChanged: (value) => postInputTextOnChanged,
+                onChanged: postInputTextOnChanged,
                 maxLines: null,
                 maxLength: 50,
               ),
