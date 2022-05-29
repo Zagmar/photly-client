@@ -7,11 +7,14 @@ class LoadingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print("loadingScreen 실행");
-    return Center(
-      child:  SizedBox(
-          width: 30.w,
-          height: 30.w,
-          child: CircularProgressIndicator()
+    return Container(
+      color: Colors.white,
+      child: Center(
+        child:  SizedBox(
+            width: 30.w,
+            height: 30.w,
+            child: CircularProgressIndicator()
+        ),
       ),
     );
   }

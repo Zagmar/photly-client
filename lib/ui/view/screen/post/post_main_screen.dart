@@ -22,12 +22,7 @@ class PostMainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _scaffoldKey = GlobalKey<ScaffoldState>();
-    _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context, listen: false);
-    print("postMain 실행");
-
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      _dailyCouplePostViewModel.initDailyCouplePosts();
-    });
+    _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context);
 
     return GestureDetector(
       onTap: (){
@@ -38,11 +33,7 @@ class PostMainScreen extends StatelessWidget {
         drawer: MainDrawerWidget(),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SafeArea(
-          child: _dailyCouplePostViewModel.dailyCouplePosts.isEmpty || _dailyCouplePostViewModel.loading ?
-          // Show loading widget when is loading
-          LoadingScreen()
-              :
-          SingleChildScrollView(
+          child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
             child: Column(

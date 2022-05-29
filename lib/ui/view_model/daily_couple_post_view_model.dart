@@ -1,5 +1,3 @@
-
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:couple_seflie_app/data/model/daily_couple_post_model.dart';
 import 'package:couple_seflie_app/data/repository/auth_service.dart';
 import 'package:couple_seflie_app/data/repository/daily_couple_post_repository.dart';
@@ -50,6 +48,7 @@ class DailyCouplePostViewModel extends ChangeNotifier {
       await loadDailyCouplePosts();
       //print(_dailyCouplePosts.length.toString() + "개 있음");
       await setDailyInfo(0);
+      notifyListeners();
     }
   }
 
@@ -65,7 +64,7 @@ class DailyCouplePostViewModel extends ChangeNotifier {
     if(response is Failure) {
       print("createTodayCouplePost 합치기 실패");
       _errorMessage = response.errorResponse;
-      notifyListeners();
+      //notifyListeners();
     }
 
     // success -> add new data to DailyCouplePosts & load
@@ -112,7 +111,7 @@ class DailyCouplePostViewModel extends ChangeNotifier {
       print("실패");
       await createTodayCouplePost();
       _errorMessage = response.errorResponse;
-      notifyListeners();
+      //notifyListeners();
     }
 
     // success -> put data to DailyCouplePosts

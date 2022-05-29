@@ -10,6 +10,7 @@ import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register1/register_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register2/register_anniversary_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register2/register_username_screen.dart';
+import 'package:couple_seflie_app/ui/view/widget/loading_widget.dart';
 import 'package:couple_seflie_app/ui/view_model/daily_couple_post_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/post_daily_info_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
@@ -76,9 +77,15 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
-
+  late DailyCouplePostViewModel _dailyCouplePostViewModel;
   @override
   Widget build(BuildContext context) {
+    _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context);
+
+    if(_isLogined){
+      _dailyCouplePostViewModel.initDailyCouplePosts();
+    }
+
     print("MyApp 실행");
     return ScreenUtilInit(
         splitScreenMode: false,
@@ -95,6 +102,10 @@ class MyApp extends StatelessWidget {
             scaffoldBackgroundColor: Color(0xFFFFFFFF),
           ),
           home: _isLogined ?
+          _dailyCouplePostViewModel.dailyCouplePosts.isEmpty || _dailyCouplePostViewModel.loading ?
+          // Show loading widget when is loading
+          LoadingScreen()
+            :
           PostMainScreen()
               :
           LoginScreen(),
