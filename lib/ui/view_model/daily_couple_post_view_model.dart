@@ -66,21 +66,22 @@ class DailyCouplePostViewModel extends ChangeNotifier {
 
 
   // refresh today's couple post
-  refreshTodayCouplePost() async {
+  Future<void> refreshTodayCouplePost() async {
     // call API
     var response =  await _dailyCouplePostRepository.getDailyCouplePosts(_userId!, DateTime.now(), 1);
 
     // success -> update data to DailyCouplePosts
     if(response is Success) {
       _dailyCouplePosts.first = DailyCouplePostModel.fromJson((response.response as List).first);
+      await setPage(_dailyCouplePosts.first);
     }
 
     // failure -> put errorCode to failure
     else if(response is Failure) {
       _errorMessage = response.errorResponse;
-      notifyListeners();
-      loadDailyCouplePosts();
     }
+
+    notifyListeners();
   }
 
   // load couple posts
@@ -145,8 +146,41 @@ class DailyCouplePostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  setLoading(bool loading){
+    _loading = loading;
+    notifyListeners();
+  }
+
+  setPage(DailyCouplePostModel _dailyCouplePostModel) async {
+    setLoading(true);
+    // Set date data
+    if(DateTime.now().year == _dailyCouplePostModel.dailyPostDate.year && DateTime.now().month == _dailyCouplePostModel.dailyPostDate.month && DateTime.now().day == _dailyCouplePostModel.dailyPostDate.day){
+      _dailyCouplePostModel.isToday = true;
+    }
+    else{
+      _dailyCouplePostModel.isToday = false;
+    }
+
+    // CheckIsUserDone
+    if(_dailyCouplePostModel.userPostId != null){
+      _dailyCouplePostModel.isUserDone = true;
+    }
+    else{
+      _dailyCouplePostModel.isUserDone = false;
+    }
+
+    // CheckIsPartnerDone
+    if(_dailyCouplePostModel.partnerPostId != null){
+      _dailyCouplePostModel.isPartnerDone = true;
+    }
+    else{
+      _dailyCouplePostModel.isPartnerDone = false;
+    }
+    setLoading(false);
+  }
+
   setPages(List<DailyCouplePostModel> newDailyCouplePosts) async {
-    _loading = true;
+    setLoading(true);
 
     print("페이지 세팅");
     //for (int index = 0; index < _dailyCouplePosts.length; index++) {
@@ -176,6 +210,6 @@ class DailyCouplePostViewModel extends ChangeNotifier {
       }
     }
 
-    _loading = false;
+    setLoading(false);
   }
 }

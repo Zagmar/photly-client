@@ -24,52 +24,55 @@ class PostMainScreen extends StatelessWidget {
     _scaffoldKey = GlobalKey<ScaffoldState>();
     _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context);
 
-    return GestureDetector(
-      onTap: (){
-        FocusScope.of(context).unfocus();
-      },
-      child: Scaffold(
-        key: _scaffoldKey,
-        drawer: MainDrawerWidget(),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  //Container(),
-                  PostMainScreenAppbar(scaffoldKey: _scaffoldKey),
-                  PostDailyInfoWidget(),
-                  SizedBox(
-                    width: FULL_WIDTH.w,
-                    height: (FULL_WIDTH * 2 + 30).w,
-                    child: PageView.builder(
-                        reverse: true,
-                        scrollDirection: Axis.horizontal,
-                        itemCount: _dailyCouplePostViewModel.dailyCouplePosts.length,
-                        onPageChanged: (index) {
-                          if(index == _dailyCouplePostViewModel.dailyCouplePosts.length - 1) {
-                            _dailyCouplePostViewModel.loadCouplePosts();
-                            print("인덱스 끝");
+    return RefreshIndicator(
+      onRefresh: () => _dailyCouplePostViewModel.refreshTodayCouplePost(),
+      child: GestureDetector(
+        onTap: (){
+          FocusScope.of(context).unfocus();
+        },
+        child: Scaffold(
+          key: _scaffoldKey,
+          drawer: MainDrawerWidget(),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          body: SafeArea(
+            child: SingleChildScrollView(
+              scrollDirection: Axis.vertical,
+              physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    //Container(),
+                    PostMainScreenAppbar(scaffoldKey: _scaffoldKey),
+                    PostDailyInfoWidget(),
+                    SizedBox(
+                      width: FULL_WIDTH.w,
+                      height: (FULL_WIDTH * 2 + 30).w,
+                      child: PageView.builder(
+                          reverse: true,
+                          scrollDirection: Axis.horizontal,
+                          itemCount: _dailyCouplePostViewModel.dailyCouplePosts.length,
+                          onPageChanged: (index) {
+                            if(index == _dailyCouplePostViewModel.dailyCouplePosts.length - 1) {
+                              _dailyCouplePostViewModel.loadCouplePosts();
+                              print("인덱스 끝");
+                            }
+                            _dailyCouplePostViewModel.setDailyInfo(index);
+                          },
+                          controller: PageController(initialPage: _dailyCouplePostViewModel.index??0),
+                          itemBuilder: (context, index) {
+                            print("itemBuilder" + index.toString());
+                            return Column(
+                              children: <Widget>[
+                                UserDailyPostWidget(index: index),
+                                Container(height: 30.w),
+                                PartnerDailyPostWidget(index: index),
+                              ],
+                            );
                           }
-                          _dailyCouplePostViewModel.setDailyInfo(index);
-                        },
-                        controller: PageController(initialPage: _dailyCouplePostViewModel.index??0),
-                        itemBuilder: (context, index) {
-                          print("itemBuilder" + index.toString());
-                          return Column(
-                            children: <Widget>[
-                              UserDailyPostWidget(index: index),
-                              Container(height: 30.w),
-                              PartnerDailyPostWidget(index: index),
-                            ],
-                          );
-                        }
+                      ),
                     ),
-                  ),
-                ]
+                  ]
+              ),
             ),
           ),
         ),
