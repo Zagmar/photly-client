@@ -89,6 +89,7 @@ class ImageButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      highlightColor: null,
       onTap: () async {
         print(postId);
         final PostViewModel _postViewModel = Provider.of<PostViewModel>(context, listen: false);
@@ -297,41 +298,44 @@ class EmptyPostButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => onTap,
+      splashColor: Colors.transparent,
+      onTap: onTap,
       child: Container(
-        height: 150.w,
-        width: 150.w,
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            SvgPicture.asset(
-              iconImagePath,
-              width: 24.w,
-              height: 24.w,
-              fit: BoxFit.contain,
-            ),
-            Text(
-              mainText,
-              style: TextStyle(
-                color: Color(0xFF000000),
-                fontSize: 14.w,
-                fontWeight: FontWeight.w400,
-                decoration: TextDecoration.underline,
+        child: Container(
+          //height: 150.w,
+          //width: 150.w,
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              SvgPicture.asset(
+                iconImagePath,
+                width: 24.w,
+                height: 24.w,
+                fit: BoxFit.contain,
               ),
-              textAlign: TextAlign.center,
-            ),
-            Text(
-              subText,
-              style: TextStyle(
-                color: Color(0xFF000000),
-                fontSize: 10.w,
-                fontWeight: FontWeight.w400,
+              Text(
+                mainText,
+                style: TextStyle(
+                  color: Color(0xFF000000),
+                  fontSize: 14.w,
+                  fontWeight: FontWeight.w400,
+                  decoration: TextDecoration.underline,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            )
-          ],
+              Text(
+                subText,
+                style: TextStyle(
+                  color: Color(0xFF000000),
+                  fontSize: 10.w,
+                  fontWeight: FontWeight.w400,
+                ),
+                textAlign: TextAlign.center,
+              )
+            ],
+          ),
         ),
       ),
     );
