@@ -39,45 +39,28 @@ class DailyCouplePostViewModel extends ChangeNotifier {
   // Init mainScreen
   Future<void> initDailyCouplePosts() async {
     _userId = await AuthService().getCurrentUserId();
-    print(_userId);
-    print("DailyCouplePostViewModel 생성자 실행");
-    print(_dailyCouplePosts.length.toString() + "개 있음");
     if(_dailyCouplePosts.isEmpty){
-      print("DailyCouplePostViewModel IF문 통과");
       // set mainScreen to default
       await loadDailyCouplePosts();
-      //print(_dailyCouplePosts.length.toString() + "개 있음");
       await setDailyInfo(0);
       notifyListeners();
     }
   }
 
   // create today's couple post
-  // temp
   Future<void> createTodayCouplePost() async {
-    print("createTodayCouplePost 실행");
     // request (_nDailyCouplePosts) days' posts before last loaded day
     var response = await _dailyCouplePostRepository.createDailyCouplePost(_userId!);
-    print(response);
 
     // failure -> put errorCode to failure
     if(response is Failure) {
-      print("createTodayCouplePost 합치기 실패");
       _errorMessage = response.errorResponse;
-      //notifyListeners();
     }
 
     // success -> add new data to DailyCouplePosts & load
     if(response is Success) {
-      print(response.response);
-      print("createTodayCouplePost 합치기 성공");
       DailyCouplePostModel newDailyCouplePostModel = DailyCouplePostModel.fromJson(response.response);
-      //List<DailyCouplePostModel> newDailyCouplePostList = DailyCouplePostModel(response.response);
-      //await setPages(newDailyCouplePostList);
       _dailyCouplePosts = [newDailyCouplePostModel] + _dailyCouplePosts;
-      print(_dailyCouplePosts);
-      //print(_dailyCouplePosts.length.toString() + "개 있음");
-      //notifyListeners();
     }
   }
 
@@ -102,46 +85,29 @@ class DailyCouplePostViewModel extends ChangeNotifier {
 
   // load couple posts
   Future<void> loadDailyCouplePosts() async {
-    print("loadDailyCouplePosts 실행");
     // request (_nDailyCouplePosts) days' posts before last loaded day
-    var response = await _dailyCouplePostRepository.getDailyCouplePosts(_userId!, DateTime.now().subtract(Duration(days: _dailyCouplePosts.length)), _nDailyCouplePosts);
+    var response = await _dailyCouplePostRepository.getDailyCouplePosts(_userId!, _dailyCouplePosts.isEmpty?DateTime.now():_dailyCouplePosts.last.dailyPostDate.subtract(Duration(days: 1)), _nDailyCouplePosts);
 
     // failure -> put errorCode to failure
     if(response is Failure) {
-      print("실패");
       await createTodayCouplePost();
       _errorMessage = response.errorResponse;
-      //notifyListeners();
     }
 
     // success -> put data to DailyCouplePosts
     if(response is Success) {
       List<DailyCouplePostModel> newDailyCouplePostList = [];
-      print("loadDailyCouplePosts 응답");
-      print(response.response);
-      // temp
       if((response.response as List).isNotEmpty){
         List list = response.response as List;
-        print("(response.response as List).isNotEmpty");
-        //newDailyCouplePostList = dailyCouplePostListFromJson(response.response);
         for (var element in list) {
           newDailyCouplePostList.add(DailyCouplePostModel.fromJson(element));
         }
-        print("dailyCouplePostListFromJson 성공");
         _dailyCouplePosts += newDailyCouplePostList;
-
       }
       else{
-        print("createTodayCouplePost실행");
         await createTodayCouplePost();
       }
-      print("newDailyCouplePostList");
-      //await setPages(newDailyCouplePostList);
       // Auto refresh today's couple post
-      print(_dailyCouplePosts.length.toString() + "개 있음");
-
-
-      print(_dailyCouplePosts.first.questionText);
       if(_dailyCouplePosts.first.dailyPostDate.year != DateTime.now().year || _dailyCouplePosts.first.dailyPostDate.month != DateTime.now().month || _dailyCouplePosts.first.dailyPostDate.day != DateTime.now().day) {
         await createTodayCouplePost();
       }
@@ -149,11 +115,10 @@ class DailyCouplePostViewModel extends ChangeNotifier {
     }
   }
 
-  setLoading(bool state) {
-    _loading = state;
+  loadCouplePosts(){
+    loadDailyCouplePosts();
     notifyListeners();
   }
-
 
   setDailyInfo(index) async {
     _index = index;
@@ -181,7 +146,7 @@ class DailyCouplePostViewModel extends ChangeNotifier {
   }
 
   setPages(List<DailyCouplePostModel> newDailyCouplePosts) async {
-    setLoading(true);
+    _loading = true;
 
     print("페이지 세팅");
     //for (int index = 0; index < _dailyCouplePosts.length; index++) {
@@ -211,6 +176,6 @@ class DailyCouplePostViewModel extends ChangeNotifier {
       }
     }
 
-    setLoading(false);
+    _loading = false;
   }
 }

@@ -50,6 +50,10 @@ class PostMainScreen extends StatelessWidget {
                         scrollDirection: Axis.horizontal,
                         itemCount: _dailyCouplePostViewModel.dailyCouplePosts.length,
                         onPageChanged: (index) {
+                          if(index == _dailyCouplePostViewModel.dailyCouplePosts.length - 1) {
+                            _dailyCouplePostViewModel.loadCouplePosts();
+                            print("인덱스 끝");
+                          }
                           _dailyCouplePostViewModel.setDailyInfo(index);
                         },
                         controller: PageController(initialPage: _dailyCouplePostViewModel.index??0),
