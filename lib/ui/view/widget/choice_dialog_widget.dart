@@ -44,7 +44,7 @@ class SingleDialogOption extends StatelessWidget {
           fontSize: 14,
         ),
       ),
-      onPressed: () => onPressed,
+      onPressed: onPressed,
     );
   }
 }
