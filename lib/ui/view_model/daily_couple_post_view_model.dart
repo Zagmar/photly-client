@@ -98,22 +98,24 @@ class DailyCouplePostViewModel extends ChangeNotifier {
     // success -> put data to DailyCouplePosts
     if(response is Success) {
       List<DailyCouplePostModel> newDailyCouplePostList = [];
+
       if((response.response as List).isNotEmpty){
         List list = response.response as List;
         for (var element in list) {
           newDailyCouplePostList.add(DailyCouplePostModel.fromJson(element));
         }
         _dailyCouplePosts += newDailyCouplePostList;
-      }
-      else{
+      } else{
         await createTodayCouplePost();
       }
+
       // Auto refresh today's couple post
       if(_dailyCouplePosts.first.dailyPostDate.year != DateTime.now().year || _dailyCouplePosts.first.dailyPostDate.month != DateTime.now().month || _dailyCouplePosts.first.dailyPostDate.day != DateTime.now().day) {
         await createTodayCouplePost();
       }
-      await setPages(newDailyCouplePostList);
+      await setPages(_dailyCouplePosts);
     }
+    notifyListeners();
   }
 
   loadCouplePosts(){
