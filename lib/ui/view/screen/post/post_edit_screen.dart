@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_detail_screen.dart';
+import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
 import 'package:couple_seflie_app/ui/view/widget/choice_dialog_widget.dart';
 import 'package:couple_seflie_app/ui/view/widget/loading_widget.dart';
 import 'package:couple_seflie_app/ui/view/widget/text_form_field.dart';
@@ -25,7 +26,7 @@ class PostEditScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context);
+    _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context, listen: false);
     _postViewModel = Provider.of<PostViewModel>(context);
 
     return _postViewModel.loading ?
@@ -42,7 +43,12 @@ class PostEditScreen extends StatelessWidget {
             physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
             child: Column(
                 children: <Widget>[
-                  PostScreensAppbar(),
+                  PostScreensAppbar(
+                    onTap: () {
+                      _postViewModel.clearLocalImage();
+                      Navigator.of(context).pop((route) => PostMainScreen());
+                    },
+                  ),
                   PostDailyInfoWidget(
                     bottomButton: TextButtonWidget(
                       buttonText: "저장",
@@ -65,10 +71,13 @@ class PostEditScreen extends StatelessWidget {
                         print("시도");
 
                         _postViewModel.isPostOk ?
-                        Navigator.pushReplacement(
+                        {
+                          await _dailyCouplePostViewModel.refreshTodayCouplePost(),
+                          Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (context) => PostDetailScreen()),
-                        )
+                          )
+                        }
                             :
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
@@ -76,9 +85,7 @@ class PostEditScreen extends StatelessWidget {
                                 _postViewModel.postFailMessage!
                             ),
                           ),
-                        )
-                        ;
-
+                        );
                       },
                     ),
                   ),
@@ -135,7 +142,7 @@ class PostEditScreen extends StatelessWidget {
                                 :
                             _postViewModel.post!.postId != 0 ?
                             // Image from DB
-                            CashedNetworkImageWidget(
+                            CachedNetworkImageWidget(
                               imageUrl: _postViewModel.post!.postImageUrl,
                               width: 390,
                               height: 390 * IMAGE_RATIO,
@@ -415,12 +422,12 @@ class PostEditScreen extends StatelessWidget {
    */
 }
 
-class CashedNetworkImageWidget extends StatelessWidget {
+class CachedNetworkImageWidget extends StatelessWidget {
   final String imageUrl;
   final double width;
   final double height;
   final BoxFit? boxFit;
-  const CashedNetworkImageWidget({Key? key, required this.imageUrl, required this.width, required this.height, this.boxFit}) : super(key: key);
+  const CachedNetworkImageWidget({Key? key, required this.imageUrl, required this.width, required this.height, this.boxFit}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

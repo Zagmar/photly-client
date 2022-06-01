@@ -1,4 +1,5 @@
 import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
+import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -57,16 +58,15 @@ class PostMainScreenAppbar extends StatelessWidget {
 }
 
 class PostScreensAppbar extends StatelessWidget {
-  const PostScreensAppbar({Key? key}) : super(key: key);
+  final GestureTapCallback onTap;
+  const PostScreensAppbar({Key? key, required this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return PostAppbarModel(
       actionButton: SingleButton(
         icon: Icons.clear,
-        onTap: () {
-          Navigator.of(context).pop((route) => PostMainScreen());
-        },
+        onTap: onTap,
       ),
     );
   }

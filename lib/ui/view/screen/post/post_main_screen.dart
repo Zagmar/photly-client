@@ -98,7 +98,7 @@ class ImageButtonWidget extends StatelessWidget {
             MaterialPageRoute(builder: (context) => PostDetailScreen())
         );
       },
-      child: CashedNetworkImageWidget(
+      child: CachedNetworkImageWidget(
           imageUrl: postImageUrl,
           width: MAIN_SPACE_WIDTH.w,
           height: MAIN_SPACE_WIDTH.w * IMAGE_RATIO
@@ -245,7 +245,7 @@ class PartnerDailyPostWidget extends StatelessWidget {
           _dailyCouplePostViewModel.dailyCouplePosts[index].isToday! ?
          // today - user : false, partner : true
          /// Show as blurred image
-         CashedNetworkImageWidget(
+         CachedNetworkImageWidget(
            imageUrl: _dailyCouplePostViewModel.dailyCouplePosts[index].partnerPostImageUrl!,
            width: MAIN_SPACE_WIDTH.w,
            height: MAIN_SPACE_WIDTH.w * IMAGE_RATIO,

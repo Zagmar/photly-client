@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:couple_seflie_app/data/model/post_model.dart';
 import 'package:couple_seflie_app/data/repository/auth_service.dart';
 import 'package:couple_seflie_app/data/repository/post_info_repository.dart';
@@ -17,6 +18,7 @@ class PostViewModel extends ChangeNotifier {
   bool _isNewImage = false;
   int _postId = 0;
   String? _postFailMessage;
+  late String _downloadResultMessage;
   String? _postErrorMessage;
   File? _postImage;
   late String _tempImageUrl;
@@ -32,6 +34,7 @@ class PostViewModel extends ChangeNotifier {
   bool get isNewImage => _isNewImage;
   String? get postErrorMessage => _postErrorMessage;
   String? get postFailMessage => _postFailMessage;
+  String get downloadResultMessage => _downloadResultMessage;
   int get postId => _postId;
   String get tempImageUrl => _tempImageUrl;
   String get dateTimeNow => (DateTime.now().hour > 12 ? "PM " +  (DateTime.now().hour - 12).toString() : "AM " +  DateTime.now().hour.toString()) + "시 " + DateTime.now().minute.toString() + "분";
@@ -40,7 +43,7 @@ class PostViewModel extends ChangeNotifier {
     if(postId == 0){
       _isNewPost = true;
       _isNewImage = true;
-      if(_postImage == null) {
+      if(_postImage != null) {
         _isPostReady = true;
         _postErrorMessage = null;
       }
@@ -51,6 +54,7 @@ class PostViewModel extends ChangeNotifier {
     }
     else{
       _isNewPost = false;
+      _isPostReady = true;
       if(_postImage == null){
         _isNewImage = false;
         _postErrorMessage = null;
@@ -86,6 +90,7 @@ class PostViewModel extends ChangeNotifier {
     var response = await _postInfoRepository.readImage(imageSource);
     if(response != null){
       _postImage = response;
+      notifyListeners();
     }
   }
 
@@ -124,22 +129,17 @@ class PostViewModel extends ChangeNotifier {
     if(response is Success) {
       print("성공");
       _post = postFromJson(response.response);
-      notifyListeners();
+      //notifyListeners();
     }
 
     // failure -> put errorCode to failure
     if(response is Failure) {
       _postFailMessage = response.errorResponse;
-      notifyListeners();
+      //notifyListeners();
     }
 
     // loading...end
     setLoading(false);
-  }
-
-  Future<void> createS3(File image, String url) async {
-    // temp
-    // S3 업로드 기능
   }
   
   // creat new post
@@ -151,10 +151,19 @@ class PostViewModel extends ChangeNotifier {
 
     // success -> add new data to Post
     if(response is Success) {
-      await createS3(_postImage!, response.response["postImageUrl"]);
-      _postImage = null;
-      await getPost(response.response["postId"]);
-      _isPostOk = true;
+      print("응답 확인");
+      print(response.response);
+      var responseImg = await _postInfoRepository.createS3(_postImage!, response.response["s3Url"]);
+      if(responseImg is Success) {
+        _postImage = null;
+        await getPost(response.response["postId"]);
+        _postFailMessage = null;
+        _isPostOk = true;
+      }
+      if(responseImg is Failure) {
+        _postFailMessage = responseImg.errorResponse;
+        _isPostOk = false;
+      }
     }
 
     // failure -> put errorCode to failure
@@ -172,20 +181,32 @@ class PostViewModel extends ChangeNotifier {
     // loading...start
     setLoading(true);
 
+    print("여기는 되나");
     print("postId ${_post!.postId}");
     // request edit post
 
     var response = await _postInfoRepository.updatePost(_post!);
 
-    if(postImage != null) {
-      await createS3(_postImage!, _post!.postImageUrl);
-    }
-
     // success -> update new data to Post
     if(response is Success) {
-      _postImage = null;
-      await getPost(_postId);
-      _isPostOk = true;
+      if(postImage != null) {
+        var responseImg = await _postInfoRepository.createS3(_postImage!, response.response["s3Url"]);
+        if(responseImg is Success) {
+          await CachedNetworkImage.evictFromCache(_post!.postImageUrl);
+          _postImage = null;
+          await getPost(_post!.postId);
+          _postFailMessage = null;
+          _isPostOk = true;
+        }
+        if(responseImg is Failure) {
+          _postFailMessage = responseImg.errorResponse;
+          _isPostOk = false;
+        }
+      }
+      else{
+        _postFailMessage = null;
+        _isPostOk = true;
+      }
     }
 
     // failure -> put errorCode to failure
@@ -196,5 +217,20 @@ class PostViewModel extends ChangeNotifier {
 
     // loading...end
     setLoading(false);
+  }
+
+  Future<void> downloadImage() async {
+    var responese = await _postInfoRepository.downloadImage(_post!.postImageUrl);
+    if(responese is Success) {
+      _downloadResultMessage = "사진을 성공적으로 다운로드되었습니다.";
+    }
+    if(responese is Failure) {
+      print("다운로드실패${responese.errorResponse}");
+      _downloadResultMessage = "사진 다운로드에 실패하였습니다.";
+    }
+  }
+
+  clearLocalImage(){
+    _postImage = null;
   }
 }

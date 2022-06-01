@@ -52,6 +52,7 @@ dependencies:
   amplify_auth_cognito: ^0.4.5
   flutter_svg: ^1.0.3
   amplify_core: ^0.4.5
+  path_provider: ^2.0.10
 
 dev_dependencies:
   flutter_test:

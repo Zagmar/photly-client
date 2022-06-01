@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_edit_screen.dart';
+import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -24,14 +25,25 @@ class PostDetailScreen extends StatelessWidget {
           primary: true,
           child: Column(
               children: <Widget>[
-                PostScreensAppbar(),
+                PostScreensAppbar(
+                  onTap: () {
+                    Navigator.of(context).pop((route) => PostMainScreen());
+                  },
+                ),
                 PostDailyInfoWidget(
                   topButton: IconButtonWidget(
                     iconData: Icons.save_alt_outlined,
-                    onTap: (){
+                    onTap: () async {
+                      print("다운로드");
                       FocusScope.of(context).unfocus();
-                      // temp
-                      /// 사진 다운로드
+                      await _postViewModel.downloadImage();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                              _postViewModel.downloadResultMessage
+                          ),
+                        ),
+                      );
                     },
                   ),
                   // bottomButton: _dailyCouplePostViewModel.isUserDone == true && _dailyCouplePostViewModel.isToday == true ?
@@ -70,7 +82,7 @@ class PostDetailScreen extends StatelessWidget {
                 _postViewModel.setTempImageUrl(_postViewModel.post!.postImageUrl);
                 //Navigator.pushNamed(context, "/largeImageScreen");
               },
-              child: CashedNetworkImageWidget(
+              child: CachedNetworkImageWidget(
                   imageUrl: _postViewModel.post!.postImageUrl,
                   width: 390.w,
                   height: 390.w * IMAGE_RATIO

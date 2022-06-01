@@ -1,7 +1,6 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:dio/dio.dart';
-import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 
 /// Status Code
 const OK = 200;
@@ -124,6 +123,35 @@ class RemoteDataSource {
           .get(
           uri,
           queryParameters: inputData).timeout(const Duration(seconds: 600))
+          .catchError((e) {
+        print(e.message);
+      });
+      print(response);
+
+      if(response.statusCode == OK) {
+        return Success(response: response.data);
+      }
+      return Failure(code: INVALID_RESPONSE, errorResponse: "Invalid Response");
+    } on HttpException{
+      return Failure(code: NO_INTERNET, errorResponse: "No Internet");
+    } on FormatException{
+      return Failure(code: INVALID_FORMAT, errorResponse: "Invalid Format");
+    }
+    catch(e) {
+      return Failure(code: UNKNOWN_ERROR, errorResponse: "Unknown Error");
+    }
+  }
+
+  Future<Object> downloadFromUrl(String url) async {
+    try{
+      Directory? savePath = Platform.isAndroid
+          ? await getExternalStorageDirectory() //FOR ANDROID
+          : await getApplicationDocumentsDirectory(); //FOR iOS
+      print("${savePath!.path}/demo.heic");
+      final response = await Dio().download(
+          url,
+        "${savePath!.path}/demo.heic"
+      ).timeout(const Duration(seconds: 600))
           .catchError((e) {
         print(e.message);
       });
