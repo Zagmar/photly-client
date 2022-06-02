@@ -1,6 +1,7 @@
 import 'package:blur/blur.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_detail_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_edit_screen.dart';
+import 'package:couple_seflie_app/ui/view/screen/register3/register_couple_code_screen.dart';
 import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -195,7 +196,8 @@ class PartnerDailyPostWidget extends StatelessWidget {
     final DailyCouplePostViewModel _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context);
     print("partner 반복되는 중");
    return DailyPostWidgetFrame(
-       widget: _dailyCouplePostViewModel.dailyCouplePosts[index].isUserDone! ?
+       widget: _dailyCouplePostViewModel.isCouple ?
+       _dailyCouplePostViewModel.dailyCouplePosts[index].isUserDone! ?
        // user : true
        Container(
            child: _dailyCouplePostViewModel.dailyCouplePosts[index].isPartnerDone! ?
@@ -281,6 +283,19 @@ class PartnerDailyPostWidget extends StatelessWidget {
              mainText: "답변을 기다려요",
              subText: "아직 답변을 하지 않았어요\n나의 답변을 작성하고 상대방에게 답변을 요청해봐요."
          ),
+       )
+           :
+       EmptyPostButton(
+         iconImagePath: "images/icons/icon_notification.svg",
+         mainText: "상대방 등록하기",
+         subText: "등록된 상대방이 없어요\n상대방을 등록 후에 같이 즐겨봐요",
+         onTap: () {
+           Focus.of(context).unfocus();
+           Navigator.push(
+             context,
+             MaterialPageRoute(builder: (context) => RegisterCoupleCodeScreen()),
+           );
+         },
        )
    );
   }

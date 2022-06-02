@@ -4,9 +4,12 @@ import 'package:couple_seflie_app/data/repository/daily_couple_post_repository.d
 import 'package:flutter/material.dart';
 
 import '../../data/datasource/remote_datasource.dart';
+import '../../data/repository/user_info_repository.dart';
 
 class DailyCouplePostViewModel extends ChangeNotifier {
   final DailyCouplePostRepository _dailyCouplePostRepository = DailyCouplePostRepository();
+  final _userInfoRepository = UserInfoRepository();
+
   // List of name of months in English
   List<String> months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   List<DailyCouplePostModel> _dailyCouplePosts = []; // Data list for page view
@@ -25,6 +28,8 @@ class DailyCouplePostViewModel extends ChangeNotifier {
   late String _questionText;
   String? _questionImageUrl;
 
+  bool _isCouple = false;
+
   List<DailyCouplePostModel> get dailyCouplePosts => _dailyCouplePosts;
   bool get loading => _loading;
   int? get index => _index;
@@ -35,15 +40,27 @@ class DailyCouplePostViewModel extends ChangeNotifier {
   int get questionType => _questionType;
   String get questionText => _questionText;
   String? get questionImageUrl => _questionImageUrl;
+  bool get isCouple => _isCouple;
 
   // Init mainScreen
   Future<void> initDailyCouplePosts() async {
     _userId = await AuthService().getCurrentUserId();
+    await checkIsCouple();
     if(_dailyCouplePosts.isEmpty){
       // set mainScreen to default
       await loadDailyCouplePosts();
       await setDailyInfo(0);
       notifyListeners();
+    }
+  }
+
+  Future<void> checkIsCouple() async {
+    var response = await _userInfoRepository.getPartner();
+    if(response is Failure) {
+      _isCouple = false;
+    }
+    if(response is Success) {
+      _isCouple = true;
     }
   }
 
