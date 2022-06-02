@@ -49,9 +49,8 @@ class Register2ViewModel with ChangeNotifier {
 
   Future<void> uploadUserInfoToDB() async {
     print("_userId");
-    _userId = await AuthService().getCurrentUserId();
     print(_userId);
-    var response = await _userInfoRepository.createUserInfo(_userId!, _username, _anniversary!);
+    var response = await _userInfoRepository.createUserInfo(_username, _anniversary!);
     if(response is Success) {
       _isUploaded = true;
       _uploadFailMessage = null;
