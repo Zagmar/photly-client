@@ -1,5 +1,7 @@
 import 'package:couple_seflie_app/ui/view/screen/login/login_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
+import 'package:couple_seflie_app/ui/view_model/daily_couple_post_view_model.dart';
+import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -29,7 +31,10 @@ class MainDrawerWidget extends StatelessWidget {
             onTap: () async {
               await Provider.of<UserInfoViewModel>(context, listen: false).doLogout() ?
               {
-                //Navigator.pushNamedAndRemoveUntil(context, "/loginScreen", (route) => false)
+                await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
+                //await Provider.of<PostViewModel>(context, listen: false).clear(),
+                //await Provider.of<UserInfoViewModel>(context, listen: false).clear(),
+                //Provider.of<DailyCouplePostViewModel>(context, listen: false).dispose(),
                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false)
               }
                   :

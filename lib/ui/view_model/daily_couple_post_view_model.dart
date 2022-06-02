@@ -21,11 +21,11 @@ class DailyCouplePostViewModel extends ChangeNotifier {
 
   bool _loading = true; // Set state to load screen until true (default : true)
 
-  late String _year;
-  late String _month;
-  late String _day;
-  late int _questionType;
-  late String _questionText;
+  String? _year;
+  String? _month;
+  String? _day;
+  int? _questionType;
+  String? _questionText;
   String? _questionImageUrl;
 
   bool _isCouple = false;
@@ -34,17 +34,18 @@ class DailyCouplePostViewModel extends ChangeNotifier {
   bool get loading => _loading;
   int? get index => _index;
 
-  String get year => _year;
-  String get month => _month;
-  String get day => _day;
-  int get questionType => _questionType;
-  String get questionText => _questionText;
+  String get year => _year!;
+  String get month => _month!;
+  String get day => _day!;
+  int get questionType => _questionType!;
+  String get questionText => _questionText!;
   String? get questionImageUrl => _questionImageUrl;
   bool get isCouple => _isCouple;
 
   // Init mainScreen
   Future<void> initDailyCouplePosts() async {
     _userId = await AuthService().getCurrentUserId();
+    print(_userId);
     await checkIsCouple();
     if(_dailyCouplePosts.isEmpty){
       // set mainScreen to default
@@ -60,7 +61,12 @@ class DailyCouplePostViewModel extends ChangeNotifier {
       _isCouple = false;
     }
     if(response is Success) {
-      _isCouple = true;
+      if(response.response["partnerId"] == null){
+        _isCouple = false;
+      }
+      else{
+        _isCouple = true;
+      }
     }
   }
 
@@ -132,15 +138,14 @@ class DailyCouplePostViewModel extends ChangeNotifier {
       }
       await setPages(_dailyCouplePosts);
     }
+  }
+
+  Future<void> loadCouplePosts() async{
+    await loadDailyCouplePosts();
     notifyListeners();
   }
 
-  loadCouplePosts(){
-    loadDailyCouplePosts();
-    notifyListeners();
-  }
-
-  setDailyInfo(index) async {
+  Future<void> setDailyInfo(index) async {
     _index = index;
     DateTime dateTime = _dailyCouplePosts[index].dailyPostDate;
     print(dateTime);
@@ -230,5 +235,23 @@ class DailyCouplePostViewModel extends ChangeNotifier {
     }
 
     setLoading(false);
+  }
+
+  Future<void> clear() async {
+    _dailyCouplePosts = []; // Data list for page view
+    _userId = null;
+    _errorMessage = null; // Error message when fail to load data through repository
+    _index = null;
+
+    _loading = true; // Set state to load screen until true (default : true)
+
+    _year = null;
+    _month = null;
+    _day = null;
+    _questionType = null;
+    _questionText = null;
+    _questionImageUrl = null;
+
+    _isCouple = false;
   }
 }
