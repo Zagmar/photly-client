@@ -1,17 +1,20 @@
 import '../datasource/local_datasource.dart';
 import '../datasource/remote_datasource.dart';
+import 'auth_service.dart';
 
 class UserInfoRepository {
   final RemoteDataSource _remoteDataSource = RemoteDataSource();
   final LocalDataSource _localDataSource = LocalDataSource();
   static const String USER = "$PHOTLY/user/info";
+  static const String USER_PARTNER = "$PHOTLY/user/partner";
 
   /// Create post
   // input : postModel
-  Future<Object> createUserInfo(String userId, String userName, DateTime coupleAnniversary) async {
+  Future<Object> createUserInfo(String userName, DateTime coupleAnniversary) async {
+    String _userId = await AuthService().getCurrentUserId();
     // convert inputData to use for API
     Map<String, dynamic> inputData = {
-      'user_id' : userId,
+      'user_id' : _userId,
       'user_name' : userName,
       'user_enrolled_date' : DateTime.now().toString(),
       'couple_anniversary' : coupleAnniversary.toString(),
@@ -21,4 +24,52 @@ class UserInfoRepository {
 
     return await _remoteDataSource.postToUri(USER, inputData);
   }
+
+  /// Create post
+  // input : postModel
+  Future<Object> registerPartner(String coupleCode) async {
+    print("여기3");
+    String _userId = await AuthService().getCurrentUserId();
+    print("여기4");
+
+    // convert inputData to use for API
+    Map<String, dynamic> inputData = {
+      'user_id' : _userId,
+      'couple_code' : coupleCode,
+      'coupleStartDate' : DateTime.now().toString()
+    };
+
+    return await _remoteDataSource.putToUri(USER_PARTNER, inputData);
+  }
+
+  /// Create post
+  // input : postModel
+  Future<Object> getPartner() async {
+    String _userId = await AuthService().getCurrentUserId();
+
+    // convert inputData to use for API
+    Map<String, dynamic> inputData = {
+      'user_id' : _userId,
+    };
+
+    print(inputData);
+
+    return await _remoteDataSource.getFromUri(USER_PARTNER, inputData);
+  }
+
+  /// Create post
+  // input : postModel
+  Future<Object> getUserInfo() async {
+    String _userId = await AuthService().getCurrentUserId();
+
+    // convert inputData to use for API
+    Map<String, dynamic> inputData = {
+      'user_id' : _userId,
+    };
+
+    print(inputData);
+
+    return await _remoteDataSource.getFromUri(USER, inputData);
+  }
+
 }

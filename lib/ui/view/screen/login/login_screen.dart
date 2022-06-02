@@ -2,6 +2,7 @@ import 'package:couple_seflie_app/ui/view/screen/login/find_id_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/login/find_pw_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register2/register_username_screen.dart';
+import 'package:couple_seflie_app/ui/view/screen/register3/register_couple_code_screen.dart';
 import 'package:couple_seflie_app/ui/view/widget/route_button_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -70,8 +71,13 @@ class LoginScreen extends StatelessWidget {
                         case null :
                           break;
                         case "success" :
-                          await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts();
-                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false);
+                          final _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context, listen: false);
+                          await _dailyCouplePostViewModel.initDailyCouplePosts();
+                          _dailyCouplePostViewModel.isCouple ?
+                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false)
+                              :
+                          Navigator.pushAndRemoveUntil(context,
+                            MaterialPageRoute(builder: (context) => RegisterCoupleCodeScreen(), fullscreenDialog: true), (route) => false, );
                           break;
                         case "nonVerification" :
                           _userInfoViewModel.clearSecret();

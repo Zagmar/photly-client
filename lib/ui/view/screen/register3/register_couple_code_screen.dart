@@ -2,6 +2,7 @@ import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
 import 'package:couple_seflie_app/ui/view/widget/route_button_widgets.dart';
 import 'package:couple_seflie_app/ui/view/widget/text_form_field.dart';
 import 'package:couple_seflie_app/ui/view/widget/top_widgets.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,6 +17,9 @@ class RegisterCoupleCodeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _register3ViewModel = Provider.of<Register3ViewModel>(context);
+    if(_register3ViewModel.userCode == ""){
+      _register3ViewModel.setUserCoupleCode();
+    }
     return Container(
         child: GestureDetector(
           onTap: (){
@@ -31,7 +35,11 @@ class RegisterCoupleCodeScreen extends StatelessWidget {
                   onTap: (){
                     _register3ViewModel.clear();
                     FocusScope.of(context).unfocus();
-                    Navigator.popUntil(context, (route) => route.isFirst);
+                    Navigator.pushReplacement(context, MaterialPageRoute(
+                        builder: (context) => PostMainScreen(),
+                        fullscreenDialog: true,
+                    ));
+                    //Navigator.popUntil(context, (route) => route.isFirst);
                   },
                   child: SizedBox(
                     width: 50.w,
@@ -59,7 +67,7 @@ class RegisterCoupleCodeScreen extends StatelessWidget {
                             topText: "이제\n서로를\n연결해봐요",
                             bottomText: "초대 링크를 함께하고 싶은 사람에게"
                         ),
-                        RegisterCoupleCodeWidget(register3ViewModel: _register3ViewModel,),
+                        RegisterCoupleCodeWidget(),
                       ],
                     ),
                   ),
@@ -68,19 +76,31 @@ class RegisterCoupleCodeScreen extends StatelessWidget {
                       onTap: () async {
                         _formKey.currentState!.save();
                         FocusScope.of(context).unfocus();
-                         _register3ViewModel.isCoupleCodeMatched ?
-                        {
-                          _register3ViewModel.clear(),
-                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false)
-                        }
-                            :
+                        !_register3ViewModel.isCoupleCoupleCodeOk ?
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
                                 _register3ViewModel.coupleCodeErrorMessage!
                             ),
                           ),
-                        );
+                        )
+                            :
+                        {
+                          await _register3ViewModel.matchCoupleCode(),
+                          _register3ViewModel.isCoupleCodeMatched ?
+                          {
+                            _register3ViewModel.clear(),
+                            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen(),fullscreenDialog: true), (route) => false)
+                          }
+                              :
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  _register3ViewModel.coupleCodeMatchFailMessage!
+                              ),
+                            ),
+                          )
+                        };
                       },
                       buttonText: "등록하기"
                   )
@@ -96,11 +116,12 @@ class RegisterCoupleCodeScreen extends StatelessWidget {
 }
 
 class RegisterCoupleCodeWidget extends StatelessWidget {
-  final Register3ViewModel register3ViewModel;
-  const RegisterCoupleCodeWidget({Key? key, required this.register3ViewModel}) : super(key: key);
+
+  const RegisterCoupleCodeWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final Register3ViewModel _register3ViewModel = Provider.of<Register3ViewModel>(context);
     return Container(
       width: 320.w,
       height: 160.w,
@@ -111,11 +132,11 @@ class RegisterCoupleCodeWidget extends StatelessWidget {
         children: [
           TextInputWidget(
               maxLines: 1,
-              maxLength: 7,
+              maxLength: 8,
               keyboardType: TextInputType.text,
               obscureText: false,
               onSaved: (value) async {
-                await register3ViewModel.checkCode(value??"");
+                await _register3ViewModel.checkCode(value??"");
               },
           ),
           Padding(padding: EdgeInsets.only(bottom: 10.w)),
@@ -140,7 +161,7 @@ class RegisterCoupleCodeWidget extends StatelessWidget {
                     width: 255.w,
                     height: 20.w,
                     child: Text(
-                      register3ViewModel.userCode,
+                      _register3ViewModel.userCode,
                       style: TextStyle(
                         fontSize: 16.w,
                         fontWeight: FontWeight.w400,
@@ -151,7 +172,9 @@ class RegisterCoupleCodeWidget extends StatelessWidget {
                   InkWell(
                     onTap: (){
                       FocusScope.of(context).unfocus();
-                      Clipboard.setData(ClipboardData(text: register3ViewModel.userCode));
+                      print("복사하기");
+                      print(_register3ViewModel.userCode);
+                      Clipboard.setData(ClipboardData(text: _register3ViewModel.userCode));
                     },
                     child: Container(
                       width: 45.w,

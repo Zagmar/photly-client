@@ -10,6 +10,7 @@ import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register1/register_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register2/register_anniversary_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register2/register_username_screen.dart';
+import 'package:couple_seflie_app/ui/view/screen/register3/register_couple_code_screen.dart';
 import 'package:couple_seflie_app/ui/view/widget/loading_widget.dart';
 import 'package:couple_seflie_app/ui/view_model/daily_couple_post_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
@@ -104,7 +105,10 @@ class MyApp extends StatelessWidget {
           // Show loading widget when is loading
           LoadingScreen()
             :
+          _dailyCouplePostViewModel.isCouple ?
           PostMainScreen()
+              :
+          RegisterCoupleCodeScreen()
               :
           LoginScreen(),
           routes: {

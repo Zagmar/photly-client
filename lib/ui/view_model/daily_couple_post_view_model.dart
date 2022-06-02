@@ -45,7 +45,6 @@ class DailyCouplePostViewModel extends ChangeNotifier {
   // Init mainScreen
   Future<void> initDailyCouplePosts() async {
     _userId = await AuthService().getCurrentUserId();
-    print(_userId);
     await checkIsCouple();
     if(_dailyCouplePosts.isEmpty){
       // set mainScreen to default

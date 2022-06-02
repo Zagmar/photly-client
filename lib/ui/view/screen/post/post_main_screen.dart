@@ -25,6 +25,7 @@ class PostMainScreen extends StatelessWidget {
     _scaffoldKey = GlobalKey<ScaffoldState>();
     _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context);
 
+
     return RefreshIndicator(
       onRefresh: () => _dailyCouplePostViewModel.refreshTodayCouplePost(),
       child: GestureDetector(
@@ -290,10 +291,10 @@ class PartnerDailyPostWidget extends StatelessWidget {
          mainText: "상대방 등록하기",
          subText: "등록된 상대방이 없어요\n상대방을 등록 후에 같이 즐겨봐요",
          onTap: () {
-           Focus.of(context).unfocus();
+           print("등록");
            Navigator.push(
              context,
-             MaterialPageRoute(builder: (context) => RegisterCoupleCodeScreen()),
+             MaterialPageRoute(builder: (context) => RegisterCoupleCodeScreen(), fullscreenDialog: true),
            );
          },
        )

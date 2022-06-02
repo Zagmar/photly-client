@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../data/datasource/remote_datasource.dart';
 import '../../data/model/auth_credentials_model.dart';
@@ -210,7 +211,7 @@ class UserInfoViewModel with ChangeNotifier {
     }
   }
 
-  clear() {
+  Future<void> clear() async {
     _email = null;
     _password = null;
     _isIdOk = false;
@@ -222,5 +223,14 @@ class UserInfoViewModel with ChangeNotifier {
 
   clearSecret(){
     _password = null;
+  }
+
+  /// this will delete cache
+  Future<void> _deleteCacheDir() async {
+    final cacheDir = await getTemporaryDirectory();
+
+    if (cacheDir.existsSync()) {
+      cacheDir.deleteSync(recursive: true);
+    }
   }
 }
