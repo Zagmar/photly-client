@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
+import '../../../view_model/daily_couple_post_view_model.dart';
 import '../../../view_model/user_info_view_model.dart';
 import '../../widget/text_form_field.dart';
 import '../../widget/top_widgets.dart';
@@ -60,12 +61,16 @@ class LoginScreen extends StatelessWidget {
                         ),
                       )
                           :
-                      await _userInfoViewModel.doLogin();
+                      {
+                        await _userInfoViewModel.doLogout(),
+                        await _userInfoViewModel.doLogin(),
+                      };
 
                       switch (_userInfoViewModel.loginFail) {
-                        case null : break;
+                        case null :
+                          break;
                         case "success" :
-                          _userInfoViewModel.clear();
+                          await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts();
                           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false);
                           break;
                         case "nonVerification" :
