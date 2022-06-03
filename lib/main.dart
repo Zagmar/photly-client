@@ -79,8 +79,6 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
   late DailyCouplePostViewModel _dailyCouplePostViewModel;
-
-  //late LocalNotificationService _localNotificationService;
   @override
   Widget build(BuildContext context) {
     _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context);
@@ -110,10 +108,7 @@ class MyApp extends StatelessWidget {
               // Show loading widget when is loading
               LoadingScreen()
                   :
-              _dailyCouplePostViewModel.isCouple ?
               PostMainScreen()
-                  :
-              RegisterCoupleCodeScreen()
                   :
               LoginScreen(),
               routes: {

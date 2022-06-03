@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import '../../../view_model/daily_couple_post_view_model.dart';
+import '../../../view_model/register3_view_model.dart';
 import '../../../view_model/user_info_view_model.dart';
 import '../../widget/text_form_field.dart';
 import '../../widget/top_widgets.dart';
@@ -76,8 +77,11 @@ class LoginScreen extends StatelessWidget {
                           _dailyCouplePostViewModel.isCouple ?
                           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false)
                               :
-                          Navigator.pushAndRemoveUntil(context,
-                            MaterialPageRoute(builder: (context) => RegisterCoupleCodeScreen(), fullscreenDialog: true), (route) => false, );
+                          {
+                            await Provider.of<Register3ViewModel>(context, listen: false).setUserCoupleCode(),
+                            Navigator.pushAndRemoveUntil(context,
+                              MaterialPageRoute(builder: (context) => RegisterCoupleCodeScreen(), fullscreenDialog: true), (route) => false, ),
+                          };
                           break;
                         case "nonVerification" :
                           _userInfoViewModel.clearSecret();

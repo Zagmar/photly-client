@@ -69,7 +69,7 @@ class RegisterAnniversaryScreen extends StatelessWidget {
                           await _register2ViewModel.uploadUserInfoToDB(),
                           _register2ViewModel.isUploaded ?
                           {
-                            _userInfoViewModel = Provider.of<UserInfoViewModel>(context),
+                            _userInfoViewModel = Provider.of<UserInfoViewModel>(context, listen: false),
                             await _userInfoViewModel.doLogout(),
                             Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()))
                           }

@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 
 import '../../../ui_setting.dart';
 import '../../../view_model/daily_couple_post_view_model.dart';
+import '../../../view_model/register3_view_model.dart';
 import '../../widget/loading_widget.dart';
 import '../../widget/main_drawer_widget.dart';
 import '../../widget/post/post_appbar_widget.dart';
@@ -290,8 +291,9 @@ class PartnerDailyPostWidget extends StatelessWidget {
          iconImagePath: "images/icons/icon_notification.svg",
          mainText: "상대방 등록하기",
          subText: "등록된 상대방이 없어요\n상대방을 등록 후에 같이 즐겨봐요",
-         onTap: () {
+         onTap: () async {
            print("등록");
+           await Provider.of<Register3ViewModel>(context, listen: false).setUserCoupleCode();
            Navigator.push(
              context,
              MaterialPageRoute(builder: (context) => RegisterCoupleCodeScreen(), fullscreenDialog: true),
