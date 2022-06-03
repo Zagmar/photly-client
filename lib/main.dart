@@ -91,8 +91,7 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
         splitScreenMode: false,
         designSize: const Size(390, 840),
-        builder: (_) =>
-            MaterialApp(
+        builder: (context, _) => MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'Photly',
               theme: ThemeData(
