@@ -60,6 +60,7 @@ class AuthService {
       final result = await Amplify.Auth.signUp(username: credentials.email, password: credentials.password, options: CognitoSignUpOptions(userAttributes: userAttributes));
       // 4
       if (result.isSignUpComplete) {
+        // 로그인
         return SignUpStatus.success;
         return Success(response: "회원가입이 완료되었습니다");
         return loginService(credentials);

@@ -31,10 +31,7 @@ class MainDrawerWidget extends StatelessWidget {
             onTap: () async {
               await Provider.of<UserInfoViewModel>(context, listen: false).doLogout() ?
               {
-                await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
-                //await Provider.of<PostViewModel>(context, listen: false).clear(),
-                //await Provider.of<UserInfoViewModel>(context, listen: false).clear(),
-                //Provider.of<DailyCouplePostViewModel>(context, listen: false).dispose(),
+                Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false)
               }
                   :

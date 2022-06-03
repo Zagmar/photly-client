@@ -9,7 +9,6 @@ import '../../data/repository/user_info_repository.dart';
 class Register2ViewModel with ChangeNotifier {
   final _userInfoRepository = UserInfoRepository();
 
-  String? _userId;
   String _username = "";
   DateTime? _anniversary;
   bool _isUsernameOk = false;
@@ -49,7 +48,6 @@ class Register2ViewModel with ChangeNotifier {
 
   Future<void> uploadUserInfoToDB() async {
     print("_userId");
-    print(_userId);
     var response = await _userInfoRepository.createUserInfo(_username, _anniversary!);
     if(response is Success) {
       _isUploaded = true;

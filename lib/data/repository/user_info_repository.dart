@@ -11,7 +11,9 @@ class UserInfoRepository {
   /// Create post
   // input : postModel
   Future<Object> createUserInfo(String userName, DateTime coupleAnniversary) async {
+    print("_userId");
     String _userId = await AuthService().getCurrentUserId();
+    print(_userId);
     // convert inputData to use for API
     Map<String, dynamic> inputData = {
       'user_id' : _userId,
@@ -34,10 +36,12 @@ class UserInfoRepository {
 
     // convert inputData to use for API
     Map<String, dynamic> inputData = {
-      'user_id' : _userId,
-      'couple_code' : coupleCode,
-      'coupleStartDate' : DateTime.now().toString()
+      'user_id' : _userId.toString(),
+      'couple_code' : coupleCode.toString(),
+      'couple_enrolled_date' : DateTime.now().toString()
     };
+
+    print(inputData);
 
     return await _remoteDataSource.putToUri(USER_PARTNER, inputData);
   }

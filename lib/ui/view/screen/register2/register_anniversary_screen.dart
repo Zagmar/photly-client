@@ -1,16 +1,18 @@
-import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
+import 'package:couple_seflie_app/ui/view/screen/login/login_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import '../../../view_model/register2_view_model.dart';
+import '../../../view_model/user_info_view_model.dart';
 import '../../widget/route_button_widgets.dart';
 import '../../widget/top_widgets.dart';
 
 class RegisterAnniversaryScreen extends StatelessWidget {
   RegisterAnniversaryScreen({Key? key}) : super(key: key);
   late Register2ViewModel _register2ViewModel;
+  late UserInfoViewModel _userInfoViewModel;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +68,11 @@ class RegisterAnniversaryScreen extends StatelessWidget {
                         {
                           await _register2ViewModel.uploadUserInfoToDB(),
                           _register2ViewModel.isUploaded ?
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => PostMainScreen()))
+                          {
+                            _userInfoViewModel = Provider.of<UserInfoViewModel>(context),
+                            await _userInfoViewModel.doLogout(),
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()))
+                          }
                               :
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import '../../../view_model/daily_couple_post_view_model.dart';
 import '../../../view_model/register3_view_model.dart';
 
 class RegisterCoupleCodeScreen extends StatelessWidget {
@@ -89,6 +90,7 @@ class RegisterCoupleCodeScreen extends StatelessWidget {
                           await _register3ViewModel.matchCoupleCode(),
                           _register3ViewModel.isCoupleCodeMatched ?
                           {
+                            await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
                             _register3ViewModel.clear(),
                             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen(),fullscreenDialog: true), (route) => false)
                           }
