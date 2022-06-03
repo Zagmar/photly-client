@@ -23,6 +23,7 @@ class PostViewModel extends ChangeNotifier {
   File? _postImage;
   late String _tempImageUrl;
   PostModel? _post;
+  int _nWeather = 4;
 
   String get currentUserId => _currentUserId;
   File? get postImage => _postImage;
@@ -36,6 +37,7 @@ class PostViewModel extends ChangeNotifier {
   String? get postFailMessage => _postFailMessage;
   String get downloadResultMessage => _downloadResultMessage;
   int get postId => _postId;
+  int get nWeather => _nWeather;
   String get tempImageUrl => _tempImageUrl;
   String get dateTimeNow => (DateTime.now().hour > 12 ? "PM " +  (DateTime.now().hour - 12).toString() : "AM " +  DateTime.now().hour.toString()) + "시 " + DateTime.now().minute.toString() + "분";
 
@@ -73,6 +75,11 @@ class PostViewModel extends ChangeNotifier {
 
   setPostText(String postText){
     _post!.postText = postText;
+    notifyListeners();
+  }
+
+  Future<void> setLocation(String location) async{
+    _post!.postLocation = location;
     notifyListeners();
   }
 

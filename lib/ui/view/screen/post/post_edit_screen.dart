@@ -5,6 +5,7 @@ import 'package:couple_seflie_app/ui/view/screen/post/post_detail_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
 import 'package:couple_seflie_app/ui/view/widget/choice_dialog_widget.dart';
 import 'package:couple_seflie_app/ui/view/widget/loading_widget.dart';
+import 'package:couple_seflie_app/ui/view/widget/route_button_widgets.dart';
 import 'package:couple_seflie_app/ui/view/widget/text_form_field.dart';
 import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
 import 'package:flutter/material.dart';
@@ -159,30 +160,28 @@ class PostEditScreen extends StatelessWidget {
                       PostTextFormWidget(
                         initialPostText: _postViewModel.post!.postText,
                         weatherButtonOnTap: (){
-                          Focus.of(context).unfocus();
+                          FocusScope.of(context).unfocus();
                           showDialog(
                               context: context,
                               builder: (context) {
-                                return WeatherDialogWidget(nWeathers: 3);
+                                return WeatherDialogWidget();
                               }
                           );
                         },
                         placeButtonOnTap: (){
-                          Focus.of(context).unfocus();
+                          FocusScope.of(context).unfocus();
                           showDialog(
                               context: context,
                               builder: (context) {
                                 return LocationDialogWidget();
                               }
                           );
-                          // temp
-                          // 장소 추가 dialog
                         },
                         postInputTextOnChanged: (value) {
                           _postViewModel.setPostText(value);
                         },
                         dateTimeNow: _postViewModel.dateTimeNow,
-                        weatherImagePath: "assets/images/weathers/weather_" + (_postViewModel.post!.postWeather ?? 0).toString() + ".svg",
+                        weatherImagePath: "images/weathers/x1/weather_${(_postViewModel.post!.postWeather??0).toString()}.png",
                       )
                     ],
                   ),
@@ -194,232 +193,6 @@ class PostEditScreen extends StatelessWidget {
       ),
     );
   }
-
-  /*
-  Widget postEditWidget() {
-    TextEditingController textController = TextEditingController()..text = _postViewModel.post.postText ?? ""; // temp
-    // TextEditingController _locateController = TextEditingController();
-    return Container(
-      margin: EdgeInsets.only(bottom: 5.w),
-      child: Column(
-        children: <Widget>[
-          Container(
-            width: 390.w,
-            height: 390.w * IMAGE_RATIO,
-            child: InkWell(
-              onTap: (){
-                FocusScope.of(_context).unfocus();
-                getImageDialogWidget();
-              },
-              child: _postViewModel.postImage != null ?
-              Image.file(
-                _postViewModel.postImage!,
-                width: 390.w,
-                height: 390.w * IMAGE_RATIO,
-                fit: BoxFit.cover,
-              )
-                :
-              _postViewModel.post.postId != "" ?
-              CachedNetworkImage(
-                imageUrl: _postViewModel.post.postImageUrl,
-                width: 390.w,
-                height: 390.w * IMAGE_RATIO,
-                progressIndicatorBuilder: (context, url, downloadProgress) =>
-                    Center(
-                      child: SizedBox(
-                          width: 30.w,
-                          height: 30.w,
-                          child: CircularProgressIndicator(value: downloadProgress.progress)
-                      ),
-                    ),
-                errorWidget: (context, url, error) => Icon(Icons.error),
-                fit: BoxFit.cover,
-              )
-                  :
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Color(0xFF000000),
-                    width: 1.w
-                  )
-                ),
-                width: 100.w,
-                height: 100.w,
-                alignment: Alignment.center,
-                child: Icon(
-                  Icons.add,
-                  size: 57.w,
-                  color: Color(0xFF000000),
-                ),
-              )
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.all(20.w),
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                    width: 1.w,
-                    color: Color(0xFF000000)
-                ),
-              )
-            ),
-            child: Column(
-              children: <Widget>[
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 30.w,
-                      width: 30.w,
-                      // temp
-                      child: IconButton(
-                        onPressed: (){},
-                        padding: EdgeInsets.zero,
-                        constraints: BoxConstraints(),
-                        icon: Icon(
-                          Icons.wb_sunny_outlined,
-                          size: 24.w,
-                          color: Color(0xFFAAAAAA),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30.w,
-                      width: 30.w,
-                      child: IconButton(
-                          onPressed: (){},
-                          padding: EdgeInsets.zero,
-                          constraints: BoxConstraints(),
-                          icon: Icon(
-                            Icons.place_outlined,
-                            size: 24.w,
-                            color: Color(0xFFAAAAAA),
-                          )
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.only(top: 10.w),
-                      child: Icon(
-                        Icons.edit,
-                        size: 24.w,
-                        color: Color(0xFF141414),
-                      ),
-                    ),
-                    Container(
-                      width: 320.w,
-                      child: TextField(
-                        controller: textController,
-                        decoration: InputDecoration(
-                            border: InputBorder.none,
-                            focusedBorder: InputBorder.none,
-                            enabledBorder: InputBorder.none,
-                            errorBorder: InputBorder.none,
-                            disabledBorder: InputBorder.none,
-                            hintText: "오늘의 한 마디",
-                            hintStyle: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16.w,
-                              color: Color(0xFFC4C4C4)
-                            )
-                        ),
-                        // temp
-                        maxLines: null,
-                        maxLength: 50,
-                      ),
-                    )
-                  ],
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 10.w),
-                  alignment: Alignment.centerRight,
-                  padding: EdgeInsets.only(right: 26.w),
-                  child: Text(
-                    // temp
-                    _postViewModel.dateTimeNow,
-                    style: TextStyle(
-                      fontSize: 9.w,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFFC4C4C4)
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-  // Dialog to select from gallery or take a photo via camera
-  getImageDialogWidget() {
-    return showDialog(
-        context: context,
-        builder: (context){
-          return SimpleDialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-            title: Text(
-              "이미지 추가",
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.black,
-              ),
-            ),
-            children: <Widget>[
-              // Select from gallery
-              SimpleDialogOption(
-                child: Text(
-                  "갤러리에서 이미지 추가하기",
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-                onPressed: (){
-                  Navigator.pop(_context);
-                  _postViewModel.pickImage("gallery");
-                },
-              ),
-              // Take a photo via camera
-              SimpleDialogOption(
-                child: Text(
-                  "카메라로 이미지 촬영하기",
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-                onPressed: (){
-                  Navigator.pop(_context);
-                  _postViewModel.pickImage("camera");
-                },
-              ),
-              // Cancel
-              SimpleDialogOption(
-                child: Text(
-                  "취소",
-                  style: TextStyle(
-                    fontSize: 14,
-                  ),
-                ),
-                onPressed: (){
-                  Navigator.pop(_context);
-                },
-              )
-            ],
-          );
-        }
-    );
-  }
-
-   */
 }
 
 class CachedNetworkImageWidget extends StatelessWidget {
@@ -502,8 +275,8 @@ class PostTextFormWidget extends StatelessWidget {
           children: <Widget>[
             // Weather button
             InkWell(
-              onTap: () => weatherButtonOnTap,
-              child: SvgPicture.asset(
+              onTap: weatherButtonOnTap,
+              child: Image.asset(
                 weatherImagePath,
                 width: 24.w,
                 height: 24.w,
@@ -512,11 +285,12 @@ class PostTextFormWidget extends StatelessWidget {
             ),
             // Place button
             InkWell(
-              onTap: () => placeButtonOnTap,
-              child: Icon(
-                Icons.place_outlined,
-                size: 24.w,
-                color: Color(0xFFAAAAAA),
+              onTap: placeButtonOnTap,
+              child: Image.asset(
+                "images/icons/icon_map_pin/map_pin_1.png",
+                width: 24.w,
+                height: 24.w,
+                fit: BoxFit.contain,
               ),
             )
           ],
@@ -577,31 +351,35 @@ class PostTextFormWidget extends StatelessWidget {
 }
 
 class WeatherDialogWidget extends StatelessWidget {
-  final int nWeathers;
-  const WeatherDialogWidget({Key? key,  required this.nWeathers, }) : super(key: key);
+  const WeatherDialogWidget({Key? key,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    int _nWeathers = Provider.of<PostViewModel>(context).nWeather;
     return SimpleDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
       title: Text(
-        "날씨 선택",
+        "날씨를 기록해보세요",
         style: TextStyle(
           fontSize: 14,
           color: Colors.black,
         ),
       ),
-      children: <Widget>[
-        Expanded(
+      children: [
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 20.w),
+          height: 40.w,
+          width: 200.w,
           child: ListView.builder(
+            shrinkWrap: true,
+            primary: false,
             scrollDirection: Axis.horizontal,
-            physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-            itemCount: nWeathers,
             itemBuilder: (BuildContext context, int index) {
               return WeatherButton(indexWeather: index);
             },
+            itemCount: _nWeathers,
           ),
         )
       ],
@@ -615,27 +393,34 @@ class WeatherButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        Navigator.pop(context);
-        Provider.of<PostViewModel>(context).setPostWeather(indexWeather);
-      },
-      child: SvgPicture.asset(
-        "assets/images/weathers/weather_" + indexWeather.toString() + ".svg",
-        width: 24.w,
-        height: 24.w,
-        fit: BoxFit.contain,
+    return Padding(
+      padding: EdgeInsets.only(right: 10.w),
+      child: InkWell(
+        onTap: () {
+          Navigator.pop(context);
+          Provider.of<PostViewModel>(context, listen: false).setPostWeather(indexWeather);
+        },
+        child: Image.asset(
+          "images/weathers/x1/weather_${indexWeather.toString()}.png",
+          width: 35.w,
+          height: 35.w,
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }
 }
 
 class LocationDialogWidget extends StatelessWidget {
-  const LocationDialogWidget({Key? key}) : super(key: key);
+  LocationDialogWidget({Key? key}) : super(key: key);
+  final _formKey = GlobalKey<FormState>();
+  late PostViewModel _postViewModel;
 
   @override
   Widget build(BuildContext context) {
+    _postViewModel = Provider.of<PostViewModel>(context);
     return SimpleDialog(
+      key: _formKey,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
@@ -647,16 +432,50 @@ class LocationDialogWidget extends StatelessWidget {
         ),
       ),
       children: <Widget>[
-        TextInputWidget(
-            maxLines: 1,
-            maxLength: 8,
-            obscureText: false,
-            onFieldSubmitted: (value) {
-              Provider.of<PostViewModel>(context).setPostLocation(value);
-            },
-          onSaved: (_) {
-              // temp
-          },
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextInputWidget(
+                maxLines: 1,
+                maxLength: 8,
+                obscureText: false,
+                onFieldSubmitted: (value) {
+                  Provider.of<PostViewModel>(context).setPostLocation(value);
+                },
+                onSaved: (value) async {
+                  await _postViewModel.setLocation(value??"");
+                },
+              ),
+              InkWell(
+                onTap: (){
+                  FocusScope.of(context).unfocus();
+                  _formKey.currentState!.save();
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10.w),
+                    color: Color(0xFF050505),
+                  ),
+                  margin: EdgeInsets.only(top: 10.w),
+                  width: 390.w,
+                  height: 50.w,
+                  alignment: Alignment.center,
+                  child: Text(
+                    "위치 등록",
+                    style: TextStyle(
+                        fontSize: 16.w,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFFE5E5E5)
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              )
+            ],
+          ),
         )
       ],
     );

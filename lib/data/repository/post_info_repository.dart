@@ -40,15 +40,13 @@ class PostInfoRepository {
     // convert inputData to use for API
     Map<String, dynamic> inputData = {
       'user_id' : postModel.postUserId,
-      'post_text' : postModel.postText,
-      'post_emotion' : postModel.postEmotion,
-      'post_location' : postModel.postLocation,
+      'post_text' : postModel.postText??"",
+      'post_emotion' : postModel.postEmotion??0,
+      'post_location' : postModel.postLocation??"",
       'post_time' : postModel.postEditTime.toString(),
       'post_is_public' : postModel.postIsPublic,
-      'post_weather' : postModel.postWeather,
+      'post_weather' : postModel.postWeather??0,
     };
-
-    //return Success(response: '{"postId": "1", "postUserId": "00", "postImageUrl": "https://item.kakaocdn.net/do/493188dee481260d5c89790036be0e66c37d537a8f2c6f426591be6b8dc7b36a", "postIsPublic": "false", "postEditTime": "2022-05-10 15:47:12.924688", "postText": "hello", "postEmotion": "1", "postWeather": "1", "postLocation": "1"}');
 
     // call API
     return await _remoteDataSource.postToUri(POST, inputData);
@@ -58,9 +56,6 @@ class PostInfoRepository {
     //var imageFile = await MultipartFile.fromFile(image.path);
     print("createS3");
     var inputData = image.openRead();
-    //http.Response response = await http.put(Uri.parse(url), body: image.readAsBytesSync());
-    //print(response.body);
-    //return Failure(code: 123, errorResponse: "errorResponse");
 
     try{
       final response = await Dio().put(
