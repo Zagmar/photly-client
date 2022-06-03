@@ -23,9 +23,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'amplifyconfiguration.dart';
 import 'data/repository/auth_service.dart';
+import 'data/repository/local_notification_service.dart';
 
 bool _isLogined = false;
 late String username;
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -77,148 +79,56 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
   late DailyCouplePostViewModel _dailyCouplePostViewModel;
+
+  //late LocalNotificationService _localNotificationService;
   @override
   Widget build(BuildContext context) {
     _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context);
 
-    if(_isLogined){
+    if (_isLogined) {
       _dailyCouplePostViewModel.initDailyCouplePosts();
+      LocalNotificationService().initialize();
     }
 
-    print("MyApp 실행");
     return ScreenUtilInit(
         splitScreenMode: false,
         designSize: const Size(390, 840),
-        builder: (_) => MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Photly',
-          theme: ThemeData(
-            fontFamily: 'Noto_Sans_KR',
-            brightness: Brightness.light,
-            backgroundColor: Color(0xFFFFFFFF),
-            primaryColor: Colors.blueGrey,
-            primarySwatch: Colors.blueGrey,
-            scaffoldBackgroundColor: Color(0xFFFFFFFF),
-          ),
-          home: _isLogined ?
-          _dailyCouplePostViewModel.dailyCouplePosts.isEmpty || _dailyCouplePostViewModel.loading ?
-          // Show loading widget when is loading
-          LoadingScreen()
-            :
-          _dailyCouplePostViewModel.isCouple ?
-          PostMainScreen()
-              :
-          RegisterCoupleCodeScreen()
-              :
-          LoginScreen(),
-          routes: {
-            '/postMainScreen': (context) => PostMainScreen(),
-            '/postEditScreen': (context) => PostEditScreen(),
-            '/postDetailScreen': (context) => PostDetailScreen(),
-            '/largeImageScreen': (context) => LargeImageScreen(),
-            '/loginScreen': (context) => LoginScreen(),
-            '/findIdScreen': (context) => FindIdScreen(),
-            '/findPwScreen': (context) => FindPwScreen(),
-            '/registerScreen': (context) => RegisterScreen(),
-            '/registerUsernameScreen': (context) => RegisterUsernameScreen(),
-            '/registerAnniversaryScreen': (context) => RegisterAnniversaryScreen(),
-          },
-        )
+        builder: (_) =>
+            MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Photly',
+              theme: ThemeData(
+                fontFamily: 'Noto_Sans_KR',
+                brightness: Brightness.light,
+                backgroundColor: Color(0xFFFFFFFF),
+                primaryColor: Colors.blueGrey,
+                primarySwatch: Colors.blueGrey,
+                scaffoldBackgroundColor: Color(0xFFFFFFFF),
+              ),
+              home: _isLogined ?
+              _dailyCouplePostViewModel.dailyCouplePosts.isEmpty || _dailyCouplePostViewModel.loading ?
+              // Show loading widget when is loading
+              LoadingScreen()
+                  :
+              _dailyCouplePostViewModel.isCouple ?
+              PostMainScreen()
+                  :
+              RegisterCoupleCodeScreen()
+                  :
+              LoginScreen(),
+              routes: {
+                '/postMainScreen': (context) => PostMainScreen(),
+                '/postEditScreen': (context) => PostEditScreen(),
+                '/postDetailScreen': (context) => PostDetailScreen(),
+                '/largeImageScreen': (context) => LargeImageScreen(),
+                '/loginScreen': (context) => LoginScreen(),
+                '/findIdScreen': (context) => FindIdScreen(),
+                '/findPwScreen': (context) => FindPwScreen(),
+                '/registerScreen': (context) => RegisterScreen(),
+                '/registerUsernameScreen': (context) => RegisterUsernameScreen(),
+                '/registerAnniversaryScreen': (context) => RegisterAnniversaryScreen(),
+              },
+            )
     );
   }
-
-  /*
-  // Init AWS amplify
-  void _configureAmplify() async {
-    _amplify.addPlugins([AmplifyAuthCognito()]);
-    final AuthFlowStatus authFlowStatus = await AuthService().checkAuthStatusService();
-    if(authFlowStatus == AuthFlowStatus.session) {
-      _initialRoute = "/postMainScreen";
-    }
-    else{
-      _initialRoute = "/loginScreen";
-    }
-    try {
-      await _amplify.configure(amplifyconfig);
-      print('Successfully configured Amplify 🎉');
-    } on AmplifyAlreadyConfiguredException {
-      print("Amplify was already configured. Looks like app restarted on android.");
-    } catch (e) {
-      print('Could not configure Amplify ☠️');
-    }
-  }
-
-   */
 }
-/*
-class MyApp extends StatelessWidget {
-  late DailyCouplePostViewModel _dailyCouplePostViewModel;
-  MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    print("실행 한 번만");
-    print("초기 설정 완료");
-    return ScreenUtilInit(
-        splitScreenMode: false,
-        designSize: const Size(390, 840),
-        builder: (_) => MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'Photly',
-          theme: ThemeData(
-            fontFamily: 'Noto_Sans_KR',
-            brightness: Brightness.light,
-            backgroundColor: Color(0xFFFFFFFF),
-            primaryColor: Colors.blueGrey,
-            primarySwatch: Colors.blueGrey,
-            scaffoldBackgroundColor: Color(0xFFFFFFFF),
-          ),
-          builder: (context, child) {
-            return MediaQuery(
-              data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
-              child: child!,
-            );
-          },
-          initialRoute: _initialRoute,
-          routes: {
-            '/postMainScreen': (context) => PostMainScreen(),
-            '/postEditScreen': (context) => PostEditScreen(),
-            '/postDetailScreen': (context) => PostDetailScreen(),
-            '/largeImageScreen': (context) => LargeImageScreen(),
-            '/loginScreen': (context) => LoginScreen(),
-            '/findIdScreen': (context) => FindIdScreen(),
-            '/findPwScreen': (context) => FindPwScreen(),
-            '/registerScreen': (context) => RegisterScreen(),
-            '/registerUsernameScreen': (context) => RegisterUsernameScreen(),
-            '/registerPartnerScreen': (context) => RegisterPartnerScreen(),
-            '/registerAnniversaryScreen': (context) => RegisterAnniversaryScreen(),
-          },
-        )
-    );
-  }
-
-  /*
-  // Init AWS amplify
-  void _configureAmplify() async {
-    _amplify.addPlugins([AmplifyAuthCognito()]);
-    final AuthFlowStatus authFlowStatus = await AuthService().checkAuthStatusService();
-    if(authFlowStatus == AuthFlowStatus.session) {
-      _initialRoute = "/postMainScreen";
-    }
-    else{
-      _initialRoute = "/loginScreen";
-    }
-    try {
-      await _amplify.configure(amplifyconfig);
-      print('Successfully configured Amplify 🎉');
-    } on AmplifyAlreadyConfiguredException {
-      print("Amplify was already configured. Looks like app restarted on android.");
-    } catch (e) {
-      print('Could not configure Amplify ☠️');
-    }
-  }
-
-   */
-}
-
- */
