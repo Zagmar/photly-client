@@ -9,11 +9,13 @@ class TextInputWidget extends StatelessWidget {
   final FormFieldSetter<String> onSaved;
   final TextInputType? keyboardType;
   final Function? onFieldSubmitted;
-  const TextInputWidget({Key? key, this.hintText, required this.maxLines, this.maxLength, required this.obscureText, required this.onSaved, this.keyboardType, this.onFieldSubmitted}) : super(key: key);
+  final String? initialValue;
+  const TextInputWidget({Key? key, this.hintText, required this.maxLines, this.maxLength, required this.obscureText, required this.onSaved, this.keyboardType, this.onFieldSubmitted, this.initialValue}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: initialValue??"",
       decoration: hintText != null ?
       InputDecoration(
         hintText: hintText,

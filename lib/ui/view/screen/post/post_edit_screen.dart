@@ -263,89 +263,138 @@ class PostTextFormWidget extends StatelessWidget {
   final GestureTapCallback weatherButtonOnTap;
   final GestureTapCallback placeButtonOnTap;
   final ValueChanged<String> postInputTextOnChanged;
+  late PostViewModel _postViewModel;
   PostTextFormWidget({Key? key, this.initialPostText, required this.weatherImagePath, required this.dateTimeNow, required this.weatherButtonOnTap, required this.placeButtonOnTap, required this.postInputTextOnChanged}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            // Weather button
-            InkWell(
-              onTap: weatherButtonOnTap,
-              child: Image.asset(
-                weatherImagePath,
-                width: 24.w,
-                height: 24.w,
-                fit: BoxFit.contain,
-              ),
-            ),
-            // Place button
-            InkWell(
-              onTap: placeButtonOnTap,
-              child: Image.asset(
-                "images/icons/icon_map_pin/map_pin_1.png",
-                width: 24.w,
-                height: 24.w,
-                fit: BoxFit.contain,
-              ),
-            )
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(top: 10.w),
-              child: Icon(
-                Icons.edit,
-                size: 24.w,
-                color: Color(0xFF141414),
-              ),
-            ),
-            Container(
-              width: 320.w,
-              child: TextFormField(
-                initialValue: initialPostText ?? "",
-                decoration: InputDecoration(
-                    border: InputBorder.none,
-                    focusedBorder: InputBorder.none,
-                    enabledBorder: InputBorder.none,
-                    errorBorder: InputBorder.none,
-                    disabledBorder: InputBorder.none,
-                    hintText: "오늘의 한 마디",
-                    hintStyle: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16.w,
-                        color: Color(0xFFC4C4C4)
-                    ),
+    _postViewModel = Provider.of<PostViewModel>(context);
+    return Padding(
+      padding: EdgeInsets.all(20.w),
+      child: Column(
+        children: <Widget>[
+          _postViewModel.post!.postLocation == null || _postViewModel.post!.postLocation == ""?
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              // Weather button
+              InkWell(
+                onTap: weatherButtonOnTap,
+                child: Image.asset(
+                  weatherImagePath,
+                  width: 24.w,
+                  height: 24.w,
+                  fit: BoxFit.contain,
                 ),
-                onChanged: postInputTextOnChanged,
-                maxLines: null,
-                maxLength: 50,
               ),
-            )
-          ],
-        ),
-        Container(
-          margin: EdgeInsets.only(top: 10.w),
-          alignment: Alignment.centerRight,
-          padding: EdgeInsets.only(right: 26.w),
-          child: Text(
-            // temp
-            dateTimeNow,
-            style: TextStyle(
-                fontSize: 9.w,
-                fontWeight: FontWeight.w400,
-                color: Color(0xFFC4C4C4)
+              Padding(padding: EdgeInsets.only(right: 10.w)),
+              // Place button
+              InkWell(
+                onTap: placeButtonOnTap,
+                child: Image.asset(
+                  "images/icons/icon_map_pin/map_pin_1.png",
+                  width: 24.w,
+                  height: 24.w,
+                  fit: BoxFit.contain,
+                ),
+              )
+            ],
+          )
+              :
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // Place button
+                  InkWell(
+                    onTap: placeButtonOnTap,
+                    child: Image.asset(
+                      "images/icons/icon_map_pin/map_pin_1.png",
+                      width: 24.w,
+                      height: 24.w,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.only(right: 10.w)),
+                  Text(
+                    _postViewModel.post!.postLocation!,
+                    style: TextStyle(
+                      fontSize: 15.w,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF000000),
+                    ),
+                  ),
+                ],
+              ),
+              // Weather button
+              InkWell(
+                onTap: weatherButtonOnTap,
+                child: Image.asset(
+                  weatherImagePath,
+                  width: 24.w,
+                  height: 24.w,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ],
+          ),
+          Padding(padding: EdgeInsets.only(bottom: 5.w)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.only(top: 10.w),
+                child: Icon(
+                  Icons.edit,
+                  size: 24.w,
+                  color: Color(0xFF141414),
+                ),
+              ),
+              Container(
+                width: 320.w,
+                child: TextFormField(
+                  initialValue: initialPostText ?? "",
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                      hintText: "오늘의 한 마디",
+                      hintStyle: TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16.w,
+                          color: Color(0xFFC4C4C4)
+                      ),
+                  ),
+                  onChanged: postInputTextOnChanged,
+                  maxLines: null,
+                  maxLength: 50,
+                ),
+              )
+            ],
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 10.w),
+            alignment: Alignment.centerRight,
+            child: Text(
+              dateTimeNow,
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                  fontSize: 10.w,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xFF444444)
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -420,7 +469,6 @@ class LocationDialogWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     _postViewModel = Provider.of<PostViewModel>(context);
     return SimpleDialog(
-      key: _formKey,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
@@ -434,47 +482,51 @@ class LocationDialogWidget extends StatelessWidget {
       children: <Widget>[
         Container(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextInputWidget(
-                maxLines: 1,
-                maxLength: 8,
-                obscureText: false,
-                onFieldSubmitted: (value) {
-                  Provider.of<PostViewModel>(context).setPostLocation(value);
-                },
-                onSaved: (value) async {
-                  await _postViewModel.setLocation(value??"");
-                },
-              ),
-              InkWell(
-                onTap: (){
-                  FocusScope.of(context).unfocus();
-                  _formKey.currentState!.save();
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10.w),
-                    color: Color(0xFF050505),
-                  ),
-                  margin: EdgeInsets.only(top: 10.w),
-                  width: 390.w,
-                  height: 50.w,
-                  alignment: Alignment.center,
-                  child: Text(
-                    "위치 등록",
-                    style: TextStyle(
-                        fontSize: 16.w,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFFE5E5E5)
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextInputWidget(
+                  initialValue: _postViewModel.post!.postLocation,
+                  maxLines: 1,
+                  maxLength: 8,
+                  obscureText: false,
+                  onFieldSubmitted: (value) async {
+                    await _postViewModel.setLocation(value??"");
+                  },
+                  onSaved: (value) async {
+                    await _postViewModel.setLocation(value??"");
+                  },
                 ),
-              )
-            ],
+                InkWell(
+                  onTap: (){
+                    _formKey.currentState!.save();
+                    FocusScope.of(context).unfocus();
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.w),
+                      color: Color(0xFF050505),
+                    ),
+                    margin: EdgeInsets.only(top: 10.w),
+                    width: 390.w,
+                    height: 50.w,
+                    alignment: Alignment.center,
+                    child: Text(
+                      "위치 등록",
+                      style: TextStyle(
+                          fontSize: 16.w,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFFE5E5E5)
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         )
       ],

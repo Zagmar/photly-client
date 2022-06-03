@@ -83,10 +83,6 @@ class PostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  setPostLocation(String location) {
-    _post!.postLocation = location;
-    notifyListeners();
-  }
   setPostWeather(int nWeather) {
     _post!.postWeather = nWeather;
     notifyListeners();
