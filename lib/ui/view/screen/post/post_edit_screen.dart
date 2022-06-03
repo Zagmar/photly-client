@@ -158,7 +158,6 @@ class PostEditScreen extends StatelessWidget {
                         child: HorizontalBorder(),
                       ),
                       PostTextFormWidget(
-                        initialPostText: _postViewModel.post!.postText,
                         weatherButtonOnTap: (){
                           FocusScope.of(context).unfocus();
                           showDialog(
@@ -180,8 +179,6 @@ class PostEditScreen extends StatelessWidget {
                         postInputTextOnChanged: (value) {
                           _postViewModel.setPostText(value);
                         },
-                        dateTimeNow: _postViewModel.dateTimeNow,
-                        weatherImagePath: "images/weathers/x1/weather_${(_postViewModel.post!.postWeather??0).toString()}.png",
                       )
                     ],
                   ),
@@ -257,14 +254,11 @@ class HorizontalBorder extends StatelessWidget {
 }
 
 class PostTextFormWidget extends StatelessWidget {
-  final String? initialPostText;
-  final String weatherImagePath;
-  final String dateTimeNow;
   final GestureTapCallback weatherButtonOnTap;
   final GestureTapCallback placeButtonOnTap;
   final ValueChanged<String> postInputTextOnChanged;
   late PostViewModel _postViewModel;
-  PostTextFormWidget({Key? key, this.initialPostText, required this.weatherImagePath, required this.dateTimeNow, required this.weatherButtonOnTap, required this.placeButtonOnTap, required this.postInputTextOnChanged}) : super(key: key);
+  PostTextFormWidget({Key? key, required this.weatherButtonOnTap, required this.placeButtonOnTap, required this.postInputTextOnChanged}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -282,7 +276,7 @@ class PostTextFormWidget extends StatelessWidget {
               InkWell(
                 onTap: weatherButtonOnTap,
                 child: Image.asset(
-                  weatherImagePath,
+                  "images/weathers/x1/weather_${(_postViewModel.post!.postWeather??0).toString()}.png",
                   width: 24.w,
                   height: 24.w,
                   fit: BoxFit.contain,
@@ -335,7 +329,7 @@ class PostTextFormWidget extends StatelessWidget {
               InkWell(
                 onTap: weatherButtonOnTap,
                 child: Image.asset(
-                  weatherImagePath,
+                  "images/weathers/x1/weather_${(_postViewModel.post!.postWeather??0).toString()}.png",
                   width: 24.w,
                   height: 24.w,
                   fit: BoxFit.contain,
@@ -359,7 +353,7 @@ class PostTextFormWidget extends StatelessWidget {
               Container(
                 width: 320.w,
                 child: TextFormField(
-                  initialValue: initialPostText ?? "",
+                  initialValue: _postViewModel.post!.postText ?? "",
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       focusedBorder: InputBorder.none,
@@ -384,7 +378,7 @@ class PostTextFormWidget extends StatelessWidget {
             margin: EdgeInsets.only(top: 10.w),
             alignment: Alignment.centerRight,
             child: Text(
-              dateTimeNow,
+              _postViewModel.dateTimeNow,
               textAlign: TextAlign.right,
               style: TextStyle(
                   fontSize: 10.w,
