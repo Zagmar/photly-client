@@ -17,6 +17,7 @@ import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/register2_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/register3_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/user_info_view_model.dart';
+import 'package:couple_seflie_app/ui/view_model/user_profile_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -71,6 +72,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (context) => UserInfoViewModel()),
         ChangeNotifierProvider(create: (context) => Register2ViewModel()),
         ChangeNotifierProvider(create: (context) => Register3ViewModel()),
+        ChangeNotifierProvider(create: (context) => UserProfileViewModel()),
       ],
       child: MyApp())
   );
@@ -79,11 +81,13 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
   late DailyCouplePostViewModel _dailyCouplePostViewModel;
+  late UserProfileViewModel _userProfileViewModel;
   @override
   Widget build(BuildContext context) {
     _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context);
-
+    _userProfileViewModel = Provider.of<UserProfileViewModel>(context, listen: false);
     if (_isLogined) {
+      _userProfileViewModel.setCurrentUser();
       _dailyCouplePostViewModel.initDailyCouplePosts();
       LocalNotificationService().initialize();
     }

@@ -82,6 +82,7 @@ flutter:
     - images/icons/
     - images/icons/icon_map_pin/
     - images/weathers/x1/
+    - images/default/
 
   #   - images/a_dot_ham.jpeg
 
