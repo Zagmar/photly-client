@@ -94,7 +94,7 @@ class MainDrawerWidget extends StatelessWidget {
             title: Text('나의 기록 초기화'),
             onTap: () async {
               await _userInfoViewModel.doClearPosts();
-              _userInfoViewModel.isDeleted ?
+              _userInfoViewModel.isPostsClear ?
               {
                 await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
                 await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
@@ -104,7 +104,7 @@ class MainDrawerWidget extends StatelessWidget {
               ScaffoldMessenger(
                 child: SnackBar(
                   content: Text(
-                      _userInfoViewModel.deleteFailMessage !
+                      _userInfoViewModel.clearPostsFailMessage !
                   ),
                 ),
               );
@@ -124,7 +124,7 @@ class MainDrawerWidget extends StatelessWidget {
               ScaffoldMessenger(
                 child: SnackBar(
                   content: Text(
-                      _userInfoViewModel.deleteFailMessage !
+                      _userInfoViewModel.clearPartnerFailMessage !
                   ),
                 ),
               );
@@ -138,7 +138,22 @@ class MainDrawerWidget extends StatelessWidget {
                   fontWeight: FontWeight.w600
               ),
             ),
-            onTap: () {}
+            onTap: () async {
+              await _userInfoViewModel.clearUser();
+              _userInfoViewModel.isUserClear ?
+              {
+                await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false)
+              }
+                  :
+              ScaffoldMessenger(
+                child: SnackBar(
+                  content: Text(
+                      _userInfoViewModel.clearUserFailMessage !
+                  ),
+                ),
+              );
+            },
           ),
         ],
       ),

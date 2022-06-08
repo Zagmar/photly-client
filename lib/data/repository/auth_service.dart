@@ -131,6 +131,22 @@ class AuthService {
     }
   }
 
+  // Clear
+  Future<Object> ClearUserService() async {
+    try {
+      // Call signOut without any option, execute logout in only this device
+      await Amplify.Auth.deleteUser();
+      // After logout, show login screen
+      //showLogin();
+      return Success(response: "success");
+      return AuthFlowStatus.login;
+    } on AuthException catch (authError) {
+      print('Could not clear user - ${authError.message}');
+      return Failure(code: INVALID_RESPONSE, errorResponse: 'Could not clear user - ${authError.message}');
+      return AuthFlowStatus.session;
+    }
+  }
+
   // Auto Login
   Future<AuthFlowStatus> checkAuthStatusService() async {
     try {

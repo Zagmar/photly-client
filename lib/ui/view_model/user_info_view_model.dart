@@ -20,8 +20,9 @@ class UserInfoViewModel with ChangeNotifier {
   bool _isRegistered = false;
   bool _isVerified = false;
   bool _isLogout = false;
-  bool _isDeleted = false;
+  bool _isPostsClear = false;
   bool _isPartnerClear = false;
+  bool _isUserClear = false;
   String? _loginFail;
   String? _idErrorMessage = '이메일은 필수사항입니다.';
   String? _pwErrorMessage = '비밀번호는 필수사항입니다.';
@@ -31,8 +32,9 @@ class UserInfoViewModel with ChangeNotifier {
   String? _logoutFailMessage;
   String? _registrationFailMessage;
   String? _verificationFailMessage;
-  String? _deleteFailMessage;
+  String? _clearPostsFailMessage;
   String? _clearPartnerFailMessage;
+  String? _clearUserFailMessage;
 
   late AuthService _authService;
 
@@ -44,8 +46,9 @@ class UserInfoViewModel with ChangeNotifier {
   String? get logoutFailMessage => _logoutFailMessage;
   String? get registrationFailMessage => _registrationFailMessage;
   String? get verificationFailMessage => _verificationFailMessage;
-  String? get deleteFailMessage => _deleteFailMessage;
+  String? get clearPostsFailMessage => _clearPostsFailMessage;
   String? get clearPartnerFailMessage => _clearPartnerFailMessage;
+  String? get clearUserFailMessage => _clearUserFailMessage;
   bool get isLoginOk => _isIdOk && _isPwOk;
   bool get isRegisterOk => _isIdOk && _isPwOk && _isPwCheckOk;
   bool get isVerificationCodeOk => _isVerificationCodeOk;
@@ -53,8 +56,9 @@ class UserInfoViewModel with ChangeNotifier {
   String? get loginFail => _loginFail;
   bool get isVerified => _isVerified;
   bool get isRegistered => _isRegistered;
-  bool get isDeleted => _isDeleted;
+  bool get isPostsClear => _isPostsClear;
   bool get isPartnerClear => _isPartnerClear;
+  bool get isUserClear => _isUserClear;
 
   // Check Email Input
   checkEmail(String val){
@@ -214,14 +218,14 @@ class UserInfoViewModel with ChangeNotifier {
     final result = await _postInfoRepository.deleteUserPostData();
 
     if(result is Success){
-      _deleteFailMessage = null;
-      _isDeleted = true;
+      _clearPostsFailMessage = null;
+      _isPostsClear = true;
       notifyListeners();
     }
 
     if(result is Failure){
-      _deleteFailMessage = result.errorResponse;
-      _isDeleted = false;
+      _clearPostsFailMessage = result.errorResponse;
+      _isPostsClear = false;
       notifyListeners();
     }
   }
@@ -255,6 +259,34 @@ class UserInfoViewModel with ChangeNotifier {
     else {
       _logoutFailMessage = null;
       _isLogout = true;
+      notifyListeners();
+    }
+  }
+
+  Future<void> clearUser() async {
+    final result = await _userInfoRepository.clearUser();
+    print("여기1");
+    if(result is Success){
+      print("여기2");
+
+      _authService = AuthService();
+      final resultAuth = await _authService.ClearUserService();
+      print("여기3");
+      if(resultAuth is Failure){
+        _clearUserFailMessage = resultAuth.errorResponse;
+        _isUserClear = false;
+        notifyListeners();
+      }
+      if(resultAuth is Success) {
+        _clearUserFailMessage = null;
+        _isUserClear = true;
+        notifyListeners();
+      }
+    }
+    if(result is Failure) {
+      print("여기4");
+      _clearUserFailMessage = result.errorResponse;
+      _isUserClear = false;
       notifyListeners();
     }
   }
