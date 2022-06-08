@@ -9,6 +9,8 @@ import '../datasource/remote_datasource.dart';
 
 import 'package:http/http.dart' as http;
 
+import 'auth_service.dart';
+
 class PostInfoRepository {
   final RemoteDataSource _remoteDataSource = RemoteDataSource();
   final LocalDataSource _localDataSource = LocalDataSource();
@@ -128,6 +130,17 @@ class PostInfoRepository {
       imageSource = ImageSource.camera;
       return await _localDataSource.getImage(imageSource);
     }
+  }
+
+  Future<Object> deleteUserPostData() async {
+    String _userId = await AuthService().getCurrentUserId();
+
+    // convert inputData to use for API
+    Map<String, dynamic> inputData = {
+      'user_id': _userId,
+    };
+
+    return await _remoteDataSource.deleteFromUri(POST, inputData);
   }
 
   Future<Object> downloadImage(String url) async {

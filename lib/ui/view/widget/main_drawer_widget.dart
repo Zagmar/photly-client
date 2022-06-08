@@ -72,7 +72,9 @@ class MainDrawerWidget extends StatelessWidget {
           ListTile(
             title: Text('로그아웃'),
             onTap: () async {
-              await Provider.of<UserInfoViewModel>(context, listen: false).doLogout() ?
+              await _userInfoViewModel.doLogout();
+
+              _userInfoViewModel.isLogout ?
               {
                 Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false)
@@ -87,7 +89,40 @@ class MainDrawerWidget extends StatelessWidget {
               );
             },
           ),
-
+          Divider(),
+          ListTile(
+            title: Text('나의 기록 초기화'),
+            onTap: () async {
+              await _userInfoViewModel.doClearPosts();
+              _userInfoViewModel.isDeleted ?
+              {
+                Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
+                Navigator.pop(context),
+              }
+                  :
+              ScaffoldMessenger(
+                child: SnackBar(
+                  content: Text(
+                      _userInfoViewModel.deleteFailMessage !
+                  ),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            title: Text('커플 끊기'),
+            onTap: () {}
+          ),
+          ListTile(
+            title: Text(
+              '회원 탈퇴',
+              style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.w600
+              ),
+            ),
+            onTap: () {}
+          ),
         ],
       ),
     );

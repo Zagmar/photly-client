@@ -1,3 +1,5 @@
+import 'package:couple_seflie_app/data/repository/post_info_repository.dart';
+import 'package:couple_seflie_app/data/repository/user_info_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -6,6 +8,7 @@ import '../../data/model/auth_credentials_model.dart';
 import '../../data/repository/auth_service.dart';
 
 class UserInfoViewModel with ChangeNotifier {
+  final PostInfoRepository _postInfoRepository = PostInfoRepository();
   String? _email;
   String? _password;
   String? _verificationCode;
@@ -15,6 +18,8 @@ class UserInfoViewModel with ChangeNotifier {
   bool _isVerificationCodeOk = false;
   bool _isRegistered = false;
   bool _isVerified = false;
+  bool _isLogout = false;
+  bool _isDeleted = false;
   String? _loginFail;
   String? _idErrorMessage = '이메일은 필수사항입니다.';
   String? _pwErrorMessage = '비밀번호는 필수사항입니다.';
@@ -24,6 +29,7 @@ class UserInfoViewModel with ChangeNotifier {
   String? _logoutFailMessage;
   String? _registrationFailMessage;
   String? _verificationFailMessage;
+  String? _deleteFailMessage;
 
   late AuthService _authService;
 
@@ -35,12 +41,15 @@ class UserInfoViewModel with ChangeNotifier {
   String? get logoutFailMessage => _logoutFailMessage;
   String? get registrationFailMessage => _registrationFailMessage;
   String? get verificationFailMessage => _verificationFailMessage;
+  String? get deleteFailMessage => _deleteFailMessage;
   bool get isLoginOk => _isIdOk && _isPwOk;
   bool get isRegisterOk => _isIdOk && _isPwOk && _isPwCheckOk;
   bool get isVerificationCodeOk => _isVerificationCodeOk;
+  bool get isLogout => _isLogout;
   String? get loginFail => _loginFail;
   bool get isVerified => _isVerified;
   bool get isRegistered => _isRegistered;
+  bool get isDeleted => _isDeleted;
 
   // Check Email Input
   checkEmail(String val){
@@ -195,19 +204,36 @@ class UserInfoViewModel with ChangeNotifier {
     }
   }
 
-  Future<bool> doLogout() async {
+  // Clear all posts of user
+  Future<void> doClearPosts() async {
+    final result = await _postInfoRepository.deleteUserPostData();
+
+    if(result is Success){
+      _deleteFailMessage = null;
+      _isDeleted = true;
+      notifyListeners();
+    }
+
+    if(result is Failure){
+      _deleteFailMessage = result.errorResponse;
+      _isDeleted = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> doLogout() async {
     _authService = AuthService();
     final result = await _authService.logOutService();
 
     if(result is Failure){
       _logoutFailMessage = result.errorResponse;
+      _isLogout = false;
       notifyListeners();
-      return false;
     }
     else {
       _logoutFailMessage = null;
+      _isLogout = true;
       notifyListeners();
-      return true;
     }
   }
 
