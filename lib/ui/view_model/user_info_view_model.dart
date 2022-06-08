@@ -9,6 +9,7 @@ import '../../data/repository/auth_service.dart';
 
 class UserInfoViewModel with ChangeNotifier {
   final PostInfoRepository _postInfoRepository = PostInfoRepository();
+  final UserInfoRepository _userInfoRepository = UserInfoRepository();
   String? _email;
   String? _password;
   String? _verificationCode;
@@ -20,6 +21,7 @@ class UserInfoViewModel with ChangeNotifier {
   bool _isVerified = false;
   bool _isLogout = false;
   bool _isDeleted = false;
+  bool _isPartnerClear = false;
   String? _loginFail;
   String? _idErrorMessage = '이메일은 필수사항입니다.';
   String? _pwErrorMessage = '비밀번호는 필수사항입니다.';
@@ -30,6 +32,7 @@ class UserInfoViewModel with ChangeNotifier {
   String? _registrationFailMessage;
   String? _verificationFailMessage;
   String? _deleteFailMessage;
+  String? _clearPartnerFailMessage;
 
   late AuthService _authService;
 
@@ -42,6 +45,7 @@ class UserInfoViewModel with ChangeNotifier {
   String? get registrationFailMessage => _registrationFailMessage;
   String? get verificationFailMessage => _verificationFailMessage;
   String? get deleteFailMessage => _deleteFailMessage;
+  String? get clearPartnerFailMessage => _clearPartnerFailMessage;
   bool get isLoginOk => _isIdOk && _isPwOk;
   bool get isRegisterOk => _isIdOk && _isPwOk && _isPwCheckOk;
   bool get isVerificationCodeOk => _isVerificationCodeOk;
@@ -50,6 +54,7 @@ class UserInfoViewModel with ChangeNotifier {
   bool get isVerified => _isVerified;
   bool get isRegistered => _isRegistered;
   bool get isDeleted => _isDeleted;
+  bool get isPartnerClear => _isPartnerClear;
 
   // Check Email Input
   checkEmail(String val){
@@ -217,6 +222,23 @@ class UserInfoViewModel with ChangeNotifier {
     if(result is Failure){
       _deleteFailMessage = result.errorResponse;
       _isDeleted = false;
+      notifyListeners();
+    }
+  }
+
+  // Clear all posts of user
+  Future<void> doClearPartner() async {
+    final result = await _userInfoRepository.clearPartner();
+
+    if(result is Success){
+      _clearPartnerFailMessage = null;
+      _isPartnerClear = true;
+      notifyListeners();
+    }
+
+    if(result is Failure){
+      _clearPartnerFailMessage = result.errorResponse;
+      _isPartnerClear = false;
       notifyListeners();
     }
   }

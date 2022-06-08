@@ -76,4 +76,16 @@ class UserInfoRepository {
     return await _remoteDataSource.getFromUri(USER, inputData);
   }
 
+  Future<Object> clearPartner() async {
+    String _userId = await AuthService().getCurrentUserId();
+
+    // convert inputData to use for API
+    Map<String, dynamic> inputData = {
+      'user_id' : _userId.toString(),
+    };
+
+    print(inputData);
+
+    return await _remoteDataSource.deleteFromUri(USER_PARTNER, inputData);
+  }
 }

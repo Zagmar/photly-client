@@ -96,8 +96,9 @@ class MainDrawerWidget extends StatelessWidget {
               await _userInfoViewModel.doClearPosts();
               _userInfoViewModel.isDeleted ?
               {
-                Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
-                Navigator.pop(context),
+                await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
+                await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false)
               }
                   :
               ScaffoldMessenger(
@@ -111,7 +112,23 @@ class MainDrawerWidget extends StatelessWidget {
           ),
           ListTile(
             title: Text('커플 끊기'),
-            onTap: () {}
+            onTap: () async {
+              await _userInfoViewModel.doClearPartner();
+              _userInfoViewModel.isPartnerClear ?
+              {
+                await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
+                await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false)
+              }
+                  :
+              ScaffoldMessenger(
+                child: SnackBar(
+                  content: Text(
+                      _userInfoViewModel.deleteFailMessage !
+                  ),
+                ),
+              );
+            },
           ),
           ListTile(
             title: Text(
