@@ -120,7 +120,7 @@ class RemoteDataSource {
   Future<Object> deleteFromUri(String uri, Map<String, dynamic> inputData) async {
     try{
       final response = await Dio()
-          .get(
+          .delete(
           uri,
           queryParameters: inputData).timeout(const Duration(seconds: 600))
           .catchError((e) {
