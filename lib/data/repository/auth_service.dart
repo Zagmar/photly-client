@@ -61,11 +61,13 @@ class AuthService {
       // 4
       if (result.isSignUpComplete) {
         // 로그인
+        await loginService(credentials);
         return SignUpStatus.success;
         return Success(response: "회원가입이 완료되었습니다");
         return loginService(credentials);
       }
       else {
+        await loginService(credentials);
         // verificationService;
         //_authCredentialsModel = credentials;
         // _authFlowStatus = AuthFlowStatus.verification;
