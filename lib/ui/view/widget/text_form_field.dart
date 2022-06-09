@@ -14,23 +14,24 @@ class TextInputWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      initialValue: initialValue??"",
-      decoration: hintText != null ?
-      InputDecoration(
-        hintText: hintText,
-        hintStyle: TextStyle(
-            fontWeight: FontWeight.w400,
-            fontSize: 16.w,
-            color: Color(0xFFC4C4C4)
-        ),
-      ) : null,
-      maxLines: maxLines,
-      maxLength: maxLength,
-      keyboardType: keyboardType,
-      onFieldSubmitted: (value) => onFieldSubmitted ?? FocusScope.of(context).unfocus(),
-      obscureText: obscureText,
-      onSaved: onSaved,
+    return Container(
+      height: 45.w,
+      width: 325.w,
+      child: TextFormField(
+        style: Theme.of(context).textTheme.bodyLarge,
+        initialValue: initialValue??"",
+        decoration: hintText != null ?
+        InputDecoration(
+          hintText: hintText,
+          hintStyle: Theme.of(context).textTheme.labelLarge,
+        ) : null,
+        maxLines: maxLines,
+        maxLength: maxLength,
+        keyboardType: keyboardType,
+        onFieldSubmitted: (value) => onFieldSubmitted ?? FocusScope.of(context).unfocus(),
+        obscureText: obscureText,
+        onSaved: onSaved,
+      ),
     );
   }
 }

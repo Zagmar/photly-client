@@ -26,19 +26,28 @@ class MainDrawerWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                    'Photly',
-                  style: TextStyle(
-                    color: Color(0xFF000000),
-                    fontWeight: FontWeight.w700,
-                    fontSize: 24.w
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/images/photlyIcon.png",
+                      height: 30.w,
+                    ),
+                    Container(width: 10.w,),
+                    Image.asset(
+                      "assets/images/photlyName.png",
+                      height: 30.w,
+                      fit: BoxFit.contain,
+                    ),
+                  ],
                 ),
                 Divider(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    /*
                     _userProfileViewModel.userImageUrl == null ?
                     Image.asset(
                       "images/default/avatar.png",
@@ -53,10 +62,12 @@ class MainDrawerWidget extends StatelessWidget {
                         height: 30.w
                     ),
                     Padding(padding: EdgeInsets.only(right: 10.w)),
+
+                     */
                     Text(
-                        _userProfileViewModel.userName!,
+                      '${_userProfileViewModel.userName!} 님, 환영합니다',
                       style: TextStyle(
-                          color: Color(0xFF444444),
+                          color: Color(0xFFFFFFFF),
                           fontWeight: FontWeight.w400,
                           fontSize: 18.w
                       ),
@@ -66,7 +77,7 @@ class MainDrawerWidget extends StatelessWidget {
               ],
             ),
             decoration: BoxDecoration(
-              color: Colors.yellow,
+              color: Color(0xFF000000),
             ),
           ),
           ListTile(
@@ -92,41 +103,61 @@ class MainDrawerWidget extends StatelessWidget {
           Divider(),
           ListTile(
             title: Text('나의 기록 초기화'),
-            onTap: () async {
-              await _userInfoViewModel.doClearPosts();
-              _userInfoViewModel.isPostsClear ?
-              {
-                await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
-                await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
-                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false)
-              }
-                  :
-              ScaffoldMessenger(
-                child: SnackBar(
-                  content: Text(
-                      _userInfoViewModel.clearPostsFailMessage !
-                  ),
-                ),
+            onTap: (){
+              FocusScope.of(context).unfocus();
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return WarningDialogWidget(
+                      onTap: () async {
+                        await _userInfoViewModel.doClearPosts();
+                        _userInfoViewModel.isPostsClear ?
+                        {
+                          await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
+                          await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
+                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false)
+                        }
+                            :
+                        ScaffoldMessenger(
+                          child: SnackBar(
+                            content: Text(
+                                _userInfoViewModel.clearPostsFailMessage !
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
               );
             },
           ),
           ListTile(
             title: Text('커플 끊기'),
-            onTap: () async {
-              await _userInfoViewModel.doClearPartner();
-              _userInfoViewModel.isPartnerClear ?
-              {
-                await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
-                await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
-                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false)
-              }
-                  :
-              ScaffoldMessenger(
-                child: SnackBar(
-                  content: Text(
-                      _userInfoViewModel.clearPartnerFailMessage !
-                  ),
-                ),
+            onTap: (){
+              FocusScope.of(context).unfocus();
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return WarningDialogWidget(
+                      onTap: () async {
+                        await _userInfoViewModel.doClearPartner();
+                        _userInfoViewModel.isPartnerClear ?
+                        {
+                          await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
+                          await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
+                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false)
+                        }
+                            :
+                        ScaffoldMessenger(
+                          child: SnackBar(
+                            content: Text(
+                                _userInfoViewModel.clearPartnerFailMessage !
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
               );
             },
           ),
@@ -138,20 +169,30 @@ class MainDrawerWidget extends StatelessWidget {
                   fontWeight: FontWeight.w600
               ),
             ),
-            onTap: () async {
-              await _userInfoViewModel.clearUser();
-              _userInfoViewModel.isUserClear ?
-              {
-                await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
-                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false)
-              }
-                  :
-              ScaffoldMessenger(
-                child: SnackBar(
-                  content: Text(
-                      _userInfoViewModel.clearUserFailMessage !
-                  ),
-                ),
+            onTap: (){
+              FocusScope.of(context).unfocus();
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return WarningDialogWidget(
+                      onTap: () async {
+                        await _userInfoViewModel.clearUser();
+                        _userInfoViewModel.isUserClear ?
+                        {
+                          await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
+                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false)
+                        }
+                            :
+                        ScaffoldMessenger(
+                          child: SnackBar(
+                            content: Text(
+                                _userInfoViewModel.clearUserFailMessage !
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
               );
             },
           ),
@@ -161,52 +202,82 @@ class MainDrawerWidget extends StatelessWidget {
   }
 }
 
-/*
-Widget mainDrawerWidget(context, GlobalKey scaffoldKey) {
- if(scaffoldKey.currentContext != null) {
-   print("테스트 성공");
-   BuildContext context = scaffoldKey.currentState!.context;
- }
- else{
-   print("테스트 실패");
- }
+class WarningDialogWidget extends StatelessWidget {
+  final GestureTapCallback onTap;
+  WarningDialogWidget({Key? key, required this.onTap}) : super(key: key);
 
-  UserViewModel _userViewModel = Provider.of<UserViewModel>(context);
-  return Drawer(
-    child: ListView(
-      padding: EdgeInsets.zero,
-      scrollDirection: Axis.vertical,
-      children: [
-        DrawerHeader(
-          child: Text('Photly'),
-          decoration: BoxDecoration(
-            color: Colors.yellow,
+  @override
+  Widget build(BuildContext context) {
+    return SimpleDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      title: RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          children: [
+            TextSpan(
+              text: "진행 후에는 복구할 수 없습니다\n",
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                  fontSize: 16.w,
+                  color: Colors.red,
+                  letterSpacing: 0
+              ),
+            ),
+            TextSpan(
+              text:  "정말로 진행하시겠습니까?",
+              style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16.w,
+                  color: Colors.black,
+                  letterSpacing: 0
+              ),
+            ),
+          ],
+        ),
+      ),
+      alignment: Alignment.center,
+      contentPadding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 20.w),
+      children: <Widget>[
+        InkWell(
+          onTap: onTap,
+          child: Text(
+            "진행할래요",
+            style: TextStyle(
+                fontSize: 12.w,
+                fontWeight: FontWeight.w400,
+                color: Color(0xFF808080),
+              decoration: TextDecoration.underline,
+            ),
+            textAlign: TextAlign.center,
           ),
         ),
-        ListTile(
-          title: Text('Item 1'),
-        ),
-        ListTile(
-          title: Text('로그아웃'),
-          onTap: () async {
-            //await _userViewModel.doLogout() ?
-            await Provider.of<UserViewModel>(context, listen: false).doLogout() ?
-            {
-              Navigator.pushNamedAndRemoveUntil(context, "/loginScreen", (route) => false)
-            }
-                :
-            ScaffoldMessenger(
-              child: SnackBar(
-                content: Text(
-                    _userViewModel.logoutFailMessage!
-                ),
-              ),
-            );
+        Container(height: 10.w,),
+        InkWell(
+          onTap: (){
+            Navigator.pop(context);
           },
-        ),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.w),
+              color: Color(0xFF319CFF),
+            ),
+            width: 390.w,
+            height: 50.w,
+            alignment: Alignment.center,
+            child: Text(
+              "취소할래요",
+              style: TextStyle(
+                  fontSize: 16.w,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF000000)
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        )
       ],
-    ),
-  );
+    );
+  }
 }
-
- */

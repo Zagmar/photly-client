@@ -13,7 +13,7 @@ import '../../../view_model/daily_couple_post_view_model.dart';
 import '../../../view_model/register3_view_model.dart';
 import '../../../view_model/user_info_view_model.dart';
 import '../../widget/text_form_field.dart';
-import '../../widget/top_widgets.dart';
+import '../../widget/one_block_top_widget.dart';
 import '../register1/register_screen.dart';
 import '../register1/register_vertification_screen.dart';
 
@@ -38,20 +38,16 @@ class LoginScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(),
-                Container(
-                  padding: EdgeInsetsDirectional.fromSTEB(35.w, 20.w, 35.w, 20.w),
-                  child: Column(
-                    children: <Widget>[
-                      OneBlockTop(
-                        topText: "서로 남기는\n하루 한장\n시작해볼까요",
-                        bottomText: "로그인을 진행합니다",
-                      ),
-                      LoginFormWidget(userInfoViewModel: _userInfoViewModel),
-                    ],
-                  ),
+                MediaQuery.of(context).viewInsets.bottom <= 30.w ?
+                OneBlockTopWidget(
+                  topText: "서로 남기는\n하루 한장\n시작해볼까요?",
+                  bottomText: "로그인을 진행합니다",
+                ):
+                OneBlockTopWidgetKeyboardOn(
+                    text: "로그인 정보를 입력중입니다"
                 ),
-                MediaQuery.of(context).viewInsets.bottom <= 50 ?
-                LargeButtonWidget(
+                LoginFormWidget(),
+                BottomLargeButtonWidget(
                     onTap: () async {
                       _formKey.currentState!.save();
                       FocusScope.of(context).unfocus();
@@ -76,14 +72,18 @@ class LoginScreen extends StatelessWidget {
                           await Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser();
                           final _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context, listen: false);
                           await _dailyCouplePostViewModel.initDailyCouplePosts();
+                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false);
+                          /*
                           _dailyCouplePostViewModel.isCouple ?
                           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false)
                               :
                           {
                             await Provider.of<Register3ViewModel>(context, listen: false).setUserCoupleCode(),
                             Navigator.pushAndRemoveUntil(context,
-                              MaterialPageRoute(builder: (context) => RegisterCoupleCodeScreen(), fullscreenDialog: true), (route) => false, ),
+                              MaterialPageRoute(builder: (context) => PostMainScreen(), fullscreenDialog: true), (route) => false, ),
                           };
+
+                           */
                           break;
                         case "nonVerification" :
                           _userInfoViewModel.clearSecret();
@@ -106,8 +106,6 @@ class LoginScreen extends StatelessWidget {
                     },
                     buttonText: "로그인"
                 )
-                    :
-                Container()
               ],
             ),
           )
@@ -117,14 +115,15 @@ class LoginScreen extends StatelessWidget {
 }
 
 class LoginFormWidget extends StatelessWidget {
-  final UserInfoViewModel userInfoViewModel;
-  LoginFormWidget({Key? key, required this.userInfoViewModel}) : super(key: key);
+  late UserInfoViewModel _userInfoViewModel;
+  LoginFormWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    _userInfoViewModel = Provider.of<UserInfoViewModel>(context);
     return Container(
-      width: 320.w,
-      height: 200.w,
+      width: 375.w,
+      height: 140.w,
       alignment: Alignment.center,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -140,7 +139,7 @@ class LoginFormWidget extends StatelessWidget {
                 obscureText: false,
                 keyboardType: TextInputType.emailAddress,
                 onSaved: (value) async {
-                  await userInfoViewModel.checkEmail(value??"");
+                  await _userInfoViewModel.checkEmail(value??"");
                 },
               ),
               TextInputWidget(
@@ -149,39 +148,39 @@ class LoginFormWidget extends StatelessWidget {
                 obscureText: true,
                 keyboardType: TextInputType.visiblePassword,
                 onSaved: (value) async {
-                  await userInfoViewModel.checkPassword(value??"");
+                  await _userInfoViewModel.checkPassword(value??"");
                 },
               ),
             ],
           ),
           /// Other Functions
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SingleTextButton(
                   buttonText: "아이디 찾기",
-                  onPressed: (){
+                  onTap: (){
                     FocusScope.of(context).unfocus();
-                    userInfoViewModel.clear();
+                    _userInfoViewModel.clear();
                     Navigator.push(context, MaterialPageRoute(builder: (context) => FindIdScreen()));
                   },
               ),
               BorderBetweenTextButtons(),
               SingleTextButton(
                   buttonText: "비밀번호 찾기",
-                  onPressed: (){
+                  onTap: (){
                     FocusScope.of(context).unfocus();
-                    userInfoViewModel.clear();
+                    _userInfoViewModel.clear();
                     Navigator.push(context, MaterialPageRoute(builder: (context) => FindPwScreen()));
                   },
               ),
               BorderBetweenTextButtons(),
               SingleTextButton(
                 buttonText: "회원가입",
-                onPressed: () {
+                onTap: () {
                   FocusScope.of(context).unfocus();
-                  userInfoViewModel.clear();
+                  _userInfoViewModel.clear();
                   Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen()));
                 },
               )
@@ -195,23 +194,23 @@ class LoginFormWidget extends StatelessWidget {
 
 class SingleTextButton extends StatelessWidget {
   final String buttonText;
-  final GestureTapCallback onPressed;
-  const SingleTextButton({Key? key, required this.buttonText, required this.onPressed}) : super(key: key);
+  final GestureTapCallback onTap;
+  const SingleTextButton({Key? key, required this.buttonText, required this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-        onPressed: onPressed,
-        child: Text(
-          buttonText,
-          style: TextStyle(
-            fontSize: 14.w,
-            fontWeight: FontWeight.w400,
-            color: Color(0xFF000000).withOpacity(0.5),
-          ),
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.ellipsis,
-        )
+    return Container(
+      height: 20.w,
+      alignment: Alignment.center,
+      child: InkWell(
+          onTap: onTap,
+          child: Text(
+            buttonText,
+            style: Theme.of(context).textTheme.labelSmall,
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+          )
+      ),
     );
   }
 }
@@ -223,7 +222,8 @@ class BorderBetweenTextButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 1.w,
-      height: 17.w,
+      height: 20.w,
+      margin: EdgeInsets.symmetric(horizontal: 10.w),
       color: Color(0xFF808080),
     );
   }

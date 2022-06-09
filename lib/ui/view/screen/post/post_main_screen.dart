@@ -164,7 +164,7 @@ class UserDailyPostWidget extends StatelessWidget {
         EmptyPostButton(
           mainText: '내 답변 사진찍기',
           subText: '아직 답변을 하지 않았어요\n얼른 답변을 찍어보세요',
-          iconImagePath: 'images/icons/icon_edit.svg',
+          iconData: Icons.edit_outlined,
           onTap: () async {
             FocusScope.of(context).unfocus();
             final PostViewModel _postViewModel = Provider.of<PostViewModel>(context, listen: false);
@@ -179,7 +179,7 @@ class UserDailyPostWidget extends StatelessWidget {
         // Otherwise
         /// Inform that user didn't answer
         EmptyPostButton(
-            iconImagePath: "images/icons/icon_empty.svg",
+            iconData: Icons.cancel_outlined,
             mainText: "사진이 없습니다",
             subText: "답변을 하지 않았어요\n앞으로는 꾸준히 답변해보세요"
         ),
@@ -223,7 +223,7 @@ class PartnerDailyPostWidget extends StatelessWidget {
              // today - user : true, partner : false
              /// Provide function to alert partner to answer
              EmptyPostButton(
-               iconImagePath: "images/icons/icon_notification.svg",
+               iconData: Icons.notifications_outlined,
                mainText: "답변 푸쉬하기",
                subText: "아직 답변을 하지 않았어요\n답변을 요청해보세요",
                onTap: () {
@@ -235,7 +235,7 @@ class PartnerDailyPostWidget extends StatelessWidget {
              // Other days - user : true, partner : false
              /// Inform that partner didn't answer
              EmptyPostButton(
-               iconImagePath: "images/icons/icon_empty.svg",
+               iconData: Icons.cancel_outlined,
                mainText: "사진이 없습니다",
                subText: "상대가 답변을 하지 않았어요\n다음 날을 기대해봐요",
              ),
@@ -258,7 +258,7 @@ class PartnerDailyPostWidget extends StatelessWidget {
              colorOpacity: 0.5,
              blur: 30,
              overlay: EmptyPostButton(
-               iconImagePath: "images/icons/icon_checked.svg",
+               iconData: Icons.check_circle_outline_outlined,
                mainText: "답변 완료",
                subText: "상대방은 답변을 완료했어요\n얼른 답변하고 확인해보세요",
              )
@@ -281,14 +281,14 @@ class PartnerDailyPostWidget extends StatelessWidget {
          // user : false, partner : false
          /// Just inform that partner didn't answer
          EmptyPostButton(
-             iconImagePath: "images/icons/icon_waiting.svg",
+             iconData: Icons.hourglass_top_outlined,
              mainText: "답변을 기다려요",
              subText: "아직 답변을 하지 않았어요\n나의 답변을 작성하고 상대방에게 답변을 요청해봐요."
          ),
        )
            :
        EmptyPostButton(
-         iconImagePath: "images/icons/icon_notification.svg",
+         iconData: Icons.cancel_outlined,
          mainText: "상대방 등록하기",
          subText: "등록된 상대방이 없어요\n상대방을 등록 후에 같이 즐겨봐요",
          onTap: () async {
@@ -307,10 +307,10 @@ class PartnerDailyPostWidget extends StatelessWidget {
 
 class EmptyPostButton extends StatelessWidget {
   final GestureTapCallback? onTap;
-  final String iconImagePath;
+  final IconData iconData;
   final String mainText;
   final String subText;
-  const EmptyPostButton({Key? key, this.onTap, required this.iconImagePath, required this.mainText, required this.subText}) : super(key: key);
+  const EmptyPostButton({Key? key, this.onTap, required this.iconData, required this.mainText, required this.subText}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -319,18 +319,20 @@ class EmptyPostButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         child: Container(
-          //height: 150.w,
+          height: 85.w,
           //width: 150.w,
           alignment: Alignment.center,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              SvgPicture.asset(
-                iconImagePath,
-                width: 24.w,
-                height: 24.w,
-                fit: BoxFit.contain,
+              SizedBox(
+                width: 20.w,
+                height: 20.w,
+                child: Icon(
+                  iconData,
+                  size: 20.w,
+                ),
               ),
               Text(
                 mainText,

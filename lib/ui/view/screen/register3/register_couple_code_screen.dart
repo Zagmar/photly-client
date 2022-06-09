@@ -1,7 +1,7 @@
 import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
 import 'package:couple_seflie_app/ui/view/widget/route_button_widgets.dart';
 import 'package:couple_seflie_app/ui/view/widget/text_form_field.dart';
-import 'package:couple_seflie_app/ui/view/widget/top_widgets.dart';
+import 'package:couple_seflie_app/ui/view/widget/one_block_top_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -60,20 +60,13 @@ class RegisterCoupleCodeScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(),
-                  Container(
-                    padding: EdgeInsetsDirectional.fromSTEB(35.w, 20.w, 35.w, 20.w),
-                    child: Column(
-                      children: <Widget>[
-                        OneBlockTop(
-                            topText: "이제\n서로를\n연결해봐요",
-                            bottomText: "초대 링크를 함께하고 싶은 사람에게"
-                        ),
-                        RegisterCoupleCodeWidget(),
-                      ],
-                    ),
+                  OneBlockTopWidget(
+                      topText: "이제\n서로를\n연결해봐요",
+                      bottomText: "초대 링크를 함께하고 싶은 사람에게"
                   ),
+                  RegisterCoupleCodeWidget(),
                   MediaQuery.of(context).viewInsets.bottom <= 50 ?
-                  LargeButtonWidget(
+                  BottomLargeButtonWidget(
                       onTap: () async {
                         _formKey.currentState!.save();
                         FocusScope.of(context).unfocus();

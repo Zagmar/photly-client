@@ -42,7 +42,6 @@ class LocalNotificationService{
 
     //tz.initializeDatabase([]);
     await _dailyNotification();
-    await _after5DaysNotification();
   }
 
   Future<void> _dailyNotification() async {
@@ -51,49 +50,18 @@ class LocalNotificationService{
       1,
       'Photly',
       '오늘의 질문 확인하기🤣',
-        //makeDailyDate(21,00),
-        tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
+        makeDailyDate(8,0),
         _notificationDetails,
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.time
     );
   }
-
-  Future<void> _after5DaysNotification() async {
-    // 5일 뒤 알림
-    await _flutterLocalNotificationsPlugin.zonedSchedule(
-        1,
-        'Photly',
-        '오늘의 질문 확인하기🤣',
-        //makeAfter5Days(21,00),
-        tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
-        _notificationDetails,
-        androidAllowWhileIdle: true,
-        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-        matchDateTimeComponents: DateTimeComponents.time
-    );
-  }
-
 
   makeDailyDate(hour, min){
     var now = tz.TZDateTime.now(tz.local);
     var when = tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, min, 0);
-    if (when.isBefore(now)) {
-      return when.add(Duration(days: 1));
-    } else {
-      return when;
-    }
-  }
-
-  makeAfter5Days(hour, min){
-    var now = tz.TZDateTime.now(tz.local);
-    var when = tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, min, 0);
-    if (when.isBefore(now)) {
-      return when.add(Duration(days: 6));
-    } else {
-      return when.add(Duration(days: 5));
-    }
+    return when.add(Duration(days:1));
   }
 
   Future<void> cancelNotification() async {

@@ -8,7 +8,7 @@ import '../../../../data/model/daily_couple_post_model.dart';
 import '../../../view_model/daily_couple_post_view_model.dart';
 
 /// Screen Split Ratio
-/// 295 : 1 : 94
+/// 292 : 1 : 82
 
 /// Top widgets: date, suggested question, emoji
 class PostDailyInfoWidget extends StatelessWidget {
@@ -23,13 +23,13 @@ class PostDailyInfoWidget extends StatelessWidget {
     final DailyCouplePostViewModel _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context);
     return Container(
       width: FULL_WIDTH.w,
-      height: 190.w,
+      height: 205.w,
       child: Row(
         children: <Widget>[
           Container(
             width: MAIN_SPACE_WIDTH.w,
-            margin: EdgeInsets.only(bottom: 30.w),
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            padding: EdgeInsets.only(left: 30.w,right: 20.w),
+            margin: EdgeInsets.only(top: 10.w,bottom: 20.w),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,7 +40,7 @@ class PostDailyInfoWidget extends StatelessWidget {
                   children: [
                     // Date
                     Container(
-                      width: 48.w,
+                      width: 50.w,
                       height: 90.w,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -48,7 +48,7 @@ class PostDailyInfoWidget extends StatelessWidget {
                         children: <Widget>[
                           /// year
                           Container(
-                            height: 24.w,
+                            height: 25.w,
                             color: Color(0xFF000000),
                             alignment: Alignment.center,
                             child: Text(
@@ -56,7 +56,7 @@ class PostDailyInfoWidget extends StatelessWidget {
                               style: TextStyle(
                                 color: Color(0xFFFFFFFF),
                                 fontWeight: FontWeight.w300,
-                                fontSize: 18.w,
+                                fontSize: 17.w,
                                 fontStyle: FontStyle.normal,
                                 //fontFamily:
                                 //height: 24.w
@@ -67,12 +67,20 @@ class PostDailyInfoWidget extends StatelessWidget {
                           Container(
                             alignment: Alignment.center,
                             height: 15.w,
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(
+                                    width: 1.w,
+                                    color: Color(0xFF000000)
+                                ),
+                              ),
+                            ),
                             child: Text(
                               _dailyCouplePostViewModel.month,
                               style: TextStyle(
                                 color: Color(0xFF000000),
                                 fontWeight: FontWeight.w600,
-                                fontSize: 12.w,
+                                fontSize: 11.w,
                                 fontStyle: FontStyle.normal,
                                 //height: 12.w
                                 //fontFamily:
@@ -81,24 +89,17 @@ class PostDailyInfoWidget extends StatelessWidget {
                           ),
                           /// day
                           Container(
-                            height: 45.w,
+                            height: 50.w,
                             alignment: Alignment.center,
                             child: Text(
                               _dailyCouplePostViewModel.day,
                               style: TextStyle(
                                 color: Color(0xFF000000),
                                 fontWeight: FontWeight.w600,
-                                fontSize: 30.w,
+                                fontSize: 40.w,
                                 fontStyle: FontStyle.normal,
                                 //height: 45.w
                                 //fontFamily:
-                              ),
-                            ),
-                            decoration: BoxDecoration(
-                              border: Border(
-                                top: BorderSide(
-                                    width: 1.w,
-                                    color: Color(0xFF000000)),
                               ),
                             ),
                           )
@@ -109,12 +110,12 @@ class PostDailyInfoWidget extends StatelessWidget {
                     Container()
                         :
                     Container(
-                      width: 90.w,
-                      height: 90.w,
+                      width: 120.w,
+                      height: 120.w,
                       child: CachedNetworkImage(
                         imageUrl: _dailyCouplePostViewModel.questionImageUrl!,
-                        width: 90.w,
-                        height: 90.w,
+                        width: 120.w,
+                        height: 120.w,
                         progressIndicatorBuilder: (context, url, downloadProgress) =>
                             Center(
                               child: SizedBox(
@@ -131,16 +132,10 @@ class PostDailyInfoWidget extends StatelessWidget {
                 ),
                 /// 해당 날짜의 질문
                 Container(
-                  height: 65.w,
+                  height: 50.w,
                   child: Text(
                     _dailyCouplePostViewModel.questionText,
-                    style: TextStyle(
-                      color: Color(0xFF000000),
-                      fontWeight: FontWeight.w400,
-                      fontSize: 24.w,
-                      fontStyle: FontStyle.normal,
-                      //fontFamily:
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
                   ),
@@ -161,6 +156,7 @@ class PostDailyInfoWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   topButton ?? Container(),
+                  Padding(padding: EdgeInsets.only(bottom: 20.w)),
                   bottomButton ?? Container(),
                 ],
               )
@@ -171,28 +167,32 @@ class PostDailyInfoWidget extends StatelessWidget {
   }
 }
 
-class IconButtonWidget extends StatelessWidget {
+class RightIconButtonWidget extends StatelessWidget {
   final GestureTapCallback onTap;
   final IconData iconData;
-  const IconButtonWidget({Key? key, required this.onTap, required this.iconData}) : super(key: key);
+  const RightIconButtonWidget({Key? key, required this.onTap, required this.iconData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      child: Icon(
-        iconData,
-        size: 24.w,
-        color: Color(0xFF666666),
+      child: Container(
+        width: 40.w,
+        height: 40.w,
+        child: Icon(
+          iconData,
+          size: 30.w,
+          color: Color(0xFF666666),
+        ),
       ),
     );
   }
 }
 
-class TextButtonWidget extends StatelessWidget {
+class RightTextButtonWidget extends StatelessWidget {
   final GestureTapCallback onTap;
   final String buttonText;
-  const TextButtonWidget({Key? key, required this.onTap, required this.buttonText}) : super(key: key);
+  const RightTextButtonWidget({Key? key, required this.onTap, required this.buttonText}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -201,9 +201,9 @@ class TextButtonWidget extends StatelessWidget {
       child: Text(
         buttonText,
         style: TextStyle(
-            fontSize: 18.w,
+            fontSize: 16.w,
             fontWeight: FontWeight.w400,
-            color: Color(0xFF000000)
+            color: Color(0xFF000000),
         ),
         textAlign: TextAlign.center,
       ),

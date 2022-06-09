@@ -17,7 +17,7 @@ class ThreeOptionsDialogWidget extends StatelessWidget {
       title: Text(
         title,
         style: TextStyle(
-          fontSize: 14,
+          fontSize: 16.w,
           color: Colors.black,
         ),
       ),
@@ -33,7 +33,8 @@ class ThreeOptionsDialogWidget extends StatelessWidget {
 class SingleDialogOption extends StatelessWidget {
   final String dialogText;
   final GestureTapCallback onPressed;
-  const SingleDialogOption({Key? key, required this.dialogText, required this.onPressed}) : super(key: key);
+  final Color? textColor;
+  const SingleDialogOption({Key? key, required this.dialogText, required this.onPressed, this.textColor}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,8 @@ class SingleDialogOption extends StatelessWidget {
       child: Text(
         dialogText,
         style: TextStyle(
-          fontSize: 14,
+          fontSize: 14.w,
+          color: textColor
         ),
       ),
       onPressed: onPressed,

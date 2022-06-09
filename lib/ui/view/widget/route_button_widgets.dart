@@ -9,10 +9,9 @@ class RouteButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 390.w,
-      height: 60.w,
+      width: 375.w,
       alignment: Alignment.centerRight,
-      padding: EdgeInsetsDirectional.fromSTEB(25.w, 0, 25.w, 20.w),
+      padding: EdgeInsetsDirectional.fromSTEB(20.w, 0, 20.w, 20.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -36,7 +35,7 @@ class SingleButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(28.w),
+            borderRadius: BorderRadius.circular(25.w),
             border: Border.all(
               width: 2.w,
               color: Color(0xFF050505),
@@ -49,7 +48,7 @@ class SingleButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            buttonText == "이전" ? Icon(Icons.chevron_left_outlined, size: 30.w, color: Color(0xFF050505),) : Container(),
+            buttonText == "이전" ? Icon(Icons.chevron_left_outlined, size: 30.w, color: Color(0xFF050505),) : Container(width: 20.w,),
             Text(
               buttonText,
               style: TextStyle(
@@ -59,7 +58,7 @@ class SingleButton extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            buttonText == "다음" ? Icon(Icons.chevron_right_outlined, size: 30.w, color: Color(0xFF050505),) : Container(),
+            buttonText == "다음" ? Icon(Icons.chevron_right_outlined, size: 30.w, color: Color(0xFF050505),) : Container(width: 20.w),
           ],
         ),
       ),
@@ -105,27 +104,23 @@ class BothButtonsWidget extends StatelessWidget {
   }
 }
 
-class LargeButtonWidget extends StatelessWidget {
+class BottomLargeButtonWidget extends StatelessWidget {
   final GestureTapCallback onTap;
   final String buttonText;
-  const LargeButtonWidget({Key? key, required this.onTap, required this.buttonText}) : super(key: key);
+  const BottomLargeButtonWidget({Key? key, required this.onTap, required this.buttonText}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
       child: Container(
-        width: 390.w,
+        width: 375.w,
         height: 60.w,
-        color: Color(0xFF050505),
+        color: Color(0xFF000000),
         alignment: Alignment.center,
         child: Text(
           buttonText,
-          style: TextStyle(
-              fontSize: 16.w,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFFE5E5E5)
-          ),
+          style: Theme.of(context).textTheme.labelMedium,
           textAlign: TextAlign.center,
         ),
       ),

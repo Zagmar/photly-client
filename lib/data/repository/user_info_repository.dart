@@ -73,7 +73,7 @@ class UserInfoRepository {
 
     print(inputData);
 
-    return await _remoteDataSource.deleteFromUri(USER, inputData);
+    return await _remoteDataSource.getFromUri(USER, inputData);
   }
 
   Future<Object> clearPartner() async {

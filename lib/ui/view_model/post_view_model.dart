@@ -23,7 +23,7 @@ class PostViewModel extends ChangeNotifier {
   File? _postImage;
   late String _tempImageUrl;
   PostModel? _post;
-  int _nWeather = 4;
+  int _nWeather = 0;
 
   String get currentUserId => _currentUserId;
   File? get postImage => _postImage;

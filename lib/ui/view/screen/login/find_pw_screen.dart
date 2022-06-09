@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../widget/route_button_widgets.dart';
 
 class FindPwScreen extends StatelessWidget {
@@ -15,7 +16,13 @@ class FindPwScreen extends StatelessWidget {
             children: [
               Container(),
               Text(
-                  "관리자 문의 요망"
+                "PW 찾기는 아래 연락처로 직접 문의 부탁드립니다\n관리자 : rjsgy0815",
+                style: TextStyle(
+                  fontSize: 16.w,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF000000),
+                ),
+                textAlign: TextAlign.center,
               ),
               LeftButtonOnlyWidget(
                 onTap: () {

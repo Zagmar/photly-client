@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import '../../../view_model/register2_view_model.dart';
 import '../../../view_model/user_info_view_model.dart';
 import '../../widget/route_button_widgets.dart';
-import '../../widget/top_widgets.dart';
+import '../../widget/one_block_top_widget.dart';
 
 class RegisterAnniversaryScreen extends StatelessWidget {
   RegisterAnniversaryScreen({Key? key}) : super(key: key);
@@ -30,31 +30,24 @@ class RegisterAnniversaryScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(),
+                  OneBlockTopWidget(
+                    topText: "서로의\n특별한 날을\n기록해주세요",
+                    bottomText: "처음 만난 날은 언제인가요?",
+                  ),
                   Container(
-                    padding: EdgeInsetsDirectional.fromSTEB(35.w, 20.w, 35.w, 20.w),
-                    child: Column(
-                      children: <Widget>[
-                        OneBlockTop(
-                          topText: "서로의\n특별한 날을\n기록해주세요",
-                          bottomText: "가장 특별한 하루를 정해주세요",
-                        ),
-                        Container(
-                            width: 320.w,
-                            height: 150.w,
-                            alignment: Alignment.center,
-                            child: CupertinoDatePicker(
-                              minimumYear: 1950,
-                              maximumYear: DateTime.now().year,
-                              initialDateTime: DateTime.now(),
-                              maximumDate: DateTime.now(),
-                              onDateTimeChanged: (DateTime value) {
-                                _register2ViewModel.setAnniversary(value);
-                              },
-                              mode: CupertinoDatePickerMode.date,
-                            )
-                        ),
-                      ],
-                    ),
+                      width: 320.w,
+                      height: 150.w,
+                      alignment: Alignment.center,
+                      child: CupertinoDatePicker(
+                        minimumYear: 1950,
+                        maximumYear: DateTime.now().year,
+                        initialDateTime: DateTime.now(),
+                        maximumDate: DateTime.now(),
+                        onDateTimeChanged: (DateTime value) {
+                          _register2ViewModel.setAnniversary(value);
+                        },
+                        mode: CupertinoDatePickerMode.date,
+                      )
                   ),
                   BothButtonsWidget(
                       onTapLeft: (){

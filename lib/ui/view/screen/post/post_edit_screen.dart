@@ -51,7 +51,7 @@ class PostEditScreen extends StatelessWidget {
                     },
                   ),
                   PostDailyInfoWidget(
-                    bottomButton: TextButtonWidget(
+                    bottomButton: RightTextButtonWidget(
                       buttonText: "저장",
                       onTap: () async {
                         FocusScope.of(context).unfocus();
@@ -94,8 +94,8 @@ class PostEditScreen extends StatelessWidget {
                     children: <Widget>[
                       // Image area
                       Container(
-                        width: 390.w,
-                        height: 390.w * IMAGE_RATIO,
+                        width: FULL_WIDTH.w,
+                        height: FULL_WIDTH.w * IMAGE_RATIO,
                         child: InkWell(
                             onTap: (){
                               FocusScope.of(context).unfocus();
@@ -124,6 +124,7 @@ class PostEditScreen extends StatelessWidget {
                                         // cancel
                                         thirdDialogOption: SingleDialogOption(
                                           dialogText: "취소",
+                                          textColor: Colors.red,
                                           onPressed: (){
                                             Navigator.pop(context);
                                           },
@@ -264,7 +265,7 @@ class PostTextFormWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     _postViewModel = Provider.of<PostViewModel>(context);
     return Padding(
-      padding: EdgeInsets.all(20.w),
+      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.w),
       child: Column(
         children: <Widget>[
           _postViewModel.post!.postLocation == null || _postViewModel.post!.postLocation == ""?
@@ -275,24 +276,23 @@ class PostTextFormWidget extends StatelessWidget {
               // Weather button
               InkWell(
                 onTap: weatherButtonOnTap,
-                child: Image.asset(
-                  "images/weathers/x1/weather_${(_postViewModel.post!.postWeather??0).toString()}.png",
+                child: SizedBox(
                   width: 24.w,
                   height: 24.w,
-                  fit: BoxFit.contain,
+                  child: Image.asset(
+                    "assets/images/weather${(_postViewModel.post!.postWeather??0).toString()}.png",
+                    width: 24.w,
+                    height: 24.w,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
               Padding(padding: EdgeInsets.only(right: 10.w)),
               // Place button
-              InkWell(
+              PostButtonWidget(
                 onTap: placeButtonOnTap,
-                child: Image.asset(
-                  "images/icons/icon_map_pin/map_pin_1.png",
-                  width: 24.w,
-                  height: 24.w,
-                  fit: BoxFit.contain,
-                ),
-              )
+                iconData: Icons.place_outlined,
+              ),
             ],
           )
               :
@@ -305,14 +305,9 @@ class PostTextFormWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   // Place button
-                  InkWell(
+                  PostButtonWidget(
                     onTap: placeButtonOnTap,
-                    child: Image.asset(
-                      "images/icons/icon_map_pin/map_pin_1.png",
-                      width: 24.w,
-                      height: 24.w,
-                      fit: BoxFit.contain,
-                    ),
+                    iconData: Icons.place_outlined,
                   ),
                   Padding(padding: EdgeInsets.only(right: 10.w)),
                   Text(
@@ -328,16 +323,20 @@ class PostTextFormWidget extends StatelessWidget {
               // Weather button
               InkWell(
                 onTap: weatherButtonOnTap,
-                child: Image.asset(
-                  "images/weathers/x1/weather_${(_postViewModel.post!.postWeather??0).toString()}.png",
+                child: SizedBox(
                   width: 24.w,
                   height: 24.w,
-                  fit: BoxFit.contain,
+                  child: Image.asset(
+                    "assets/images/weather${(_postViewModel.post!.postWeather??0).toString()}.png",
+                    width: 24.w,
+                    height: 24.w,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
             ],
           ),
-          Padding(padding: EdgeInsets.only(bottom: 5.w)),
+          Container(height: 10.w,),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -347,12 +346,14 @@ class PostTextFormWidget extends StatelessWidget {
                 child: Icon(
                   Icons.edit,
                   size: 24.w,
-                  color: Color(0xFF141414),
+                  color: Color(0xFF000000),
                 ),
               ),
+              Container(width: 10.w,),
               Container(
-                width: 320.w,
+                width: 300.w,
                 child: TextFormField(
+                  style: Theme.of(context).textTheme.bodyLarge,
                   initialValue: _postViewModel.post!.postText ?? "",
                   decoration: InputDecoration(
                       border: InputBorder.none,
@@ -374,6 +375,7 @@ class PostTextFormWidget extends StatelessWidget {
               )
             ],
           ),
+          Container(height: 10.w,),
           Container(
             margin: EdgeInsets.only(top: 10.w),
             alignment: Alignment.centerRight,
@@ -416,13 +418,13 @@ class WeatherDialogWidget extends StatelessWidget {
           height: 40.w,
           width: 200.w,
           child: ListView.builder(
-            shrinkWrap: true,
+            shrinkWrap: false,
             primary: false,
             scrollDirection: Axis.horizontal,
             itemBuilder: (BuildContext context, int index) {
               return WeatherButton(indexWeather: index);
             },
-            itemCount: _nWeathers,
+            itemCount: 4,
           ),
         )
       ],
@@ -443,11 +445,15 @@ class WeatherButton extends StatelessWidget {
           Navigator.pop(context);
           Provider.of<PostViewModel>(context, listen: false).setPostWeather(indexWeather);
         },
-        child: Image.asset(
-          "images/weathers/x1/weather_${indexWeather.toString()}.png",
-          width: 35.w,
-          height: 35.w,
-          fit: BoxFit.contain,
+        child: SizedBox(
+          width: 24.w,
+          height: 24.w,
+          child: Image.asset(
+            "assets/images/weather${(indexWeather??0).toString()}.png",
+            width: 24.w,
+            height: 24.w,
+            fit: BoxFit.contain,
+          ),
         ),
       ),
     );
@@ -469,7 +475,7 @@ class LocationDialogWidget extends StatelessWidget {
       title: Text(
         "장소를 기록해주세요",
         style: TextStyle(
-          fontSize: 14,
+          fontSize: 16,
           color: Colors.black,
         ),
       ),
@@ -524,6 +530,32 @@ class LocationDialogWidget extends StatelessWidget {
           ),
         )
       ],
+    );
+  }
+}
+
+class PostButtonWidget extends StatelessWidget {
+  final IconData iconData;
+  final GestureTapCallback onTap;
+  const PostButtonWidget({Key? key, required this.iconData, required this.onTap}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 24.w,
+      width: 24.w,
+      child: InkWell(
+          onTap: onTap,
+          child: Container(
+            padding: EdgeInsets.zero,
+            constraints: BoxConstraints(),
+            child: Icon(
+              iconData,
+              size: 24.w,
+              color: Color(0xFF292929),
+            ),
+          )
+      ),
     );
   }
 }

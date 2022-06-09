@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:io' as io;
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -48,7 +48,7 @@ class RemoteDataSource {
       }
       print("테스트 실패");
       return Failure(code: INVALID_RESPONSE, errorResponse: "Invalid Response");
-    } on HttpException{
+    } on io.HttpException{
       print("에러1");
       return Failure(code: NO_INTERNET, errorResponse: "No Internet");
     } on FormatException{
@@ -78,7 +78,7 @@ class RemoteDataSource {
         return Success(response: response.data);
       }
       return Failure(code: INVALID_RESPONSE, errorResponse: "Invalid Response");
-    } on HttpException{
+    } on io.HttpException{
       return Failure(code: NO_INTERNET, errorResponse: "No Internet");
     } on FormatException{
       return Failure(code: INVALID_FORMAT, errorResponse: "Invalid Format");
@@ -106,7 +106,7 @@ class RemoteDataSource {
         return Success(response: response.data);
       }
       return Failure(code: INVALID_RESPONSE, errorResponse: "Invalid Response");
-    } on HttpException{
+    } on io.HttpException{
       return Failure(code: NO_INTERNET, errorResponse: "No Internet");
     } on FormatException{
       return Failure(code: INVALID_FORMAT, errorResponse: "Invalid Format");
@@ -132,7 +132,7 @@ class RemoteDataSource {
         return Success(response: response.data);
       }
       return Failure(code: INVALID_RESPONSE, errorResponse: "Invalid Response");
-    } on HttpException{
+    } on io.HttpException{
       return Failure(code: NO_INTERNET, errorResponse: "No Internet");
     } on FormatException{
       return Failure(code: INVALID_FORMAT, errorResponse: "Invalid Format");
@@ -144,7 +144,7 @@ class RemoteDataSource {
 
   Future<Object> downloadFromUrl(String url) async {
     try{
-      Directory? savePath = Platform.isAndroid
+      io.Directory? savePath = io.Platform.isAndroid
           ? await getExternalStorageDirectory() //FOR ANDROID
           : await getApplicationDocumentsDirectory(); //FOR iOS
       print("${savePath!.path}/demo.heic");
@@ -161,7 +161,7 @@ class RemoteDataSource {
         return Success(response: response.data);
       }
       return Failure(code: INVALID_RESPONSE, errorResponse: "Invalid Response");
-    } on HttpException{
+    } on io.HttpException{
       return Failure(code: NO_INTERNET, errorResponse: "No Internet");
     } on FormatException{
       return Failure(code: INVALID_FORMAT, errorResponse: "Invalid Format");

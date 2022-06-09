@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../widget/text_form_field.dart';
-import '../../widget/top_widgets.dart';
+import '../../widget/one_block_top_widget.dart';
 
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({Key? key}) : super(key: key);
@@ -50,21 +50,17 @@ class RegisterScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(),
-                Container(
-                  padding: EdgeInsetsDirectional.fromSTEB(35.w, 20.w, 35.w, 20.w),
-                  child: Column(
-                    children: <Widget>[
-                      OneBlockTop(
-                        topText: "서로 남기는\n하루 한장\n시작해볼까요",
-                        bottomText: "회원가입을 진행합니다",
-                      ),
-                      RegisterFormWidget(userInfoViewModel: _userInfoViewModel),
-                    ],
-                  ),
+                MediaQuery.of(context).viewInsets.bottom <= 30.w ?
+                OneBlockTopWidget(
+                  topText: "서로 남기는\n하루 한장\n시작해볼까요",
+                  bottomText: "회원가입을 진행합니다",
+                ):
+                OneBlockTopWidgetKeyboardOn(
+                    text: "회원 정보를 입력중입니다"
                 ),
-                MediaQuery.of(context).viewInsets.bottom <= 50 ?
+                RegisterFormWidget(userInfoViewModel: _userInfoViewModel),
                 // Register Button
-                LargeButtonWidget(
+                BottomLargeButtonWidget(
                     onTap: () async {
                       _formKey.currentState!.save();
                       FocusScope.of(context).unfocus();
@@ -94,9 +90,7 @@ class RegisterScreen extends StatelessWidget {
                       );
                     },
                     buttonText: "회원가입"
-                )
-                    :
-                Container()
+                ),
               ],
             ),
           ),

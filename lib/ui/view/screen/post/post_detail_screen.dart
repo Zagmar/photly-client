@@ -31,7 +31,7 @@ class PostDetailScreen extends StatelessWidget {
                   },
                 ),
                 PostDailyInfoWidget(
-                  topButton: IconButtonWidget(
+                  topButton: RightIconButtonWidget(
                     iconData: Icons.save_alt_outlined,
                     onTap: () async {
                       print("다운로드");
@@ -48,11 +48,9 @@ class PostDetailScreen extends StatelessWidget {
                   ),
                   // bottomButton: _dailyCouplePostViewModel.isUserDone == true && _dailyCouplePostViewModel.isToday == true ?
                   bottomButton: _postViewModel.post!.postUserId == _postViewModel.currentUserId && _postViewModel.post!.postEditTime.year == DateTime.now().year && _postViewModel.post!.postEditTime.month == DateTime.now().month && _postViewModel.post!.postEditTime.day == DateTime.now().day ?
-                  TextButtonWidget(
+                  RightTextButtonWidget(
                       onTap: (){
                         FocusScope.of(context).unfocus();
-                        print("누름");
-                        // temp
                         Navigator.popAndPushNamed(context, '/postEditScreen');
                       },
                       buttonText: "편집"
@@ -60,23 +58,30 @@ class PostDetailScreen extends StatelessWidget {
                       :
                   Container(),
                 ),
-                postDetailWidget(),
+                PostDetailWidget(),
               ]
           ),
         ),
       ),
     );
   }
+}
 
-  Widget postDetailWidget() {
+class PostDetailWidget extends StatelessWidget {
+  late PostViewModel _postViewModel;
+  PostDetailWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    _postViewModel = Provider.of<PostViewModel>(context);
     return Container(
       margin: EdgeInsets.only(bottom: 5.w),
       child: Column(
         children: <Widget>[
           /// 이미지
           Container(
-            width: 390.w,
-            height: 390.w * IMAGE_RATIO,
+            width: FULL_WIDTH.w,
+            height: FULL_WIDTH.w * IMAGE_RATIO,
             child: InkWell(
               onTap: (){
                 _postViewModel.setTempImageUrl(_postViewModel.post!.postImageUrl);
@@ -84,15 +89,17 @@ class PostDetailScreen extends StatelessWidget {
               },
               child: CachedNetworkImageWidget(
                   imageUrl: _postViewModel.post!.postImageUrl,
-                  width: 390.w,
-                  height: 390.w * IMAGE_RATIO
+                  width: FULL_WIDTH.w,
+                  height: FULL_WIDTH.w * IMAGE_RATIO
               ),
             ),
           ),
           /// 상세 텍스트
           Container(
-            padding: EdgeInsets.all(20.w),
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.w),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -103,18 +110,17 @@ class PostDetailScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        PostButtonWidget(
-                            iconData: Icons.place_outlined,
-                            onTap: (){}
+                        PostIconWidget(
+                          iconData: Icons.place_outlined,
                         ),
                         Container(
                           width: 280.w,
-                          padding: EdgeInsets.only(left: 5.w),
+                          padding: EdgeInsets.only(left: 10.w),
                           child: Text(
                             _postViewModel.post!.postLocation!,
                             style: TextStyle(
-                                fontSize: 13.w,
-                                fontWeight: FontWeight.w400,
+                                fontSize: 12.w,
+                                fontWeight: FontWeight.w500,
                                 color: Color(0xFF000000)
                             ),
                             overflow: TextOverflow.ellipsis,
@@ -125,34 +131,30 @@ class PostDetailScreen extends StatelessWidget {
                     )
                         :
                     Container(),
-                    PostButtonWidget(
-                        iconData: Icons.wb_sunny_outlined,
-                        onTap: (){}
-                    ),
+                    PostWeatherImageWidget()
                   ],
                 ),
+                Container(height: 10.w,),
                 Container(
-                  height: 80.w,
                   alignment: Alignment.center,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
+                      _postViewModel.post!.postText == null || _postViewModel.post!.postText == "" ?
+                      Container()
+                          :
                       Text(
-                        _postViewModel.post!.postText ?? "",
-                        style: TextStyle(
-                            fontSize: 16.w,
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xFF000000)
-                        ),
+                        _postViewModel.post!.postText!,
+                        style: Theme.of(context).textTheme.bodyLarge,
                       ),
+                      Container(height: 10.w,),
                       Text(
-                        // 오후 1시 30분
                         _postViewModel.dateTimeNow,
                         style: TextStyle(
-                            fontSize: 9.w,
-                            fontWeight: FontWeight.w400,
-                            color: Color(0xFFC4C4C4)
+                            fontSize: 10.w,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFF808080)
                         ),
                       )
                     ],
@@ -167,28 +169,48 @@ class PostDetailScreen extends StatelessWidget {
   }
 }
 
-class PostButtonWidget extends StatelessWidget {
+class PostIconWidget extends StatelessWidget {
   final IconData iconData;
-  final GestureTapCallback onTap;
-  const PostButtonWidget({Key? key, required this.iconData, required this.onTap}) : super(key: key);
+  const PostIconWidget({Key? key, required this.iconData}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 30.w,
-      width: 30.w,
-      child: InkWell(
-          onTap: onTap,
-          child: Container(
-            padding: EdgeInsets.zero,
-            constraints: BoxConstraints(),
-            child: Icon(
-              iconData,
-              size: 24.w,
-              color: Color(0xFF292929),
-            ),
-          )
-      ),
+      height: 24.w,
+      width: 24.w,
+      child: Container(
+        padding: EdgeInsets.zero,
+        constraints: BoxConstraints(),
+        child: Icon(
+          iconData,
+          size: 24.w,
+          color: Color(0xFF292929),
+        ),
+      )
+    );
+  }
+}
+
+class PostWeatherImageWidget extends StatelessWidget {
+  late PostViewModel _postViewModel;
+  PostWeatherImageWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    _postViewModel = Provider.of<PostViewModel>(context);
+    return SizedBox(
+        height: 24.w,
+        width: 24.w,
+        child: Container(
+          padding: EdgeInsets.zero,
+          constraints: BoxConstraints(),
+          child: Image.asset(
+            "assets/images/weather${_postViewModel.post!.postWeather.toString()}.png",
+            height: 24.w,
+            width: 24.w,
+            color: Color(0xFF292929),
+          ),
+        )
     );
   }
 }

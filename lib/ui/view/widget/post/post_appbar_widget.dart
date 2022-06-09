@@ -3,6 +3,8 @@ import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../ui_setting.dart';
+
 // Custom Appbars for post screens
 
 class PostAppbarModel extends StatelessWidget {
@@ -13,22 +15,23 @@ class PostAppbarModel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 390.w,
-      height: 90.w,
-      padding: EdgeInsets.only(left: 20.w),
+      width: 375.w,
+      height: 58.w,
       child: Row(
         children: <Widget>[
           Container(
-            width: 275.w,
-            alignment: Alignment.centerLeft,
-            child: leadButton
+              padding: EdgeInsetsDirectional.fromSTEB(20.w, 10.w, 20.w, 0),
+              width: MAIN_SPACE_WIDTH.w,
+              alignment: Alignment.centerLeft,
+              child: leadButton
           ),
           Container(
             color: Color(0xFF000000),
-            width: 1.w,
+            width: BORDER_WIDTH.w,
           ),
           Container(
-            width: 94.w,
+            width: EMPTY_SPACE_WIDTH.w,
+            alignment: Alignment.center,
             child: actionButton
           ),
         ],
@@ -81,11 +84,11 @@ class SingleButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       child: SizedBox(
-        height: 50.w,
-        width: 50.w,
+        height: 48.w,
+        width: 48.w,
         child: Icon(
           icon,
-          color: Color(0xFF667080),
+          color: Color(0xFF000000),
           size: 30.w,
         ),
       ),

@@ -1,5 +1,7 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:couple_seflie_app/photly_style.dart';
+import 'package:couple_seflie_app/ui/splash_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/large_image_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/login/find_id_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/login/find_pw_screen.dart';
@@ -10,7 +12,6 @@ import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register1/register_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register2/register_anniversary_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register2/register_username_screen.dart';
-import 'package:couple_seflie_app/ui/view/screen/register3/register_couple_code_screen.dart';
 import 'package:couple_seflie_app/ui/view/widget/loading_widget.dart';
 import 'package:couple_seflie_app/ui/view_model/daily_couple_post_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
@@ -20,6 +21,7 @@ import 'package:couple_seflie_app/ui/view_model/user_info_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/user_profile_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'amplifyconfiguration.dart';
@@ -29,8 +31,8 @@ import 'data/repository/local_notification_service.dart';
 bool _isLogined = false;
 late String username;
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+main() async {
+  FlutterNativeSplash.preserve(widgetsBinding: WidgetsFlutterBinding.ensureInitialized());
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await ScreenUtil.ensureScreenSize();
 
@@ -90,26 +92,21 @@ class MyApp extends StatelessWidget {
       _userProfileViewModel.setCurrentUser();
       _dailyCouplePostViewModel.initDailyCouplePosts();
       LocalNotificationService().initialize();
+      FlutterNativeSplash.remove();
     }
 
     return ScreenUtilInit(
         splitScreenMode: false,
-        designSize: const Size(390, 840),
+        //designSize: const Size(390, 840),
+        designSize: const Size(375, 667),
         builder: (context, _) => MaterialApp(
               debugShowCheckedModeBanner: false,
               title: 'Photly',
-              theme: ThemeData(
-                fontFamily: 'Noto_Sans_KR',
-                brightness: Brightness.light,
-                backgroundColor: Color(0xFFFFFFFF),
-                primaryColor: Colors.blueGrey,
-                primarySwatch: Colors.blueGrey,
-                scaffoldBackgroundColor: Color(0xFFFFFFFF),
-              ),
+              theme: PhotlyStyle(MediaQueryData()).photlyThemeData,
               home: _isLogined ?
               _dailyCouplePostViewModel.dailyCouplePosts.isEmpty || _dailyCouplePostViewModel.loading ?
               // Show loading widget when is loading
-              LoadingScreen()
+              SplashScreen()
                   :
               PostMainScreen()
                   :
