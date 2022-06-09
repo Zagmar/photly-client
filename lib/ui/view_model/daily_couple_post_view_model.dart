@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:couple_seflie_app/data/model/daily_couple_post_model.dart';
 import 'package:couple_seflie_app/data/repository/auth_service.dart';
 import 'package:couple_seflie_app/data/repository/daily_couple_post_repository.dart';
@@ -179,6 +180,12 @@ class DailyCouplePostViewModel extends ChangeNotifier {
     // Set date data
     if(DateTime.now().year == _dailyCouplePostModel.dailyPostDate.year && DateTime.now().month == _dailyCouplePostModel.dailyPostDate.month && DateTime.now().day == _dailyCouplePostModel.dailyPostDate.day){
       _dailyCouplePostModel.isToday = true;
+      if(_dailyCouplePostModel.userPostImageUrl != null){
+        await CachedNetworkImage.evictFromCache(_dailyCouplePostModel.userPostImageUrl!);
+      }
+      if(_dailyCouplePostModel.partnerPostImageUrl != null){
+        await CachedNetworkImage.evictFromCache(_dailyCouplePostModel.partnerPostImageUrl!);
+      }
     }
     else{
       _dailyCouplePostModel.isToday = false;
@@ -211,6 +218,12 @@ class DailyCouplePostViewModel extends ChangeNotifier {
       // Set date data
       if(DateTime.now().year == _dailyCouplePostModel.dailyPostDate.year && DateTime.now().month == _dailyCouplePostModel.dailyPostDate.month && DateTime.now().day == _dailyCouplePostModel.dailyPostDate.day){
         _dailyCouplePostModel.isToday = true;
+        if(_dailyCouplePostModel.userPostImageUrl != null){
+          await CachedNetworkImage.evictFromCache(_dailyCouplePostModel.userPostImageUrl!);
+        }
+        if(_dailyCouplePostModel.partnerPostImageUrl != null){
+          await CachedNetworkImage.evictFromCache(_dailyCouplePostModel.partnerPostImageUrl!);
+        }
       }
       else{
         _dailyCouplePostModel.isToday = false;
