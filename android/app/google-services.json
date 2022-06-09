@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "653690506781",
+    "project_id": "photly-efd8d",
+    "storage_bucket": "photly-efd8d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:653690506781:android:bfba87584f6e35610240f4",
+        "android_client_info": {
+          "package_name": "com.zagmar.couple_seflie_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "653690506781-o0fjirlsi4fve5eute6809sf2j4fvct9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.zagmar.couple_seflie_app",
+            "certificate_hash": "113375494bf71cd5bb2e2a2bbd7fa14174120970"
+          }
+        },
+        {
+          "client_id": "653690506781-4uh2b1ed8372f4nt9r64a4n8tpeknf6g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDm9Su19OseGd3P4Mxb0_BU21bdl5USm1s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "653690506781-4uh2b1ed8372f4nt9r64a4n8tpeknf6g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

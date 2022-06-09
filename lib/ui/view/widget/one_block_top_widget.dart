@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -9,33 +10,24 @@ class OneBlockTop extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 320.w,
       height: 170.w,
+      padding: EdgeInsetsDirectional.fromSTEB(25.w, 0, 25.w, 0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             topText,
-            style: TextStyle(
-                fontSize: 28.w,
-                fontWeight: FontWeight.w700,
-                color: Color(0xFF000000)
-            ),
+            style: Theme.of(context).textTheme.headlineLarge,
             textAlign: TextAlign.start,
             overflow: TextOverflow.ellipsis,
           ),
           Text(
             bottomText,
-            style: TextStyle(
-                fontSize: 16.w,
-                fontWeight: FontWeight.w400,
-                color: Color(0xFF000000).withOpacity(0.5)
-            ),
+            style: Theme.of(context).textTheme.headlineSmall,
             textAlign: TextAlign.start,
             overflow: TextOverflow.ellipsis,
           ),
-          Padding(padding: EdgeInsets.symmetric(vertical: 20.w)),
         ],
       ),
     );
