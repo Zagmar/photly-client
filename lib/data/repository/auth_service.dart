@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
@@ -9,7 +10,7 @@ import '../model/auth_credentials_model.dart';
 
 // AuthFlowStatus는 로그인 페이지, 등록 페이지, 확인 페이지 또는 세션의 네 가지 인증 흐름을 포함할 수 있는 열거형
 enum AuthFlowStatus { login, session }
-enum LoginStatus { success, fail, nonVerification, nonUserInfo, unknownFail}
+enum LoginStatus { success, nonUser, nonVerification, nonUserInfo, unknownFail}
 enum SignUpStatus { success, fail, nonVerification, existUser }
 enum VerifyStatus { success, fail }
 
@@ -20,24 +21,23 @@ class AuthService {
 
   Future<Object> loginService(UserCredentialsModel credentials) async {
     try {
-      final response = await Amplify.Auth.signIn(username: credentials.email, password: credentials.password);
+      final amplifyResponse = await Amplify.Auth.signIn(username: credentials.email, password: credentials.password);
 
-      if (response.isSignedIn) {
-        print(credentials.email);
+      if (amplifyResponse.isSignedIn) {
+        // Success to login on Amplify
         final dbResponse = await getUserInfo(credentials.email);
         if(dbResponse is Success) {
-          print("성공");
-          // Success to login
+          // Success to login Completely
           return LoginStatus.success;
         }
         else {
-          print("유저 정보 없음");
-          // No uploaded user information in DB
+          // Nonexistent user information in DB
           return LoginStatus.nonUserInfo;
         }
         return Success(response: "로그인에 성공하였습니다");
-      } else {
-        // Fail to login
+      }
+      else {
+        // Fail to login on Amplify
         return LoginStatus.unknownFail;
         return Failure(code: INVALID_RESPONSE, errorResponse: "일치하는 회원정보가 없습니다");
       }
@@ -48,8 +48,14 @@ class AuthService {
     } on AuthException catch (authError) {
       print(authError.message);
       // Fail to login
-      return LoginStatus.fail;
+      return LoginStatus.nonUser;
       return Failure(code: UNKNOWN_ERROR, errorResponse: "로그인에 실패하였습니다 - ${authError.message}");
+    } catch (e){
+      // Fail to login on Amplify
+      print("실패");
+      print(e);
+      return LoginStatus.unknownFail;
+      return Failure(code: INVALID_RESPONSE, errorResponse: "일치하는 회원정보가 없습니다");
     }
   }
 
@@ -135,7 +141,9 @@ class AuthService {
   Future<Object> ClearUserService() async {
     try {
       // Call signOut without any option, execute logout in only this device
-      await Amplify.Auth.deleteUser();
+      if (Platform.isIOS) {
+        await Amplify.Auth.deleteUser();
+      }
       // After logout, show login screen
       //showLogin();
       return Success(response: "success");

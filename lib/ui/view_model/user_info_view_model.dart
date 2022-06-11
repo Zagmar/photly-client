@@ -10,6 +10,8 @@ import '../../data/repository/auth_service.dart';
 class UserInfoViewModel with ChangeNotifier {
   final PostInfoRepository _postInfoRepository = PostInfoRepository();
   final UserInfoRepository _userInfoRepository = UserInfoRepository();
+  final AuthService _authService = AuthService();
+  UserCredentialsModel? _credential;
   String? _email;
   String? _password;
   String? _verificationCode;
@@ -23,7 +25,7 @@ class UserInfoViewModel with ChangeNotifier {
   bool _isPostsClear = false;
   bool _isPartnerClear = false;
   bool _isUserClear = false;
-  String? _loginFail;
+  String? _loginFailure;
   String? _idErrorMessage = '이메일은 필수사항입니다.';
   String? _pwErrorMessage = '비밀번호는 필수사항입니다.';
   String? _pwCheckErrorMessage = '비밀번호 확인은 필수사항입니다';
@@ -36,7 +38,29 @@ class UserInfoViewModel with ChangeNotifier {
   String? _clearPartnerFailMessage;
   String? _clearUserFailMessage;
 
-  late AuthService _authService;
+  String _username = "";
+  DateTime? _anniversary;
+  bool _isUsernameOk = false;
+  bool _isAnniversaryOk = false;
+  bool _isUploaded = false;
+  String? _usernameErrorMessage = '닉네임은 필수사항입니다';
+  String? _anniversaryErrorMessage = '날짜를 선택해주세요';
+  String? _uploadFailMessage = "다시 시도해주세요";
+
+  String _userCode = ""; // temp
+  String? _coupleCode; // temp
+  bool _isCoupleCodeMatched = false;
+  bool _isUserCoupleCodeOk = false;
+  bool _isCoupleCoupleCodeOk = false;
+  String? _coupleCodeErrorMessage;
+  String? _coupleCodeMatchFailMessage;
+
+  String? get coupleCodeErrorMessage => _coupleCodeErrorMessage;
+  String? get coupleCodeMatchFailMessage => _coupleCodeMatchFailMessage;
+  bool get isCoupleCodeMatched => _isCoupleCodeMatched;
+  bool get isUserCoupleCodeOk => _isUserCoupleCodeOk;
+  bool get isCoupleCoupleCodeOk => _isCoupleCoupleCodeOk;
+  String get userCode => _userCode;
 
   String? get idErrorMessage => _idErrorMessage;
   String? get pwErrorMessage => _pwErrorMessage;
@@ -53,14 +77,23 @@ class UserInfoViewModel with ChangeNotifier {
   bool get isRegisterOk => _isIdOk && _isPwOk && _isPwCheckOk;
   bool get isVerificationCodeOk => _isVerificationCodeOk;
   bool get isLogout => _isLogout;
-  String? get loginFail => _loginFail;
+  String? get loginFailure => _loginFailure;
   bool get isVerified => _isVerified;
   bool get isRegistered => _isRegistered;
   bool get isPostsClear => _isPostsClear;
   bool get isPartnerClear => _isPartnerClear;
   bool get isUserClear => _isUserClear;
 
-  // Check Email Input
+  String? get usernameErrorMessage => _usernameErrorMessage;
+  String? get anniversaryErrorMessage => _anniversaryErrorMessage;
+  bool get isUsernameOk => _isUsernameOk;
+  bool get isAnniversaryOk => _isAnniversaryOk;
+  String get username => _username;
+  DateTime? get anniversary => _anniversary;
+  bool get isUploaded => _isUploaded;
+  String? get uploadFailMessage => _uploadFailMessage;
+
+  // Check Input Form of Email
   checkEmail(String val){
     if(val.isEmpty) {
       _idErrorMessage = '이메일은 필수사항입니다.';
@@ -80,7 +113,7 @@ class UserInfoViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  // Check Password Input
+  // Check Input Form of Password
   checkPassword(String val){
     if(val.isEmpty) {
       _pwErrorMessage = '비밀번호는 필수사항입니다.';
@@ -100,7 +133,7 @@ class UserInfoViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  // Check Password Check Input
+  // Check Input Form of Password Check
   checkPasswordCheck(String val){
     if(val.isEmpty) {
       _pwCheckErrorMessage = '비밀번호 확인은 필수사항입니다';
@@ -117,7 +150,7 @@ class UserInfoViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  // Check Verification Code
+  // Check Input Form of Verification Code
   checkVerificationCode(String val){
     if(val.isEmpty) {
       _verificationCodeErrorMessage = '인증코드를 입력해주세요';
@@ -137,8 +170,46 @@ class UserInfoViewModel with ChangeNotifier {
     notifyListeners();
   }
 
+  // Check Input Form of Username
+  checkUsername(String val){
+    if(val.isEmpty) {
+      _usernameErrorMessage = '닉네임은 필수사항입니다';
+      _isUsernameOk = false;
+    }
+    else{
+      _username = val;
+      _usernameErrorMessage = null;
+      _isUsernameOk = true;
+    }
+    notifyListeners();
+  }
+
+  // Check Input Form of Couple Code
+  Future<void> checkCoupleCode(String str) async {
+    if(str.isEmpty) {
+      _isCoupleCoupleCodeOk = false;
+      _coupleCodeErrorMessage = "연결할 코드를 입력해주세요";
+    }
+    else if(str.length != 8){
+      _isCoupleCoupleCodeOk = false;
+      _coupleCodeErrorMessage = "커플 코드는 8자리입니다";
+    }
+    else{
+      _coupleCode = str;
+      _isCoupleCoupleCodeOk = true;
+      _coupleCodeErrorMessage = null;
+    }
+  }
+
+  // Set Anniversary to Input Date
+  setAnniversary(DateTime val) {
+    _anniversary = val;
+    _isAnniversaryOk = true;
+    notifyListeners();
+  }
+
+
   Future<void> doRegistration() async {
-    _authService = AuthService();
     final credentials = UserCredentialsModel(email: _email!, password: _password!);
     final response = await _authService.registerService(credentials);
 
@@ -161,13 +232,15 @@ class UserInfoViewModel with ChangeNotifier {
 
   Future<void> doVerification() async {
     print("checkVerification");
-    _authService = AuthService();
     final result = await _authService.verificationService(_email!, _verificationCode!);
     print(result);
 
     if(result == VerifyStatus.success){
       _verificationFailMessage = null;
       _isVerified = true;
+      //await _authService.loginService(_credential!);
+      await doLogin();
+      print("뷰모델" + _credential!.email.toString() + _credential!.password.toString());
       notifyListeners();
     }
     else {
@@ -178,37 +251,36 @@ class UserInfoViewModel with ChangeNotifier {
   }
 
   Future<void> doLogin() async {
-    _authService = AuthService();
-    final credentials = UserCredentialsModel(email: _email!, password: _password!);
-    final result = await _authService.loginService(credentials);
+    await _authService.logOutService();
+    _credential = UserCredentialsModel(email: _email!, password: _password!);
+    final result = await _authService.loginService(_credential!);
 
     if(result == LoginStatus.success){
       _loginFailMessage = null;
-      _loginFail = "success";
-      print(_loginFail);
+      _loginFailure = null;
       notifyListeners();
     }
     else if(result == LoginStatus.nonVerification) {
-      _loginFailMessage = "인증을 완료해주세요";
-      _loginFail = "nonVerification";
-      print(_loginFail);
+      _loginFailMessage = "이메일 인증을 완료해주세요";
+      _loginFailure = "nonVerification";
+      print(_loginFailure);
       notifyListeners();
     }
     else if(result == LoginStatus.nonUserInfo) {
       _loginFailMessage = "사용자 정보 입력을 완료해주세요";
-      _loginFail = "nonUserInfo";
-      print(_loginFail);
+      _loginFailure = "nonUserInfo";
+      print(_loginFailure);
       notifyListeners();
     }
-    else if(result == LoginStatus.fail){
+    else if(result == LoginStatus.nonUser){
       _loginFailMessage = "일치하는 사용자 정보가 없습니다";
-      _loginFail = "fail";
-      print(_loginFail);
+      _loginFailure = "nonUser";
+      print(_loginFailure);
       notifyListeners();
     }
-    else {
+    else if(result == LoginStatus.unknownFail){
       _loginFailMessage = "재시도 후 지속적으로 오류가 발생 시 문의해주세요";
-      _loginFail = "fail";
+      _loginFailure = "fail";
       notifyListeners();
     }
   }
@@ -248,7 +320,6 @@ class UserInfoViewModel with ChangeNotifier {
   }
 
   Future<void> doLogout() async {
-    _authService = AuthService();
     final result = await _authService.logOutService();
 
     if(result is Failure){
@@ -269,7 +340,6 @@ class UserInfoViewModel with ChangeNotifier {
     if(result is Success){
       print("여기2");
 
-      _authService = AuthService();
       final resultAuth = await _authService.ClearUserService();
       print("여기3");
       if(resultAuth is Failure){
@@ -298,19 +368,61 @@ class UserInfoViewModel with ChangeNotifier {
     _isPwOk = false;
     _isPwCheckOk = false;
     _isRegistered = false;
+    _username = "";
+    _anniversary = null;
+    _isUsernameOk = false;
+    _isAnniversaryOk = false;
+
+    _isCoupleCodeMatched = false;
+    _userCode = ""; // temp
+    _coupleCode = null; // temp
+    _isUserCoupleCodeOk = false;
+    _isCoupleCoupleCodeOk = false;
+    _coupleCodeErrorMessage = null;
+    _coupleCodeMatchFailMessage = null;
+    print(_email);
     notifyListeners();
   }
 
-  clearSecret(){
-    _password = null;
+  Future<void> uploadUserInfoToDB() async {
+    print("_userId");
+    var response = await _userInfoRepository.createUserInfo(_username, _anniversary!);
+    if(response is Success) {
+      _isUploaded = true;
+      _uploadFailMessage = null;
+    }
+    else {
+      _isUploaded = false;
+      _uploadFailMessage = "요청을 실패하였습니다.";
+    }
+    notifyListeners();
   }
 
-  /// this will delete cache
-  Future<void> _deleteCacheDir() async {
-    final cacheDir = await getTemporaryDirectory();
 
-    if (cacheDir.existsSync()) {
-      cacheDir.deleteSync(recursive: true);
+  setUserCoupleCode() async {
+    var response = await _userInfoRepository.getUserInfo();
+    if(response is Failure){
+      _userCode = "로드를 실패했습니다";
+      _isUserCoupleCodeOk = false;
+    }
+    if(response is Success){
+      _userCode = response.response["coupleCode"];
+      _isUserCoupleCodeOk = true;
+    }
+    notifyListeners();
+  }
+
+  Future<void> matchCoupleCode() async {
+    var response = await _userInfoRepository.registerPartner(_coupleCode!);
+
+    if(response is Failure){
+      _isCoupleCodeMatched = false;
+      _coupleCodeMatchFailMessage = "연결에 실패하였습니다. 다시 한 번 확인해주세요.";
+    }
+
+    if((response is Success)){
+      _isCoupleCodeMatched = true;
+      _coupleCodeMatchFailMessage = null;
     }
   }
 }

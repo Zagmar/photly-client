@@ -8,19 +8,22 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../../view_model/daily_couple_post_view_model.dart';
-import '../../../view_model/register3_view_model.dart';
+import '../../../view_model/user_info_view_model.dart';
 
 class RegisterCoupleCodeScreen extends StatelessWidget {
   RegisterCoupleCodeScreen({Key? key}) : super(key: key);
-  late Register3ViewModel _register3ViewModel;
+  late UserInfoViewModel _userInfoViewModel;
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    _register3ViewModel = Provider.of<Register3ViewModel>(context);
-    if(_register3ViewModel.userCode == ""){
-      _register3ViewModel.setUserCoupleCode();
+    _userInfoViewModel = Provider.of<UserInfoViewModel>(context);
+    /*
+    if(_userInfoViewModel.userCode == ""){
+      _userInfoViewModel.setUserCoupleCode();
     }
+
+     */
     return Container(
         child: GestureDetector(
           onTap: (){
@@ -34,7 +37,7 @@ class RegisterCoupleCodeScreen extends StatelessWidget {
               actions: <Widget>[
                 InkWell(
                   onTap: (){
-                    _register3ViewModel.clear();
+                    //_userInfoViewModel.clearCoupleCode();
                     FocusScope.of(context).unfocus();
                     Navigator.pushReplacement(context, MaterialPageRoute(
                         builder: (context) => PostMainScreen(),
@@ -70,28 +73,28 @@ class RegisterCoupleCodeScreen extends StatelessWidget {
                       onTap: () async {
                         _formKey.currentState!.save();
                         FocusScope.of(context).unfocus();
-                        !_register3ViewModel.isCoupleCoupleCodeOk ?
+                        !_userInfoViewModel.isCoupleCoupleCodeOk ?
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                                _register3ViewModel.coupleCodeErrorMessage!
+                                _userInfoViewModel.coupleCodeErrorMessage!
                             ),
                           ),
                         )
                             :
                         {
-                          await _register3ViewModel.matchCoupleCode(),
-                          _register3ViewModel.isCoupleCodeMatched ?
+                          await _userInfoViewModel.matchCoupleCode(),
+                          _userInfoViewModel.isCoupleCodeMatched ?
                           {
                             await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
-                            _register3ViewModel.clear(),
+                            //_register3ViewModel.clearCoupleCode(),
                             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen(),fullscreenDialog: true), (route) => false)
                           }
                               :
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                  _register3ViewModel.coupleCodeMatchFailMessage!
+                                  _userInfoViewModel.coupleCodeMatchFailMessage!
                               ),
                             ),
                           )
@@ -116,7 +119,7 @@ class RegisterCoupleCodeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Register3ViewModel _register3ViewModel = Provider.of<Register3ViewModel>(context);
+    final UserInfoViewModel _userInfoViewModel = Provider.of<UserInfoViewModel>(context);
     return Container(
       width: 320.w,
       height: 160.w,
@@ -131,7 +134,7 @@ class RegisterCoupleCodeWidget extends StatelessWidget {
               keyboardType: TextInputType.text,
               obscureText: false,
               onSaved: (value) async {
-                await _register3ViewModel.checkCode(value??"");
+                await _userInfoViewModel.checkCoupleCode(value??"");
               },
           ),
           Padding(padding: EdgeInsets.only(bottom: 10.w)),
@@ -156,7 +159,7 @@ class RegisterCoupleCodeWidget extends StatelessWidget {
                     width: 255.w,
                     height: 20.w,
                     child: Text(
-                      _register3ViewModel.userCode,
+                      _userInfoViewModel.userCode,
                       style: TextStyle(
                         fontSize: 16.w,
                         fontWeight: FontWeight.w400,
@@ -168,8 +171,8 @@ class RegisterCoupleCodeWidget extends StatelessWidget {
                     onTap: (){
                       FocusScope.of(context).unfocus();
                       print("복사하기");
-                      print(_register3ViewModel.userCode);
-                      Clipboard.setData(ClipboardData(text: _register3ViewModel.userCode));
+                      print(_userInfoViewModel.userCode);
+                      Clipboard.setData(ClipboardData(text: _userInfoViewModel.userCode));
                     },
                     child: Container(
                       width: 45.w,

@@ -2,20 +2,19 @@ import 'package:couple_seflie_app/ui/view/screen/register2/register_anniversary_
 import 'package:couple_seflie_app/ui/view/widget/route_button_widgets.dart';
 import 'package:couple_seflie_app/ui/view/widget/text_form_field.dart';
 import 'package:couple_seflie_app/ui/view/widget/one_block_top_widget.dart';
+import 'package:couple_seflie_app/ui/view_model/user_info_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-import '../../../view_model/register2_view_model.dart';
-
 class RegisterUsernameScreen extends StatelessWidget {
   RegisterUsernameScreen({Key? key}) : super(key: key);
-  late Register2ViewModel _register2ViewModel;
+  late UserInfoViewModel _userInfoViewModel;
   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    _register2ViewModel = Provider.of<Register2ViewModel>(context);
+    _userInfoViewModel = Provider.of<UserInfoViewModel>(context);
     return Container(
         child: GestureDetector(
           onTap: (){
@@ -45,7 +44,7 @@ class RegisterUsernameScreen extends StatelessWidget {
                         },
                         obscureText: false,
                         onSaved: (value) {
-                          _register2ViewModel.checkUsername(value??"");
+                          _userInfoViewModel.checkUsername(value??"");
                         },
                       ),
                     ),
@@ -55,13 +54,13 @@ class RegisterUsernameScreen extends StatelessWidget {
                         onTap: () {
                           _formKey.currentState!.save();
                           FocusScope.of(context).unfocus();
-                          _register2ViewModel.isUsernameOk ?
+                          _userInfoViewModel.isUsernameOk ?
                           Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterAnniversaryScreen()))
                               :
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                  _register2ViewModel.usernameErrorMessage!
+                                  _userInfoViewModel.usernameErrorMessage!
                               ),
                             ),
                           );

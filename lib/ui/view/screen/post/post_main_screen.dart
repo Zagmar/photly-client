@@ -5,13 +5,11 @@ import 'package:couple_seflie_app/ui/view/screen/register3/register_couple_code_
 import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 import '../../../ui_setting.dart';
 import '../../../view_model/daily_couple_post_view_model.dart';
-import '../../../view_model/register3_view_model.dart';
-import '../../widget/loading_widget.dart';
+import '../../../view_model/user_info_view_model.dart';
 import '../../widget/main_drawer_widget.dart';
 import '../../widget/post/post_appbar_widget.dart';
 import '../../widget/post/post_daily_info_widget.dart';
@@ -293,7 +291,8 @@ class PartnerDailyPostWidget extends StatelessWidget {
          subText: "등록된 상대방이 없어요\n상대방을 등록 후에 같이 즐겨봐요",
          onTap: () async {
            print("등록");
-           await Provider.of<Register3ViewModel>(context, listen: false).setUserCoupleCode();
+           //await Provider.of<Register3ViewModel>(context, listen: false).setUserCoupleCode();
+           await Provider.of<UserInfoViewModel>(context, listen: false).setUserCoupleCode();
            Navigator.push(
              context,
              MaterialPageRoute(builder: (context) => RegisterCoupleCodeScreen(), fullscreenDialog: true),

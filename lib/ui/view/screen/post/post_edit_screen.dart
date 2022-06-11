@@ -449,7 +449,7 @@ class WeatherButton extends StatelessWidget {
           width: 24.w,
           height: 24.w,
           child: Image.asset(
-            "assets/images/weather${(indexWeather??0).toString()}.png",
+            "assets/images/weather${(indexWeather).toString()}.png",
             width: 24.w,
             height: 24.w,
             fit: BoxFit.contain,

@@ -1,11 +1,15 @@
+import 'package:couple_seflie_app/ui/view/screen/login/login_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register2/register_username_screen.dart';
 import 'package:couple_seflie_app/ui/view/widget/route_button_widgets.dart';
 import 'package:couple_seflie_app/ui/view_model/user_info_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import '../../../view_model/daily_couple_post_view_model.dart';
+import '../../../view_model/user_profile_view_model.dart';
 import '../../widget/text_form_field.dart';
 import '../../widget/one_block_top_widget.dart';
+import '../post/post_main_screen.dart';
 
 class RegisterVertificationScreen extends StatelessWidget {
   RegisterVertificationScreen({Key? key}) : super(key: key);
@@ -26,8 +30,8 @@ class RegisterVertificationScreen extends StatelessWidget {
           leading: Container(),
           actions: <Widget>[
             InkWell(
-              onTap: (){
-                _userInfoViewModel.clear();
+              onTap: () async {
+                await _userInfoViewModel.clear();
                 FocusScope.of(context).unfocus();
                 Navigator.popUntil(context, (route) => route.isFirst);
               },
@@ -74,17 +78,32 @@ class RegisterVertificationScreen extends StatelessWidget {
                         await _userInfoViewModel.doVerification(),
                         _userInfoViewModel.isVerified ?
                         {
-                          _userInfoViewModel.clearSecret(),
-                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => RegisterUsernameScreen()), (route) => false)
+                          if(_userInfoViewModel.loginFailure == null) {
+                            await Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser(),
+                            await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
+                            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false),
+                          }
+                          else if(_userInfoViewModel.loginFailure == "nonUserInfo"){
+                            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => RegisterUsernameScreen()), (route) => false),
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    "로그인에 실패하였습니다.\n다시 시도해주세요"
+                                ),
+                              ),
+                            ),
+                            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false),
+                          }
                         }
-                            :
+                        :
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
                                 _userInfoViewModel.verificationFailMessage!
                             ),
                           ),
-                        )
+                        ),
                       }
                           :
                       ScaffoldMessenger.of(context).showSnackBar(

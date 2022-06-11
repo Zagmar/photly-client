@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../widget/text_form_field.dart';
 import '../../widget/one_block_top_widget.dart';
+import '../login/login_screen.dart';
 
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({Key? key}) : super(key: key);
@@ -77,7 +78,6 @@ class RegisterScreen extends StatelessWidget {
 
                       _userInfoViewModel.isRegistered ?
                       {
-                        _userInfoViewModel.clearSecret(),
                         Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterVertificationScreen()))
                       }
                           :

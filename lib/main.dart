@@ -12,11 +12,10 @@ import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register1/register_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register2/register_anniversary_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register2/register_username_screen.dart';
-import 'package:couple_seflie_app/ui/view/widget/loading_widget.dart';
 import 'package:couple_seflie_app/ui/view_model/daily_couple_post_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
-import 'package:couple_seflie_app/ui/view_model/register2_view_model.dart';
-import 'package:couple_seflie_app/ui/view_model/register3_view_model.dart';
+//import 'package:couple_seflie_app/ui/view_model/register2_view_model.dart';
+//import 'package:couple_seflie_app/ui/view_model/register3_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/user_info_view_model.dart';
 import 'package:couple_seflie_app/ui/view_model/user_profile_view_model.dart';
 import 'package:flutter/material.dart';
@@ -72,8 +71,8 @@ main() async {
         ChangeNotifierProvider(create: (context)=> DailyCouplePostViewModel(),),
         ChangeNotifierProvider(create: (context)=> PostViewModel()),
         ChangeNotifierProvider(create: (context) => UserInfoViewModel()),
-        ChangeNotifierProvider(create: (context) => Register2ViewModel()),
-        ChangeNotifierProvider(create: (context) => Register3ViewModel()),
+        //ChangeNotifierProvider(create: (context) => Register2ViewModel()),
+        //ChangeNotifierProvider(create: (context) => Register3ViewModel()),
         ChangeNotifierProvider(create: (context) => UserProfileViewModel()),
       ],
       child: MyApp())
@@ -88,11 +87,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context);
     _userProfileViewModel = Provider.of<UserProfileViewModel>(context, listen: false);
+    FlutterNativeSplash.remove();
     if (_isLogined) {
       _userProfileViewModel.setCurrentUser();
       _dailyCouplePostViewModel.initDailyCouplePosts();
       LocalNotificationService().initialize();
-      FlutterNativeSplash.remove();
     }
 
     return ScreenUtilInit(

@@ -10,7 +10,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import '../../../view_model/daily_couple_post_view_model.dart';
-import '../../../view_model/register3_view_model.dart';
 import '../../../view_model/user_info_view_model.dart';
 import '../../widget/text_form_field.dart';
 import '../../widget/one_block_top_widget.dart';
@@ -46,7 +45,77 @@ class LoginScreen extends StatelessWidget {
                 OneBlockTopWidgetKeyboardOn(
                     text: "로그인 정보를 입력중입니다"
                 ),
-                LoginFormWidget(),
+                Container(
+                  width: 375.w,
+                  height: 140.w,
+                  alignment: Alignment.center,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      /// Login Textfield
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          TextInputWidget(
+                            hintText: "아이디 입력",
+                            maxLines: 1,
+                            obscureText: false,
+                            keyboardType: TextInputType.emailAddress,
+                            onSaved: (value) async {
+                              await _userInfoViewModel.checkEmail(value??"");
+                            },
+                          ),
+                          TextInputWidget(
+                            hintText: "비밀번호 입력",
+                            maxLines: 1,
+                            obscureText: true,
+                            keyboardType: TextInputType.visiblePassword,
+                            onSaved: (value) async {
+                              await _userInfoViewModel.checkPassword(value??"");
+                            },
+                          ),
+                        ],
+                      ),
+                      /// Other Functions
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SingleTextButton(
+                            buttonText: "아이디 찾기",
+                            onTap: (){
+                              FocusScope.of(context).unfocus();
+                              _formKey.currentState!.reset();
+                              _userInfoViewModel.clear();
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => FindIdScreen()));
+                            },
+                          ),
+                          BorderBetweenTextButtons(),
+                          SingleTextButton(
+                            buttonText: "비밀번호 찾기",
+                            onTap: (){
+                              FocusScope.of(context).unfocus();
+                              _formKey.currentState!.reset();
+                              _userInfoViewModel.clear();
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => FindPwScreen()));
+                            },
+                          ),
+                          BorderBetweenTextButtons(),
+                          SingleTextButton(
+                            buttonText: "회원가입",
+                            onTap: () async {
+                              FocusScope.of(context).unfocus();
+                              _formKey.currentState!.reset();
+                              _userInfoViewModel.clear();
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen()));
+                            },
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
                 BottomLargeButtonWidget(
                     onTap: () async {
                       _formKey.currentState!.save();
@@ -60,44 +129,61 @@ class LoginScreen extends StatelessWidget {
                         ),
                       )
                           :
-                      {
-                        await _userInfoViewModel.doLogout(),
-                        await _userInfoViewModel.doLogin(),
-                      };
+                      await _userInfoViewModel.doLogin();
 
-                      switch (_userInfoViewModel.loginFail) {
+                      switch (_userInfoViewModel.loginFailure) {
                         case null :
-                          break;
-                        case "success" :
                           await Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser();
-                          final _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context, listen: false);
-                          await _dailyCouplePostViewModel.initDailyCouplePosts();
+                          await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts();
                           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false);
-                          /*
-                          _dailyCouplePostViewModel.isCouple ?
-                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false)
-                              :
-                          {
-                            await Provider.of<Register3ViewModel>(context, listen: false).setUserCoupleCode(),
-                            Navigator.pushAndRemoveUntil(context,
-                              MaterialPageRoute(builder: (context) => PostMainScreen(), fullscreenDialog: true), (route) => false, ),
-                          };
-
-                           */
                           break;
                         case "nonVerification" :
-                          _userInfoViewModel.clearSecret();
+                          //_userInfoViewModel.clearSecret();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  _userInfoViewModel.loginFailMessage!
+                              ),
+                            ),
+                          );
+                          _formKey.currentState!.reset();
                           Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterVertificationScreen()));
                           break;
                         case "nonUserInfo" :
-                          _userInfoViewModel.clearSecret();
+                          //_userInfoViewModel.clearSecret();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  _userInfoViewModel.loginFailMessage!
+                              ),
+                            ),
+                          );
+                          _formKey.currentState!.reset();
                           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => RegisterUsernameScreen()), (route) => false);
+                          break;
+                        case "nonUser" :
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  _userInfoViewModel.loginFailMessage!
+                              ),
+                            ),
+                          );
                           break;
                         case "fail" :
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
                                   _userInfoViewModel.loginFailMessage!
+                              ),
+                            ),
+                          );
+                          break;
+                        default :
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  "로그인에 실패하였습니다.\n다시 시도해주세요"
                               ),
                             ),
                           );
@@ -178,7 +264,7 @@ class LoginFormWidget extends StatelessWidget {
               BorderBetweenTextButtons(),
               SingleTextButton(
                 buttonText: "회원가입",
-                onTap: () {
+                onTap: () async {
                   FocusScope.of(context).unfocus();
                   _userInfoViewModel.clear();
                   Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen()));

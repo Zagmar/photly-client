@@ -1,22 +1,23 @@
-import 'package:couple_seflie_app/ui/view/screen/login/login_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-
-import '../../../view_model/register2_view_model.dart';
+import '../../../view_model/daily_couple_post_view_model.dart';
 import '../../../view_model/user_info_view_model.dart';
+import '../../../view_model/user_profile_view_model.dart';
 import '../../widget/route_button_widgets.dart';
 import '../../widget/one_block_top_widget.dart';
+import '../post/post_main_screen.dart';
 
 class RegisterAnniversaryScreen extends StatelessWidget {
   RegisterAnniversaryScreen({Key? key}) : super(key: key);
-  late Register2ViewModel _register2ViewModel;
+  //late Register2ViewModel _register2ViewModel;
   late UserInfoViewModel _userInfoViewModel;
 
   @override
   Widget build(BuildContext context) {
-    _register2ViewModel = Provider.of<Register2ViewModel>(context);
+    //_register2ViewModel = Provider.of<Register2ViewModel>(context);
+    _userInfoViewModel = Provider.of<UserInfoViewModel>(context);
     return Container(
         child: GestureDetector(
           onTap: (){
@@ -44,7 +45,7 @@ class RegisterAnniversaryScreen extends StatelessWidget {
                         initialDateTime: DateTime.now(),
                         maximumDate: DateTime.now(),
                         onDateTimeChanged: (DateTime value) {
-                          _register2ViewModel.setAnniversary(value);
+                          _userInfoViewModel.setAnniversary(value);
                         },
                         mode: CupertinoDatePickerMode.date,
                       )
@@ -57,30 +58,24 @@ class RegisterAnniversaryScreen extends StatelessWidget {
                       buttonTextLeft: "이전",
                       onTapRight: () async {
                         FocusScope.of(context).unfocus();
-                        _register2ViewModel.isAnniversaryOk ?
+                        if(!_userInfoViewModel.isAnniversaryOk){
+                          _userInfoViewModel.setAnniversary(DateTime.now());
+                        }
+
+                        await _userInfoViewModel.uploadUserInfoToDB();
+                        _userInfoViewModel.isUploaded ?
                         {
-                          await _register2ViewModel.uploadUserInfoToDB(),
-                          _register2ViewModel.isUploaded ?
-                          {
-                            _userInfoViewModel = Provider.of<UserInfoViewModel>(context, listen: false),
-                            await _userInfoViewModel.doLogout(),
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()))
-                          }
-                              :
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text(
-                                    _register2ViewModel.uploadFailMessage !
-                                )
-                            ),
-                          )
+                          await Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser(),
+                          await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
+                          await Provider.of<UserInfoViewModel>(context, listen: false).clear(),
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => PostMainScreen()))
                         }
                             :
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text(
-                                _register2ViewModel.anniversaryErrorMessage!
-                            )
+                              content: Text(
+                                  _userInfoViewModel.uploadFailMessage !
+                              )
                           ),
                         );
                       },
