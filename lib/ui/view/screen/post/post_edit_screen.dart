@@ -183,7 +183,7 @@ class PostEditScreen extends StatelessWidget {
                       )
                     ],
                   ),
-                  AddBannerWidget()
+                  //AddBannerWidget()
                 ]
             ),
           ),
