@@ -221,15 +221,15 @@ class WarningDialogWidget extends StatelessWidget {
               style: TextStyle(
                 fontWeight: FontWeight.w700,
                   fontSize: 16.w,
-                  color: Colors.red,
+                  color: Colors.black,
                   letterSpacing: 0
               ),
             ),
             TextSpan(
               text:  "정말로 진행하시겠습니까?",
               style: TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16.w,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 12.w,
                   color: Colors.black,
                   letterSpacing: 0
               ),
@@ -242,15 +242,18 @@ class WarningDialogWidget extends StatelessWidget {
       children: <Widget>[
         InkWell(
           onTap: onTap,
-          child: Text(
-            "진행할래요",
-            style: TextStyle(
-                fontSize: 12.w,
-                fontWeight: FontWeight.w400,
-                color: Color(0xFF808080),
-              decoration: TextDecoration.underline,
+          child: Container(
+            width: 100.w,
+            child: Text(
+              "진행할래요",
+              style: TextStyle(
+                  fontSize: 12.w,
+                  fontWeight: FontWeight.w400,
+                  color: Color(0xFF808080),
+                decoration: TextDecoration.underline,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ),
         ),
         Container(height: 10.w,),
@@ -261,17 +264,17 @@ class WarningDialogWidget extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.w),
-              color: Color(0xFF319CFF),
+              //color: Color(0xFFEEEEEE),
             ),
             width: 390.w,
             height: 50.w,
             alignment: Alignment.center,
             child: Text(
-              "취소할래요",
+              "취소",
               style: TextStyle(
                   fontSize: 16.w,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF000000)
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF319CFF)
               ),
               textAlign: TextAlign.center,
             ),
