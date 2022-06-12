@@ -156,7 +156,7 @@ class PostDailyInfoWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   topButton ?? Container(),
-                  Padding(padding: EdgeInsets.only(bottom: 20.w)),
+                  bottomButton == null ? Container() : Padding(padding: EdgeInsets.only(bottom: 20.w)),
                   bottomButton ?? Container(),
                 ],
               )

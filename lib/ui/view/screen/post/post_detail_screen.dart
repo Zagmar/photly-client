@@ -21,7 +21,7 @@ class PostDetailScreen extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
-          physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+          physics: BouncingScrollPhysics(),
           primary: true,
           child: Column(
               children: <Widget>[
@@ -56,7 +56,7 @@ class PostDetailScreen extends StatelessWidget {
                       buttonText: "편집"
                   )
                       :
-                  Container(),
+                  null,
                 ),
                 PostDetailWidget(),
               ]

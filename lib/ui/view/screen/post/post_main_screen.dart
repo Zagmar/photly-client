@@ -38,16 +38,16 @@ class PostMainScreen extends StatelessWidget {
           body: SafeArea(
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
-              physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+              physics: BouncingScrollPhysics(),
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     //Container(),
                     PostMainScreenAppbar(scaffoldKey: _scaffoldKey),
                     PostDailyInfoWidget(),
-                    SizedBox(
+                    Container(
                       width: FULL_WIDTH.w,
-                      height: (FULL_WIDTH * 2 + 30).w,
+                      height: (MAIN_SPACE_WIDTH * IMAGE_RATIO * 2 + 30).w,
                       child: PageView.builder(
                           reverse: true,
                           scrollDirection: Axis.horizontal,
@@ -99,10 +99,15 @@ class ImageButtonWidget extends StatelessWidget {
             MaterialPageRoute(builder: (context) => PostDetailScreen())
         );
       },
-      child: CachedNetworkImageWidget(
-          imageUrl: postImageUrl,
-          width: MAIN_SPACE_WIDTH.w,
-          height: MAIN_SPACE_WIDTH.w * IMAGE_RATIO
+      child: Container(
+        width: MAIN_SPACE_WIDTH.w,
+        height: MAIN_SPACE_WIDTH.w * IMAGE_RATIO,
+        child: CachedNetworkImageWidget(
+            imageUrl: postImageUrl,
+            width: MAIN_SPACE_WIDTH.w,
+            height: MAIN_SPACE_WIDTH.w * IMAGE_RATIO,
+          boxFit: BoxFit.cover,
+        ),
       ),
     );
   }
@@ -115,6 +120,7 @@ class DailyPostWidgetFrame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        width: FULL_WIDTH.w,
         height: MAIN_SPACE_WIDTH.w * IMAGE_RATIO,
         decoration: BoxDecoration(
           border: Border(
@@ -149,7 +155,15 @@ class UserDailyPostWidget extends StatelessWidget {
         children: <Widget>[
           ImageButtonWidget(postId: _dailyCouplePostViewModel.dailyCouplePosts[index].userPostId!, postImageUrl: _dailyCouplePostViewModel.dailyCouplePosts[index].userPostImageUrl!,),
           Container(
-            width: (EMPTY_SPACE_WIDTH + 1).w,
+            decoration: BoxDecoration(
+              border: Border(
+                left: BorderSide(
+                    width: BORDER_WIDTH.w,
+                    color: Color(0xFF000000)
+                ),
+              ),
+            ),
+            width: (EMPTY_SPACE_WIDTH + BORDER_WIDTH).w,
           ),
         ],
       )
@@ -206,6 +220,14 @@ class PartnerDailyPostWidget extends StatelessWidget {
            Row(
              children: <Widget>[
                Container(
+                 decoration: BoxDecoration(
+                   border: Border(
+                     right: BorderSide(
+                         width: BORDER_WIDTH.w,
+                         color: Color(0xFF000000)
+                     ),
+                   ),
+                 ),
                  width: (EMPTY_SPACE_WIDTH + 1).w,
                ),
                ImageButtonWidget(
@@ -224,9 +246,15 @@ class PartnerDailyPostWidget extends StatelessWidget {
                iconData: Icons.notifications_outlined,
                mainText: "답변 푸쉬하기",
                subText: "아직 답변을 하지 않았어요\n답변을 요청해보세요",
-               onTap: () {
-                 // temp
-                 // 답변 푸시 기능
+               onTap: () async {
+                 await _dailyCouplePostViewModel.pushToPartner();
+                 ScaffoldMessenger.of(context).showSnackBar(
+                   SnackBar(
+                     content: Text(
+                         _dailyCouplePostViewModel.pushResultMessage
+                     ),
+                   ),
+                 );
                },
              )
                  :
@@ -249,9 +277,9 @@ class PartnerDailyPostWidget extends StatelessWidget {
          /// Show as blurred image
          CachedNetworkImageWidget(
            imageUrl: _dailyCouplePostViewModel.dailyCouplePosts[index].partnerPostImageUrl!,
-           width: MAIN_SPACE_WIDTH.w,
+           width: FULL_WIDTH.w,
            height: MAIN_SPACE_WIDTH.w * IMAGE_RATIO,
-           boxFit: BoxFit.cover,
+           boxFit: BoxFit.fitWidth,
          ).blurred(
              colorOpacity: 0.5,
              blur: 30,
@@ -267,6 +295,14 @@ class PartnerDailyPostWidget extends StatelessWidget {
          Row(
            children: <Widget>[
              Container(
+               decoration: BoxDecoration(
+                 border: Border(
+                   right: BorderSide(
+                       width: BORDER_WIDTH.w,
+                       color: Color(0xFF000000)
+                   ),
+                 ),
+               ),
                width: (EMPTY_SPACE_WIDTH + 1).w,
              ),
              ImageButtonWidget(

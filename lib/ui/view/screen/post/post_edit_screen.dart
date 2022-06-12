@@ -41,7 +41,7 @@ class PostEditScreen extends StatelessWidget {
         child: SafeArea(
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
-            physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+            physics: BouncingScrollPhysics(),
             child: Column(
                 children: <Widget>[
                   PostScreensAppbar(
