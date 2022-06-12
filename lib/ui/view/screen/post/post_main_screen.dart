@@ -38,7 +38,7 @@ class PostMainScreen extends StatelessWidget {
           body: SafeArea(
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
-              physics: BouncingScrollPhysics(),
+              physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
