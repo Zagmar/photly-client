@@ -159,9 +159,8 @@ class AuthService {
   Future<AuthFlowStatus> checkAuthStatusService() async {
     try {
       await Amplify.Auth.fetchAuthSession();
-      // username = (await Amplify.Auth.getCurrentUser()).username;
       String userId = await AuthService().getCurrentUserId();
-      print("아이디: " + userId);
+
       var response = await getUserInfo(userId);
       if(response is Success) {
         return AuthFlowStatus.session;
@@ -190,5 +189,41 @@ class AuthService {
   Future<String> getCurrentUserId() async {
     String userId = (await Amplify.Auth.fetchUserAttributes()).firstWhere((element) => element.userAttributeKey.key == "email").value;
     return userId;
+  }
+
+  Future<Object> resetPassword(String email) async {
+    try {
+      await Amplify.Auth.resetPassword(
+        username: email,
+      );
+      return Success(response: "이메일을 확인해주세요");
+    } on UserNotFoundException catch(e) {
+      return Failure(code: INVALID_RESPONSE, errorResponse: "존재하지 않는 유저입니다");
+    } on AmplifyException catch (e) {
+      print(e.message);
+      return Failure(code: INVALID_RESPONSE, errorResponse: e.message);
+    }
+  }
+
+  Future<Object> updatePassword(String email, String password, String confirmCode) async {
+    try {
+      await Amplify.Auth.confirmResetPassword(
+          username: email,
+          newPassword: password,
+          confirmationCode: confirmCode
+      );
+
+      return Success(response: "Success");
+    } on UserNotFoundException catch(e) {
+      return Failure(code: INVALID_RESPONSE, errorResponse: "존재하지 않는 유저입니다 ${e.message}");
+    } on PasswordResetRequiredException catch(e) {
+      print("PasswordResetRequiredException");
+      print(e.message);
+      return Failure(code: INVALID_RESPONSE, errorResponse: e.message);
+    } on AmplifyException catch (e) {
+      print("AmplifyException");
+      print(e.message);
+      return Failure(code: INVALID_RESPONSE, errorResponse: e.message);
+    }
   }
 }

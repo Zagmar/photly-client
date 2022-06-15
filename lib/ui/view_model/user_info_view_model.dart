@@ -6,15 +6,19 @@ import 'package:path_provider/path_provider.dart';
 import '../../data/datasource/remote_datasource.dart';
 import '../../data/model/auth_credentials_model.dart';
 import '../../data/repository/auth_service.dart';
+import '../../data/repository/firebase_cloud_messaging_service.dart';
 
-class UserInfoViewModel with ChangeNotifier {
+class UserInfoViewModel extends ChangeNotifier {
   final PostInfoRepository _postInfoRepository = PostInfoRepository();
   final UserInfoRepository _userInfoRepository = UserInfoRepository();
   final AuthService _authService = AuthService();
+  final FirebaseCloudMessagingService _firebaseCloudMessagingService = FirebaseCloudMessagingService();
+
   UserCredentialsModel? _credential;
   String? _email;
   String? _password;
   String? _verificationCode;
+  String? _resetPwConfirmedCode;
   bool _isIdOk = false;
   bool _isPwOk = false;
   bool _isPwCheckOk = false;
@@ -25,11 +29,13 @@ class UserInfoViewModel with ChangeNotifier {
   bool _isPostsClear = false;
   bool _isPartnerClear = false;
   bool _isUserClear = false;
+  bool _isPWReset = false;
   String? _loginFailure;
   String? _idErrorMessage = '이메일은 필수사항입니다.';
   String? _pwErrorMessage = '비밀번호는 필수사항입니다.';
   String? _pwCheckErrorMessage = '비밀번호 확인은 필수사항입니다';
   String? _verificationCodeErrorMessage = '인증코드 입력은 필수사항입니다';
+  String? _pwResetErrorMessage = "초기화 확인 코드를 입력해주세요";
   String? _loginFailMessage;
   String? _logoutFailMessage;
   String? _registrationFailMessage;
@@ -54,13 +60,17 @@ class UserInfoViewModel with ChangeNotifier {
   bool _isCoupleCoupleCodeOk = false;
   String? _coupleCodeErrorMessage;
   String? _coupleCodeMatchFailMessage;
+  String? _resetPasswordResultMessage;
 
+  String? get email => _email;
   String? get coupleCodeErrorMessage => _coupleCodeErrorMessage;
   String? get coupleCodeMatchFailMessage => _coupleCodeMatchFailMessage;
   bool get isCoupleCodeMatched => _isCoupleCodeMatched;
   bool get isUserCoupleCodeOk => _isUserCoupleCodeOk;
   bool get isCoupleCoupleCodeOk => _isCoupleCoupleCodeOk;
   String get userCode => _userCode;
+  bool get isIdOk => _isIdOk;
+  bool get isConfirmResetPassword => _isPwCheckOk && _isPwOk && _isPWReset;
 
   String? get idErrorMessage => _idErrorMessage;
   String? get pwErrorMessage => _pwErrorMessage;
@@ -92,6 +102,9 @@ class UserInfoViewModel with ChangeNotifier {
   DateTime? get anniversary => _anniversary;
   bool get isUploaded => _isUploaded;
   String? get uploadFailMessage => _uploadFailMessage;
+  bool get isPWReset => _isPWReset;
+  String? get resetPasswordResultMessage => _resetPasswordResultMessage;
+  String? get pwResetErrorMessage => _pwResetErrorMessage;
 
   // Check Input Form of Email
   checkEmail(String val){
@@ -109,6 +122,19 @@ class UserInfoViewModel with ChangeNotifier {
       _email = val;
       _idErrorMessage = null;
       _isIdOk = true;
+    }
+    notifyListeners();
+  }
+
+  checkResetPwConfirmedCode(String val) {
+    if(val.isEmpty) {
+      _pwResetErrorMessage = '초기화 확인 코드를 입력해주세요';
+      _isPWReset = false;
+    }
+    else{
+      _resetPwConfirmedCode = val;
+      _pwResetErrorMessage = null;
+      _isPWReset = true;
     }
     notifyListeners();
   }
@@ -256,6 +282,7 @@ class UserInfoViewModel with ChangeNotifier {
     final result = await _authService.loginService(_credential!);
 
     if(result == LoginStatus.success){
+      await _firebaseCloudMessagingService.fcmSetting();
       _loginFailMessage = null;
       _loginFailure = null;
       notifyListeners();
@@ -372,6 +399,7 @@ class UserInfoViewModel with ChangeNotifier {
     _anniversary = null;
     _isUsernameOk = false;
     _isAnniversaryOk = false;
+    _isPWReset = false;
 
     _isCoupleCodeMatched = false;
     _userCode = ""; // temp
@@ -380,7 +408,6 @@ class UserInfoViewModel with ChangeNotifier {
     _isCoupleCoupleCodeOk = false;
     _coupleCodeErrorMessage = null;
     _coupleCodeMatchFailMessage = null;
-    print(_email);
     notifyListeners();
   }
 
@@ -424,5 +451,35 @@ class UserInfoViewModel with ChangeNotifier {
       _isCoupleCodeMatched = true;
       _coupleCodeMatchFailMessage = null;
     }
+  }
+
+  Future<void> resetPassword() async {
+    var response = await _authService.resetPassword(_email!);
+
+    if(response is Failure){
+      _isPWReset = false;
+      _resetPasswordResultMessage = response.errorResponse;
+    }
+
+    if((response is Success)){
+      _isPWReset = true;
+      _resetPasswordResultMessage = response.response;
+    }
+    notifyListeners();
+  }
+
+  Future<void> confirmResetPassword() async {
+    var response = await _authService.updatePassword(_email!, _password!, _resetPwConfirmedCode!);
+
+    if(response is Failure){
+      _isPWReset = false;
+      _resetPasswordResultMessage = response.errorResponse;
+    }
+
+    if((response is Success)){
+      _isPWReset = true;
+      _resetPasswordResultMessage = null;
+    }
+    notifyListeners();
   }
 }
