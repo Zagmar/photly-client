@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:couple_seflie_app/data/model/post_model.dart';
 import 'package:couple_seflie_app/data/repository/auth_service.dart';
+import 'package:couple_seflie_app/data/repository/firebase_cloud_messaging_service.dart';
 import 'package:couple_seflie_app/data/repository/post_info_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,7 +11,8 @@ import '../../data/datasource/remote_datasource.dart';
 
 class PostViewModel extends ChangeNotifier {
   late String _currentUserId;
-  final _postInfoRepository = PostInfoRepository();
+  final PostInfoRepository _postInfoRepository = PostInfoRepository();
+  final FirebaseCloudMessagingService _firebaseCloudMessagingService = FirebaseCloudMessagingService();
   bool _loading = false;
   bool _isPostReady = false;
   bool _isPostOk = false;
@@ -160,6 +162,7 @@ class PostViewModel extends ChangeNotifier {
       if(responseImg is Success) {
         _postImage = null;
         await getPost(response.response["postId"]);
+        await _firebaseCloudMessagingService.pushUploadedNotification();
         _postFailMessage = null;
         _isPostOk = true;
       }
@@ -198,6 +201,9 @@ class PostViewModel extends ChangeNotifier {
           await CachedNetworkImage.evictFromCache(_post!.postImageUrl);
           _postImage = null;
           await getPost(_post!.postId);
+          var result = await _firebaseCloudMessagingService.pushUploadedNotification();
+          print("푸시 알림");
+          print(result);
           _postFailMessage = null;
           _isPostOk = true;
         }
@@ -207,6 +213,9 @@ class PostViewModel extends ChangeNotifier {
         }
       }
       else{
+        var result = await _firebaseCloudMessagingService.pushUploadedNotification();
+        print("푸시 알림");
+        print(result);
         _postFailMessage = null;
         _isPostOk = true;
       }
@@ -225,7 +234,7 @@ class PostViewModel extends ChangeNotifier {
   Future<void> downloadImage() async {
     var responese = await _postInfoRepository.downloadImage(_post!.postImageUrl);
     if(responese is Success) {
-      _downloadResultMessage = "사진을 성공적으로 다운로드되었습니다.";
+      _downloadResultMessage = "사진이 성공적으로 다운로드되었습니다.";
     }
     if(responese is Failure) {
       print("다운로드실패${responese.errorResponse}");

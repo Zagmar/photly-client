@@ -28,10 +28,9 @@ bool _isLogined = false;
 late String username;
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print("백그라운드 실행");
-  print('Got a message whilst in the background!');
-  print('Message data: ${message.data.keys}');
-  print('Message data: ${message.data.values}');
+  RemoteNotification? notification = message.notification;
+  AndroidNotification? android = message.notification?.android;
+
   const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'high_importance_channel',
     'High Importance Notifications',
@@ -59,26 +58,28 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
   // background 푸시 알림 핸들링
   print('Got a message whilst in the background!');
-  print('Message data: ${message.data.keys}');
-  print('Message data: ${message.data.values}');
-  print("${message.data['pinpoint.notification.title']}");
-  print("${message.data['pinpoint.notification.body']}");
-  flutterLocalNotificationsPlugin.show(
-    0,
-    "${message.data['pinpoint.notification.title']}",
-    "${message.data['pinpoint.notification.body']}",
-    NotificationDetails(
-      android: AndroidNotificationDetails(
-        channel.id,
-        channel.name,
-        importance: Importance.max,
-        priority: Priority.max,
-        enableLights: true,
-        visibility: NotificationVisibility.public,
-      ),
-      iOS: IOSNotificationDetails(),
-    ),
-  );
+  print(notification?.title);
+  print(notification?.body);
+  // If `onMessage` is triggered with a notification, construct our own
+  // local notification to show to users using the created channel.
+  if (notification != null && android != null) {
+    flutterLocalNotificationsPlugin.show(
+        notification.hashCode,
+        notification.title,
+        notification.body,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            channel.id,
+            channel.name,
+            importance: Importance.max,
+            priority: Priority.max,
+            enableLights: true,
+            visibility: NotificationVisibility.public,
+            icon: android.smallIcon,
+          ),
+          iOS: IOSNotificationDetails(),
+        ));
+  }
 }
 
 main() async {

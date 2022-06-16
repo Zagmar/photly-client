@@ -83,8 +83,19 @@ class MainDrawerWidget extends StatelessWidget {
               color: Color(0xFF000000),
             ),
           ),
+          Provider.of<DailyCouplePostViewModel>(context).isCouple ?
+          Container()
+              :
           ListTile(
-            title: Text('로그아웃'),
+            title: Text('커플 등록', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.blueAccent, fontWeight: FontWeight.w700),),
+            onTap: () async {
+              FocusScope.of(context).unfocus();
+              await Provider.of<UserInfoViewModel>(context, listen: false).setUserCoupleCode();
+              Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterCoupleCodeScreen(), fullscreenDialog: true,));
+            },
+          ),
+          ListTile(
+            title: Text('로그아웃', style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700),),
             onTap: () async {
               await _userInfoViewModel.doLogout();
 
@@ -103,17 +114,9 @@ class MainDrawerWidget extends StatelessWidget {
               );
             },
           ),
-          ListTile(
-            title: Text('커플 등록'),
-            onTap: () async {
-              FocusScope.of(context).unfocus();
-              await Provider.of<UserInfoViewModel>(context, listen: false).setUserCoupleCode();
-              Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterCoupleCodeScreen(), fullscreenDialog: true,));
-            },
-          ),
           Divider(),
           ListTile(
-            title: Text('계정 관리'),
+            title: Text('계정 관리', style: Theme.of(context).textTheme.bodyLarge,),
             onTap: (){
               FocusScope.of(context).unfocus();
               Navigator.push(context, MaterialPageRoute(builder: (context) => ManageAccountScreen(), fullscreenDialog: true,));
@@ -121,7 +124,7 @@ class MainDrawerWidget extends StatelessWidget {
           ),
           Divider(),
           ListTile(
-            title: Text('서비스 문의'),
+            title: Text('서비스 문의', style: Theme.of(context).textTheme.bodyLarge,),
             onTap: (){
               FocusScope.of(context).unfocus();
               Navigator.push(context, MaterialPageRoute(builder: (context) => InformationScreen(), fullscreenDialog: true,));

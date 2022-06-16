@@ -23,7 +23,7 @@ class PostMainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     _scaffoldKey = GlobalKey<ScaffoldState>();
     _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context);
-
+    print("Postmain 실행");
 
     return RefreshIndicator(
       onRefresh: () => _dailyCouplePostViewModel.refreshTodayCouplePost(),
@@ -54,7 +54,7 @@ class PostMainScreen extends StatelessWidget {
                           itemCount: _dailyCouplePostViewModel.dailyCouplePosts.length,
                           onPageChanged: (index) {
                             if(index == _dailyCouplePostViewModel.dailyCouplePosts.length - 1) {
-                              _dailyCouplePostViewModel.loadCouplePosts();
+                              _dailyCouplePostViewModel.loadMoreCouplePosts();
                               print("인덱스 끝");
                             }
                             _dailyCouplePostViewModel.setDailyInfo(index);
@@ -247,7 +247,7 @@ class PartnerDailyPostWidget extends StatelessWidget {
                mainText: "답변 푸쉬하기",
                subText: "아직 답변을 하지 않았어요\n답변을 요청해보세요",
                onTap: () async {
-                 await _dailyCouplePostViewModel.pushToPartner();
+                 await _dailyCouplePostViewModel.pushPartner();
                  ScaffoldMessenger.of(context).showSnackBar(
                    SnackBar(
                      content: Text(

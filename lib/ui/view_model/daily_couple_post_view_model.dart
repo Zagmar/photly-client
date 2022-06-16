@@ -5,11 +5,15 @@ import 'package:couple_seflie_app/data/repository/daily_couple_post_repository.d
 import 'package:flutter/material.dart';
 
 import '../../data/datasource/remote_datasource.dart';
+import '../../data/repository/firebase_cloud_messaging_service.dart';
 import '../../data/repository/user_info_repository.dart';
 
 class DailyCouplePostViewModel extends ChangeNotifier {
   final DailyCouplePostRepository _dailyCouplePostRepository = DailyCouplePostRepository();
-  final _userInfoRepository = UserInfoRepository();
+  final UserInfoRepository _userInfoRepository = UserInfoRepository();
+  final FirebaseCloudMessagingService _firebaseCloudMessagingService = FirebaseCloudMessagingService();
+
+  bool _isLoadDone = false;
 
   // List of name of months in English
   List<String> months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -20,8 +24,6 @@ class DailyCouplePostViewModel extends ChangeNotifier {
   String? _errorMessage; // Error message when fail to load data through repository
   int? _index;
 
-  bool _loading = true; // Set state to load screen until true (default : true)
-
   String? _year;
   String? _month;
   String? _day;
@@ -29,11 +31,14 @@ class DailyCouplePostViewModel extends ChangeNotifier {
   String? _questionText;
   String? _questionImageUrl;
 
+  DateTime? _lastPushTime;
+  String _pushResultMessage = "";
+
   bool _isCouple = false;
 
   List<DailyCouplePostModel> get dailyCouplePosts => _dailyCouplePosts;
-  bool get loading => _loading;
   int? get index => _index;
+  bool get isLoadDone => _isLoadDone;
 
   String get year => _year!;
   String get month => _month!;
@@ -42,26 +47,104 @@ class DailyCouplePostViewModel extends ChangeNotifier {
   String get questionText => _questionText!;
   String? get questionImageUrl => _questionImageUrl;
   bool get isCouple => _isCouple;
+  String get pushResultMessage => _pushResultMessage;
 
-  // Init mainScreen
+  /// Load data for initialize mainScreen
   Future<void> initDailyCouplePosts() async {
-    _userId = await AuthService().getCurrentUserId();
-    await checkIsCouple();
     if(_dailyCouplePosts.isEmpty){
-      // set mainScreen to default
-      await loadDailyCouplePosts();
-      await setDailyInfo(0);
+      await _firebaseCloudMessagingService.fcmSetting();
+      _userId = await AuthService().getCurrentUserId();
+      await _checkIsCouple();
+      await _loadDailyCouplePosts();
+      await _setDailyInfo(0);
+      _isLoadDone = true;
       notifyListeners();
     }
   }
 
-  Future<void> checkIsCouple() async {
+  /// Push partner to upload
+  Future<void> pushPartner() async {
+    if(_lastPushTime == null || DateTime.now().isAfter(_lastPushTime!.add(Duration(minutes: 1)))){
+      var response = await _firebaseCloudMessagingService.pushPartnerToUpload();
+      if(response is Success){
+        _lastPushTime = DateTime.now();
+        _pushResultMessage = "상대방을 푸시하였습니다";
+        notifyListeners();
+      }
+      if(response is Failure){
+        _pushResultMessage = "푸시하기 중 오류가 발생했습니다. 다시 시도해주세요";
+        notifyListeners();
+      }
+    }
+    else {
+      _pushResultMessage = "푸시하기 후에는 1분이 지나야 다시 푸시가 가능합니다";
+      notifyListeners();
+    }
+  }
+
+  /// Refresh today's couple post
+  Future<void> refreshTodayCouplePost() async {
+    // call API
+    var response =  await _dailyCouplePostRepository.getDailyCouplePosts(_userId!, DateTime.now(), 1);
+
+    // success -> update data to DailyCouplePosts
+    if(response is Success) {
+      _dailyCouplePosts.first = DailyCouplePostModel.fromJson((response.response as List).first);
+      await _setPage(_dailyCouplePosts.first);
+
+      // Not exist today's couple post
+      if(_dailyCouplePosts.first.dailyPostDate.year != DateTime.now().year || _dailyCouplePosts.first.dailyPostDate.month != DateTime.now().month || _dailyCouplePosts.first.dailyPostDate.day != DateTime.now().day) {
+        await _createTodayCouplePost();
+        await _setPage(_dailyCouplePosts.first);
+      }
+    }
+
+    // failure -> put errorCode to failure
+    else if(response is Failure) {
+      _errorMessage = response.errorResponse;
+    }
+
+    notifyListeners();
+  }
+
+  /// Load more couple posts in page view
+  Future<void> loadMoreCouplePosts() async{
+    await _loadDailyCouplePosts();
+    notifyListeners();
+  }
+
+  /// Set present couple post in page view
+  Future<void> setDailyInfo(index) async {
+    await _setDailyInfo(index);
+    notifyListeners();
+  }
+
+  /// Clear data in dailyCouplePostViewModel provider
+  Future<void> clear() async {
+    _dailyCouplePosts = []; // Data list for page view
+    _userId = null;
+    _errorMessage = null; // Error message when fail to load data through repository
+    _index = null;
+    _isLoadDone = false;
+
+    _year = null;
+    _month = null;
+    _day = null;
+    _questionType = null;
+    _questionText = null;
+    _questionImageUrl = null;
+
+    _isCouple = false;
+  }
+
+  // Check whether user has partner
+  Future<void> _checkIsCouple() async {
     var response = await _userInfoRepository.getPartner();
     if(response is Failure) {
       _isCouple = false;
     }
     if(response is Success) {
-      if(response.response["partnerId"] == null){
+      if(response.response["has_partner"] == 0){
         _isCouple = false;
       }
       else{
@@ -70,8 +153,8 @@ class DailyCouplePostViewModel extends ChangeNotifier {
     }
   }
 
-  // create today's couple post
-  Future<void> createTodayCouplePost() async {
+  // Create today's couple post
+  Future<void> _createTodayCouplePost() async {
     // request (_nDailyCouplePosts) days' posts before last loaded day
     var response = await _dailyCouplePostRepository.createDailyCouplePost(_userId!);
 
@@ -87,96 +170,62 @@ class DailyCouplePostViewModel extends ChangeNotifier {
     }
   }
 
-
-  // refresh today's couple post
-  Future<void> refreshTodayCouplePost() async {
-    // call API
-    var response =  await _dailyCouplePostRepository.getDailyCouplePosts(_userId!, DateTime.now(), 1);
-
-    // success -> update data to DailyCouplePosts
-    if(response is Success) {
-      _dailyCouplePosts.first = DailyCouplePostModel.fromJson((response.response as List).first);
-      await setPage(_dailyCouplePosts.first);
-    }
-
-    // failure -> put errorCode to failure
-    else if(response is Failure) {
-      _errorMessage = response.errorResponse;
-    }
-
-    notifyListeners();
-  }
-
-  // load couple posts
-  Future<void> loadDailyCouplePosts() async {
-    // request (_nDailyCouplePosts) days' posts before last loaded day
+  // Load couple posts
+  Future<void> _loadDailyCouplePosts() async {
+    // Request (_nDailyCouplePosts) days' posts before last loaded day
     var response = await _dailyCouplePostRepository.getDailyCouplePosts(_userId!, _dailyCouplePosts.isEmpty?DateTime.now():_dailyCouplePosts.last.dailyPostDate.subtract(Duration(days: 1)), _nDailyCouplePosts);
 
-    // failure -> put errorCode to failure
+    // Failure -> Put errorCode to failure
     if(response is Failure) {
-      await createTodayCouplePost();
+      //await createTodayCouplePost();
       _errorMessage = response.errorResponse;
     }
 
-    // success -> put data to DailyCouplePosts
+    // Success -> Put data to DailyCouplePosts
     if(response is Success) {
       List<DailyCouplePostModel> newDailyCouplePostList = [];
 
+      // Exist couple posts
       if((response.response as List).isNotEmpty){
         List list = response.response as List;
         for (var element in list) {
           newDailyCouplePostList.add(DailyCouplePostModel.fromJson(element));
         }
         _dailyCouplePosts += newDailyCouplePostList;
-      } else{
-        await createTodayCouplePost();
+      }
+      // Not exist couple posts
+      else{
+        // Create first couple post
+        await _createTodayCouplePost();
       }
 
-      // Auto refresh today's couple post
+      // Not exist today's couple post
       if(_dailyCouplePosts.first.dailyPostDate.year != DateTime.now().year || _dailyCouplePosts.first.dailyPostDate.month != DateTime.now().month || _dailyCouplePosts.first.dailyPostDate.day != DateTime.now().day) {
-        await createTodayCouplePost();
+        await _createTodayCouplePost();
       }
-      await setPages(_dailyCouplePosts);
+      await _setPages(_dailyCouplePosts);
     }
   }
 
-  Future<void> loadCouplePosts() async{
-    await loadDailyCouplePosts();
-    notifyListeners();
-  }
-
-  Future<void> setDailyInfo(index) async {
+  // Set daily info of couple post at index
+  Future<void> _setDailyInfo(index) async {
+    // Set Index
     _index = index;
+
+    // Set DateTime
     DateTime dateTime = _dailyCouplePosts[index].dailyPostDate;
-    print(dateTime);
-
     _year = dateTime.year.toString();
-    print(_year);
-
-
     _month = months[dateTime.month - 1];
-    print(_month);
-
-
     _day = dateTime.day.toString();
-    print(_day);
-
 
     // Set question data
     _questionType = _dailyCouplePosts[index].questionType;
     _questionText = _dailyCouplePosts[index].questionText;
     _questionImageUrl = _dailyCouplePosts[index].questionImageUrl;
-
-    notifyListeners();
   }
 
-  setLoading(bool loading){
-    _loading = loading;
-    notifyListeners();
-  }
-
-  setPage(DailyCouplePostModel _dailyCouplePostModel) async {
-    setLoading(true);
+  // Set info of single couple post
+  Future<void> _setPage(DailyCouplePostModel _dailyCouplePostModel) async {
     // Set date data
     if(DateTime.now().year == _dailyCouplePostModel.dailyPostDate.year && DateTime.now().month == _dailyCouplePostModel.dailyPostDate.month && DateTime.now().day == _dailyCouplePostModel.dailyPostDate.day){
       _dailyCouplePostModel.isToday = true;
@@ -206,64 +255,12 @@ class DailyCouplePostViewModel extends ChangeNotifier {
     else{
       _dailyCouplePostModel.isPartnerDone = false;
     }
-    setLoading(false);
   }
 
-  setPages(List<DailyCouplePostModel> newDailyCouplePosts) async {
-    setLoading(true);
-
-    print("페이지 세팅");
-    //for (int index = 0; index < _dailyCouplePosts.length; index++) {
+  // Set info of list of couple post
+  Future<void> _setPages(List<DailyCouplePostModel> newDailyCouplePosts) async {
     for (DailyCouplePostModel _dailyCouplePostModel in newDailyCouplePosts) {
-      // Set date data
-      if(DateTime.now().year == _dailyCouplePostModel.dailyPostDate.year && DateTime.now().month == _dailyCouplePostModel.dailyPostDate.month && DateTime.now().day == _dailyCouplePostModel.dailyPostDate.day){
-        _dailyCouplePostModel.isToday = true;
-        if(_dailyCouplePostModel.userPostImageUrl != null){
-          await CachedNetworkImage.evictFromCache(_dailyCouplePostModel.userPostImageUrl!);
-        }
-        if(_dailyCouplePostModel.partnerPostImageUrl != null){
-          await CachedNetworkImage.evictFromCache(_dailyCouplePostModel.partnerPostImageUrl!);
-        }
-      }
-      else{
-        _dailyCouplePostModel.isToday = false;
-      }
-
-      // CheckIsUserDone
-      if(_dailyCouplePostModel.userPostId != null){
-        _dailyCouplePostModel.isUserDone = true;
-      }
-      else{
-        _dailyCouplePostModel.isUserDone = false;
-      }
-
-      // CheckIsPartnerDone
-      if(_dailyCouplePostModel.partnerPostId != null){
-        _dailyCouplePostModel.isPartnerDone = true;
-      }
-      else{
-        _dailyCouplePostModel.isPartnerDone = false;
-      }
+      await _setPage(_dailyCouplePostModel);
     }
-
-    setLoading(false);
-  }
-
-  Future<void> clear() async {
-    _dailyCouplePosts = []; // Data list for page view
-    _userId = null;
-    _errorMessage = null; // Error message when fail to load data through repository
-    _index = null;
-
-    _loading = true; // Set state to load screen until true (default : true)
-
-    _year = null;
-    _month = null;
-    _day = null;
-    _questionType = null;
-    _questionText = null;
-    _questionImageUrl = null;
-
-    _isCouple = false;
   }
 }
