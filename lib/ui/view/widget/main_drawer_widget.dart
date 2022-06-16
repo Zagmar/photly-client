@@ -1,4 +1,5 @@
 import 'package:couple_seflie_app/ui/view/screen/login/login_screen.dart';
+import 'package:couple_seflie_app/ui/view/screen/manage/manage_account_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_edit_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
 import 'package:couple_seflie_app/ui/view_model/daily_couple_post_view_model.dart';
@@ -9,6 +10,7 @@ import 'package:provider/provider.dart';
 
 import '../../view_model/user_info_view_model.dart';
 import '../../view_model/user_profile_view_model.dart';
+import '../screen/register3/register_couple_code_screen.dart';
 
 class MainDrawerWidget extends StatelessWidget {
   late UserProfileViewModel _userProfileViewModel;
@@ -100,100 +102,20 @@ class MainDrawerWidget extends StatelessWidget {
               );
             },
           ),
+          ListTile(
+            title: Text('커플 등록'),
+            onTap: () async {
+              FocusScope.of(context).unfocus();
+              await Provider.of<UserInfoViewModel>(context, listen: false).setUserCoupleCode();
+              Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterCoupleCodeScreen(), fullscreenDialog: true,));
+            },
+          ),
           Divider(),
           ListTile(
-            title: Text('나의 기록 초기화'),
+            title: Text('계정 관리'),
             onTap: (){
               FocusScope.of(context).unfocus();
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return WarningDialogWidget(
-                      onTap: () async {
-                        await _userInfoViewModel.doClearPosts();
-                        _userInfoViewModel.isPostsClear ?
-                        {
-                          await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
-                          await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
-                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false)
-                        }
-                            :
-                        ScaffoldMessenger(
-                          child: SnackBar(
-                            content: Text(
-                                _userInfoViewModel.clearPostsFailMessage !
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  }
-              );
-            },
-          ),
-          ListTile(
-            title: Text('커플 끊기'),
-            onTap: (){
-              FocusScope.of(context).unfocus();
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return WarningDialogWidget(
-                      onTap: () async {
-                        await _userInfoViewModel.doClearPartner();
-                        _userInfoViewModel.isPartnerClear ?
-                        {
-                          await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
-                          await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
-                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false)
-                        }
-                            :
-                        ScaffoldMessenger(
-                          child: SnackBar(
-                            content: Text(
-                                _userInfoViewModel.clearPartnerFailMessage !
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  }
-              );
-            },
-          ),
-          ListTile(
-            title: Text(
-              '회원 탈퇴',
-              style: TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.w600
-              ),
-            ),
-            onTap: (){
-              FocusScope.of(context).unfocus();
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return WarningDialogWidget(
-                      onTap: () async {
-                        await _userInfoViewModel.clearUser();
-                        _userInfoViewModel.isUserClear ?
-                        {
-                          await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
-                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false)
-                        }
-                            :
-                        ScaffoldMessenger(
-                          child: SnackBar(
-                            content: Text(
-                                _userInfoViewModel.clearUserFailMessage !
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  }
-              );
+              Navigator.push(context, MaterialPageRoute(builder: (context) => ManageAccountScreen(), fullscreenDialog: true,));
             },
           ),
         ],

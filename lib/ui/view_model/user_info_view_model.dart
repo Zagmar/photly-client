@@ -425,6 +425,32 @@ class UserInfoViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateUsername() async {
+    var response = await _userInfoRepository.updateUsername(_username);
+    if(response is Success) {
+      _isUploaded = true;
+      _uploadFailMessage = null;
+    }
+    else {
+      _isUploaded = false;
+      _uploadFailMessage = "요청을 실패하였습니다.";
+    }
+    notifyListeners();
+  }
+
+  Future<void> updateAnniversary() async {
+    var response = await _userInfoRepository.updateAnniversary(_anniversary!);
+    if(response is Success) {
+      _isUploaded = true;
+      _uploadFailMessage = null;
+    }
+    else {
+      _isUploaded = false;
+      _uploadFailMessage = "요청을 실패하였습니다.";
+    }
+    notifyListeners();
+  }
+
 
   setUserCoupleCode() async {
     var response = await _userInfoRepository.getUserInfo();

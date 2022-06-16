@@ -27,6 +27,30 @@ class UserInfoRepository {
     return await _remoteDataSource.postToUri(USER, inputData);
   }
 
+  Future<Object> updateUsername(String username) async {
+    String _userId = await AuthService().getCurrentUserId();
+    Map<String, dynamic> inputData = {
+      'user_id' : _userId,
+      'user_name' : username,
+    };
+
+    print(inputData);
+
+    return await _remoteDataSource.putToUri(USER, inputData);
+  }
+
+  Future<Object> updateAnniversary(DateTime coupleAnniversary) async {
+    String _userId = await AuthService().getCurrentUserId();
+    Map<String, dynamic> inputData = {
+      'user_id' : _userId,
+      'couple_anniversary' : coupleAnniversary.toString(),
+    };
+
+    print(inputData);
+
+    return await _remoteDataSource.putToUri(USER, inputData);
+  }
+
   /// Create post
   // input : postModel
   Future<Object> registerPartner(String coupleCode) async {
@@ -56,6 +80,7 @@ class UserInfoRepository {
       'user_id' : _userId,
     };
 
+    print("get Partner");
     print(inputData);
 
     return await _remoteDataSource.getFromUri(USER_PARTNER, inputData);
