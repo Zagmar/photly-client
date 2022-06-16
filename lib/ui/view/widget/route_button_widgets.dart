@@ -24,10 +24,10 @@ class RouteButton extends StatelessWidget {
   }
 }
 
-class SingleButton extends StatelessWidget {
+class SingleTextButton extends StatelessWidget {
   final GestureTapCallback onTap;
   final String buttonText;
-  const SingleButton({Key? key, required this.onTap, required this.buttonText,}) : super(key: key);
+  const SingleTextButton({Key? key, required this.onTap, required this.buttonText,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +73,7 @@ class LeftButtonOnlyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RouteButton(leftButton: SingleButton(onTap: onTap, buttonText: buttonText,),);
+    return RouteButton(leftButton: SingleTextButton(onTap: onTap, buttonText: buttonText,),);
   }
 }
 
@@ -84,7 +84,7 @@ class RightButtonOnlyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RouteButton(rightButton: SingleButton(onTap: onTap, buttonText: buttonText,),);
+    return RouteButton(rightButton: SingleTextButton(onTap: onTap, buttonText: buttonText,),);
   }
 }
 
@@ -98,8 +98,8 @@ class BothButtonsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return RouteButton(
-      leftButton: SingleButton(onTap: onTapLeft, buttonText: buttonTextLeft,),
-      rightButton: SingleButton(onTap: onTapRight, buttonText: buttonTextRight,),
+      leftButton: SingleTextButton(onTap: onTapLeft, buttonText: buttonTextLeft,),
+      rightButton: SingleTextButton(onTap: onTapRight, buttonText: buttonTextRight,),
     );
   }
 }
