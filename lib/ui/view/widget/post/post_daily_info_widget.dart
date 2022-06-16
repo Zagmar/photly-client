@@ -36,14 +36,14 @@ class PostDailyInfoWidget extends StatelessWidget {
               children: <Widget>[
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Date
                     Container(
                       width: 50.w,
-                      height: 90.w,
+                      height: 120.w,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           /// year
@@ -110,12 +110,12 @@ class PostDailyInfoWidget extends StatelessWidget {
                     Container()
                         :
                     Container(
-                      width: 120.w,
-                      height: 120.w,
+                      width: 100.w,
+                      height: 100.w,
                       child: CachedNetworkImage(
                         imageUrl: _dailyCouplePostViewModel.questionImageUrl!,
-                        width: 120.w,
-                        height: 120.w,
+                        width: 100.w,
+                        height: 100.w,
                         progressIndicatorBuilder: (context, url, downloadProgress) =>
                             Center(
                               child: SizedBox(
