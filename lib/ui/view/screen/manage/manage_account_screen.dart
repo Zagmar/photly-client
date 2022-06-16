@@ -37,8 +37,6 @@ class ManageAccountScreen extends StatelessWidget {
             child: SingleButton(
               icon: Icons.clear,
               onTap: () async {
-                await Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser();
-                await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts();
                 await Provider.of<UserInfoViewModel>(context, listen: false).clear();
                 Navigator.pop(context);
               },
