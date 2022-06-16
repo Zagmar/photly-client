@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 
 import '../../view_model/user_info_view_model.dart';
 import '../../view_model/user_profile_view_model.dart';
+import '../screen/manage/information_screen.dart';
 import '../screen/register3/register_couple_code_screen.dart';
 
 class MainDrawerWidget extends StatelessWidget {
@@ -118,91 +119,16 @@ class MainDrawerWidget extends StatelessWidget {
               Navigator.push(context, MaterialPageRoute(builder: (context) => ManageAccountScreen(), fullscreenDialog: true,));
             },
           ),
+          Divider(),
+          ListTile(
+            title: Text('서비스 문의'),
+            onTap: (){
+              FocusScope.of(context).unfocus();
+              Navigator.push(context, MaterialPageRoute(builder: (context) => InformationScreen(), fullscreenDialog: true,));
+            },
+          ),
         ],
       ),
-    );
-  }
-}
-
-class WarningDialogWidget extends StatelessWidget {
-  final GestureTapCallback onTap;
-  WarningDialogWidget({Key? key, required this.onTap}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SimpleDialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      title: RichText(
-        textAlign: TextAlign.center,
-        text: TextSpan(
-          children: [
-            TextSpan(
-              text: "진행 후에는 복구할 수 없습니다\n",
-              style: TextStyle(
-                fontWeight: FontWeight.w700,
-                  fontSize: 16.w,
-                  color: Colors.black,
-                  letterSpacing: 0
-              ),
-            ),
-            TextSpan(
-              text:  "정말로 진행하시겠습니까?",
-              style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 12.w,
-                  color: Colors.black,
-                  letterSpacing: 0
-              ),
-            ),
-          ],
-        ),
-      ),
-      alignment: Alignment.center,
-      contentPadding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 20.w),
-      children: <Widget>[
-        InkWell(
-          onTap: onTap,
-          child: Container(
-            width: 100.w,
-            child: Text(
-              "진행할래요",
-              style: TextStyle(
-                  fontSize: 12.w,
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xFF808080),
-                decoration: TextDecoration.underline,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        ),
-        Container(height: 10.w,),
-        InkWell(
-          onTap: (){
-            Navigator.pop(context);
-          },
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.w),
-              //color: Color(0xFFEEEEEE),
-            ),
-            width: 390.w,
-            height: 50.w,
-            alignment: Alignment.center,
-            child: Text(
-              "취소",
-              style: TextStyle(
-                  fontSize: 16.w,
-                  fontWeight: FontWeight.w700,
-                  color: Color(0xFF319CFF)
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-        )
-      ],
     );
   }
 }
