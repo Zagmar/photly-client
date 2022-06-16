@@ -37,13 +37,8 @@ class RegisterCoupleCodeScreen extends StatelessWidget {
               actions: <Widget>[
                 InkWell(
                   onTap: (){
-                    //_userInfoViewModel.clearCoupleCode();
                     FocusScope.of(context).unfocus();
-                    Navigator.pushReplacement(context, MaterialPageRoute(
-                        builder: (context) => PostMainScreen(),
-                        fullscreenDialog: true,
-                    ));
-                    //Navigator.popUntil(context, (route) => route.isFirst);
+                    Navigator.pop(context);
                   },
                   child: SizedBox(
                     width: 50.w,
@@ -88,7 +83,7 @@ class RegisterCoupleCodeScreen extends StatelessWidget {
                           {
                             await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
                             //_register3ViewModel.clearCoupleCode(),
-                            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen(),fullscreenDialog: true), (route) => false)
+                            Navigator.pop(context),
                           }
                               :
                           ScaffoldMessenger.of(context).showSnackBar(
