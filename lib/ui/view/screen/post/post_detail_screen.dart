@@ -1,4 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:couple_seflie_app/ui/view/screen/large_image_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_edit_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
 import 'package:flutter/material.dart';
@@ -83,9 +83,9 @@ class PostDetailWidget extends StatelessWidget {
             width: FULL_WIDTH.w,
             height: FULL_WIDTH.w * IMAGE_RATIO,
             child: InkWell(
-              onTap: (){
-                _postViewModel.setTempImageUrl(_postViewModel.post!.postImageUrl);
-                //Navigator.pushNamed(context, "/largeImageScreen");
+              onTap: () async {
+                await _postViewModel.setTempImageUrl(_postViewModel.post!.postImageUrl);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => LargeImageScreen()));
               },
               child: CachedNetworkImageWidget(
                   imageUrl: _postViewModel.post!.postImageUrl,
