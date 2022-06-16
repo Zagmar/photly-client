@@ -1,4 +1,4 @@
-import 'dart:io' as io;
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -48,7 +48,7 @@ class RemoteDataSource {
       }
       print("테스트 실패");
       return Failure(code: INVALID_RESPONSE, errorResponse: "Invalid Response");
-    } on io.HttpException{
+    } on HttpException{
       print("에러1");
       return Failure(code: NO_INTERNET, errorResponse: "No Internet");
     } on FormatException{
@@ -78,7 +78,7 @@ class RemoteDataSource {
         return Success(response: response.data);
       }
       return Failure(code: INVALID_RESPONSE, errorResponse: "Invalid Response");
-    } on io.HttpException{
+    } on HttpException{
       return Failure(code: NO_INTERNET, errorResponse: "No Internet");
     } on FormatException{
       return Failure(code: INVALID_FORMAT, errorResponse: "Invalid Format");
@@ -99,14 +99,13 @@ class RemoteDataSource {
           .catchError((e) {
         print(e.message);
       });
-      print(response);
 
       if(response.statusCode == OK) {
         print("Success");
         return Success(response: response.data);
       }
       return Failure(code: INVALID_RESPONSE, errorResponse: "Invalid Response");
-    } on io.HttpException{
+    } on HttpException{
       return Failure(code: NO_INTERNET, errorResponse: "No Internet");
     } on FormatException{
       return Failure(code: INVALID_FORMAT, errorResponse: "Invalid Format");
@@ -132,7 +131,7 @@ class RemoteDataSource {
         return Success(response: response.data);
       }
       return Failure(code: INVALID_RESPONSE, errorResponse: "Invalid Response");
-    } on io.HttpException{
+    } on HttpException{
       return Failure(code: NO_INTERNET, errorResponse: "No Internet");
     } on FormatException{
       return Failure(code: INVALID_FORMAT, errorResponse: "Invalid Format");
@@ -144,13 +143,13 @@ class RemoteDataSource {
 
   Future<Object> downloadFromUrl(String url) async {
     try{
-      io.Directory? savePath = io.Platform.isAndroid
+      Directory? savePath = Platform.isAndroid
           ? await getExternalStorageDirectory() //FOR ANDROID
           : await getApplicationDocumentsDirectory(); //FOR iOS
       print("${savePath!.path}/demo.heic");
       final response = await Dio().download(
           url,
-        "${savePath!.path}/demo.heic"
+        "${savePath.path}/demo.heic"
       ).timeout(const Duration(seconds: 600))
           .catchError((e) {
         print(e.message);
@@ -161,7 +160,7 @@ class RemoteDataSource {
         return Success(response: response.data);
       }
       return Failure(code: INVALID_RESPONSE, errorResponse: "Invalid Response");
-    } on io.HttpException{
+    } on HttpException{
       return Failure(code: NO_INTERNET, errorResponse: "No Internet");
     } on FormatException{
       return Failure(code: INVALID_FORMAT, errorResponse: "Invalid Format");
