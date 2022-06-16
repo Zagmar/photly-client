@@ -81,6 +81,7 @@ class RegisterCoupleCodeScreen extends StatelessWidget {
                           await _userInfoViewModel.matchCoupleCode(),
                           _userInfoViewModel.isCoupleCodeMatched ?
                           {
+                            await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
                             await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
                             //_register3ViewModel.clearCoupleCode(),
                             Navigator.pop(context),
