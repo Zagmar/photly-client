@@ -75,6 +75,21 @@ class PostScreensAppbar extends StatelessWidget {
   }
 }
 
+class ManageAccountScreenAppbar extends StatelessWidget {
+  final GestureTapCallback onTap;
+  const ManageAccountScreenAppbar({Key? key, required this.onTap}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return PostAppbarModel(
+      actionButton: SingleButton(
+        icon: Icons.clear,
+        onTap: onTap,
+      ),
+    );
+  }
+}
+
 class SingleButton extends StatelessWidget {
   final IconData icon;
   final GestureTapCallback onTap;
