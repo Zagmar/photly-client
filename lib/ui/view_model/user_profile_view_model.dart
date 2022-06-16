@@ -19,13 +19,11 @@ class UserProfileViewModel extends ChangeNotifier {
     if(response is Success) {
       _userName = response.response["userName"];
       _userEnrolledDate = response.response["userEnrrolledDate"];
-      notifyListeners();
     }
 
     if(response is Failure){
       _userName = "#unknown";
       _userEnrolledDate = DateTime.now();
-      notifyListeners();
     }
   }
 }
