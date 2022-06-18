@@ -109,17 +109,10 @@ class PostViewModel extends ChangeNotifier {
     );
     notifyListeners();
   }
-
-  // Whether the process is in progress
-  setLoading(bool loading){
-    _loading = loading;
-    notifyListeners();
-  }
   
   // get post via postId
   Future<void> getPost(int postId) async {
     // loading...start
-    setLoading(true);
     _currentUserId = await AuthService().getCurrentUserId();
     print("이거");
 
@@ -142,15 +135,13 @@ class PostViewModel extends ChangeNotifier {
       _postFailMessage = response.errorResponse;
       //notifyListeners();
     }
-
-    // loading...end
-    setLoading(false);
   }
   
   // creat new post
   createPost() async {
     // loading...start
-    setLoading(true);
+    _loading = true;
+    notifyListeners();
 
     var response = await _postInfoRepository.createPost(_post!);
 
@@ -179,13 +170,14 @@ class PostViewModel extends ChangeNotifier {
     }
 
     // loading...end
-    setLoading(false);
+    _loading = false;
   }
   
   // edit post
   Future<void> editPost() async {
     // loading...start
-    setLoading(true);
+    _loading = true;
+    notifyListeners();
 
     print("여기는 되나");
     print("postId ${_post!.postId}");
@@ -228,7 +220,8 @@ class PostViewModel extends ChangeNotifier {
     }
 
     // loading...end
-    setLoading(false);
+    _loading = false;
+
   }
 
   Future<void> downloadImage() async {
