@@ -367,6 +367,10 @@ class UserInfoViewModel extends ChangeNotifier {
     if(result is Success){
       print("여기2");
 
+      _clearUserFailMessage = null;
+      _isUserClear = true;
+
+      /*
       final resultAuth = await _authService.ClearUserService();
       print("여기3");
       if(resultAuth is Failure){
@@ -379,6 +383,8 @@ class UserInfoViewModel extends ChangeNotifier {
         _isUserClear = true;
         notifyListeners();
       }
+
+       */
     }
     if(result is Failure) {
       print("여기4");
