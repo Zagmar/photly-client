@@ -57,7 +57,7 @@ class LoginScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           TextInputWidget(
-                            hintText: "아이디 입력",
+                            hintText: "이메일 입력",
                             maxLines: 1,
                             obscureText: false,
                             keyboardType: TextInputType.emailAddress,
@@ -81,6 +81,7 @@ class LoginScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          /*
                           SingleTextButton(
                             buttonText: "아이디 찾기",
                             onTap: (){
@@ -91,6 +92,8 @@ class LoginScreen extends StatelessWidget {
                             },
                           ),
                           BorderBetweenTextButtons(),
+
+                           */
                           SingleTextButton(
                             buttonText: "비밀번호 재설정",
                             onTap: () async {

@@ -115,7 +115,7 @@ class RegisterFormWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           TextInputWidget(
-            hintText: "아이디 입력",
+            hintText: "이메일 입력",
             maxLines: 1,
             obscureText: false,
             keyboardType: TextInputType.emailAddress,
