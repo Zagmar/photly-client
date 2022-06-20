@@ -31,22 +31,6 @@ class PostDetailScreen extends StatelessWidget {
                   },
                 ),
                 PostDailyInfoWidget(
-                  topButton: RightIconButtonWidget(
-                    iconData: Icons.save_alt_outlined,
-                    onTap: () async {
-                      print("다운로드");
-                      FocusScope.of(context).unfocus();
-                      await _postViewModel.downloadImage();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                              _postViewModel.downloadResultMessage
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  // bottomButton: _dailyCouplePostViewModel.isUserDone == true && _dailyCouplePostViewModel.isToday == true ?
                   bottomButton: _postViewModel.post!.postUserId == _postViewModel.currentUserId && _postViewModel.post!.postEditTime.year == DateTime.now().year && _postViewModel.post!.postEditTime.month == DateTime.now().month && _postViewModel.post!.postEditTime.day == DateTime.now().day ?
                   RightTextButtonWidget(
                       onTap: (){
@@ -85,7 +69,7 @@ class PostDetailWidget extends StatelessWidget {
             child: InkWell(
               onTap: () async {
                 await _postViewModel.setTempImageUrl(_postViewModel.post!.postImageUrl);
-                Navigator.push(context, MaterialPageRoute(builder: (context) => LargeImageScreen()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => LargeImageScreen(), fullscreenDialog: true));
               },
               child: CachedNetworkImageWidget(
                   imageUrl: _postViewModel.post!.postImageUrl,

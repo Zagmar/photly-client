@@ -143,18 +143,22 @@ class RemoteDataSource {
 
   Future<Object> downloadFromUrl(String url) async {
     try{
-      Directory? savePath = Platform.isAndroid
+      var savePath = Platform.isAndroid
           ? await getExternalStorageDirectory() //FOR ANDROID
           : await getApplicationDocumentsDirectory(); //FOR iOS
-      print("${savePath!.path}/demo.heic");
+      //print("${savePath!.path}/${url.split("/")[4]}/${url.split("/").last}");
+      String path = "${savePath!.path}/${url.split("/")[4]}/${url.split("/").last}";
+      print(path);
+      print(url);
       final response = await Dio().download(
-          url,
-        "${savePath.path}/demo.heic"
-      ).timeout(const Duration(seconds: 600))
+         url, path,
+      )
           .catchError((e) {
         print(e.message);
       });
-      print(response);
+
+      print("response.data");
+      print(response.data);
 
       if(response.statusCode == OK) {
         return Success(response: response.data);
