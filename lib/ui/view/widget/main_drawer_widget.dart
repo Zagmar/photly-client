@@ -46,27 +46,10 @@ class MainDrawerWidget extends StatelessWidget {
                   ],
                 ),
                 Divider(),
-                Row(
+                Column(
                   mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    /*
-                    _userProfileViewModel.userImageUrl == null ?
-                    Image.asset(
-                      "images/default/avatar.png",
-                      width: 30.w,
-                      height: 30.w,
-                      fit: BoxFit.cover,
-                    )
-                    :
-                    CachedNetworkImageWidget(
-                        imageUrl: _userProfileViewModel.userImageUrl!,
-                        width: 30.w,
-                        height: 30.w
-                    ),
-                    Padding(padding: EdgeInsets.only(right: 10.w)),
-
-                     */
                     Text(
                       '${_userProfileViewModel.userName!} 님, 환영합니다',
                       style: TextStyle(
@@ -74,7 +57,19 @@ class MainDrawerWidget extends StatelessWidget {
                           fontWeight: FontWeight.w400,
                           fontSize: 18.w
                       ),
-                    )
+                    ),
+                    Provider.of<DailyCouplePostViewModel>(context).isCouple ?
+                    Padding(
+                      padding: EdgeInsets.only(top: 10.w),
+                      child: Text(
+                        '함께한지 ${_userProfileViewModel.days!}일째',
+                        style: TextStyle(
+                            color: Color(0xFFFFFFFF),
+                            fontWeight: FontWeight.w700,
+                            fontSize: 14.w
+                        ),
+                      ),
+                    ):Container()
                   ],
                 )
               ],

@@ -51,10 +51,10 @@ class DailyCouplePostViewModel extends ChangeNotifier {
 
   /// Load data for initialize mainScreen
   Future<void> initDailyCouplePosts() async {
+    await _checkIsCouple();
     if(_dailyCouplePosts.isEmpty){
       await _firebaseCloudMessagingService.fcmSetting();
       _userId = await AuthService().getCurrentUserId();
-      await _checkIsCouple();
       await _loadDailyCouplePosts();
       await _setDailyInfo(0);
       _isLoadDone = true;
@@ -84,6 +84,7 @@ class DailyCouplePostViewModel extends ChangeNotifier {
 
   /// Refresh today's couple post
   Future<void> refreshTodayCouplePost() async {
+    await _checkIsCouple();
     // call API
     var response =  await _dailyCouplePostRepository.getDailyCouplePosts(_userId!, DateTime.now(), 1);
 

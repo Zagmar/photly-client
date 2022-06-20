@@ -1,26 +1,25 @@
 import 'dart:convert';
 
-List<UserInfoModel> userInfoModelFromJson(String str) => List<UserInfoModel>.from(json.decode(str).map((x) => UserInfoModel.fromJson(x)));
-
-String userInfoModelToJson(List<UserInfoModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
-
 class UserInfoModel {
   UserInfoModel({
     required this.userId,
     required this.userName,
     required this.userEnrolledDate,
+    required this.coupleAnniversary,
     required this.coupleCode,
   });
 
   String userId;
   String userName;
   DateTime userEnrolledDate;
+  DateTime coupleAnniversary;
   String coupleCode;
 
   factory UserInfoModel.fromJson(Map<String, dynamic> json) => UserInfoModel(
     userId: json["userId"],
     userName: json["userName"],
     userEnrolledDate: DateTime.parse(json['userEnrolledDate'].toString()),
+    coupleAnniversary: DateTime.parse(json['coupleAnniversary'].toString()),
     coupleCode: json["coupleCode"],
   );
 
@@ -28,6 +27,7 @@ class UserInfoModel {
     "userId": userId,
     "userName": userName,
     "userEnrolledDate": userEnrolledDate.toString(),
+    "coupleAnniversary": coupleAnniversary.toString(),
     "coupleCode": coupleCode,
   };
 }
