@@ -1,27 +1,129 @@
-import 'dart:io';
+import '../datasource/local_datasource.dart';
+import '../datasource/remote_datasource.dart';
+import 'auth_service.dart';
 
-import 'package:couple_seflie_app/data/model/user_info_model.dart';
-import 'package:couple_seflie_app/data/repository/api_status.dart';
-import 'package:http/http.dart' as http;
+class UserInfoRepository {
+  final RemoteDataSource _remoteDataSource = RemoteDataSource();
+  final LocalDataSource _localDataSource = LocalDataSource();
+  static const String USER = "$PHOTLY/user/info";
+  static const String USER_PARTNER = "$PHOTLY/user/partner";
 
-import 'constants.dart';
+  /// Create post
+  // input : postModel
+  Future<Object> createUserInfo(String userName, DateTime coupleAnniversary) async {
+    print("_userId");
+    String _userId = await AuthService().getCurrentUserId();
+    print(_userId);
+    // convert inputData to use for API
+    Map<String, dynamic> inputData = {
+      'user_id' : _userId,
+      'user_name' : userName,
+      'user_enrolled_date' : DateTime.now().toString(),
+      'couple_anniversary' : coupleAnniversary.toString(),
+    };
 
-class UserInfoRepository{
-  static Future<Object> getUser() async {
-    try{
-      var url = Uri.parse(USER_LIST);
-      var response = await http.get(url);
-      if(response.statusCode == 100) {
-        return Success(code: response.statusCode, response: userInfoModelFromJson(response.body));
-      }
-      return Failure(code: USER_INVALID_RESPONSE, errorResponse: "Invalid Response");
-    } on HttpException{
-      return Failure(code: NO_INTERNET, errorResponse: "No Internet");
-    } on FormatException{
-      return Failure(code: INVALID_FORMAT, errorResponse: "Invalid Format");
-    }
-    catch(e) {
-      return Failure(code: UNKNOWN_ERROR, errorResponse: "Unknown Error");
-    }
+    print(inputData);
+
+    return await _remoteDataSource.postToUri(USER, inputData);
+  }
+
+  Future<Object> updateUsername(String username) async {
+    String _userId = await AuthService().getCurrentUserId();
+    Map<String, dynamic> inputData = {
+      'user_id' : _userId,
+      'user_name' : username,
+    };
+
+    print(inputData);
+
+    return await _remoteDataSource.putToUri(USER, inputData);
+  }
+
+  Future<Object> updateAnniversary(DateTime coupleAnniversary) async {
+    String _userId = await AuthService().getCurrentUserId();
+    Map<String, dynamic> inputData = {
+      'user_id' : _userId,
+      'couple_anniversary' : coupleAnniversary.toString(),
+    };
+
+    print(inputData);
+
+    return await _remoteDataSource.putToUri(USER, inputData);
+  }
+
+  /// Create post
+  // input : postModel
+  Future<Object> registerPartner(String coupleCode) async {
+    print("여기3");
+    String _userId = await AuthService().getCurrentUserId();
+    print("여기4");
+
+    // convert inputData to use for API
+    Map<String, dynamic> inputData = {
+      'user_id' : _userId.toString(),
+      'couple_code' : coupleCode.toString(),
+      'couple_enrolled_date' : DateTime.now().toString()
+    };
+
+    print(inputData);
+
+    return await _remoteDataSource.putToUri(USER_PARTNER, inputData);
+  }
+
+  /// Create post
+  // input : postModel
+  Future<Object> getPartner() async {
+    String _userId = await AuthService().getCurrentUserId();
+
+    // convert inputData to use for API
+    Map<String, dynamic> inputData = {
+      'user_id' : _userId,
+    };
+
+    print("get Partner");
+    print(inputData);
+
+    return await _remoteDataSource.getFromUri(USER_PARTNER, inputData);
+  }
+
+  /// Clear post
+  // input : postModel
+  Future<Object> getUserInfo() async {
+    String _userId = await AuthService().getCurrentUserId();
+
+    // convert inputData to use for API
+    Map<String, dynamic> inputData = {
+      'user_id' : _userId,
+    };
+
+    print(inputData);
+
+    return await _remoteDataSource.getFromUri(USER, inputData);
+  }
+
+  Future<Object> clearPartner() async {
+    String _userId = await AuthService().getCurrentUserId();
+
+    // convert inputData to use for API
+    Map<String, dynamic> inputData = {
+      'user_id' : _userId.toString(),
+    };
+
+    print(inputData);
+
+    return await _remoteDataSource.deleteFromUri(USER_PARTNER, inputData);
+  }
+
+  Future<Object> clearUser() async {
+    String _userId = await AuthService().getCurrentUserId();
+
+    // convert inputData to use for API
+    Map<String, dynamic> inputData = {
+      'user_id' : _userId.toString(),
+    };
+
+    print(inputData);
+
+    return await _remoteDataSource.deleteFromUri(USER, inputData);
   }
 }

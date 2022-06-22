@@ -1,7 +1,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.zagmar.couple_seflie_app">
+    //예약 알림과, 진동을 통한 알림을 이용하기 위해서 사용해주는 것입니다.
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+
+    //예약 알림과, 진동을 통한 알림을 이용하기 위해서 사용해주는 것입니다.
+
+
    <application
-        android:label="couple_seflie_app"
+        android:label="photly"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -11,7 +22,12 @@
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true" >
+            <meta-data
+                    android:name="com.google.firebase.messaging.default_notification_channel_id"
+                    android:value="high_importance_channel" />
             <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user
                  while the Flutter UI initializes. After that, this theme continues
@@ -23,8 +39,24 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+                // FCM
+                <action android:name="FLUTTER_NOTIFICATION_CLICK" />
+                <category android:name="android.intent.category.DEFAULT" />
+                // FCM
             </intent-filter>
         </activity>
+       //이것은 재부팅시 예약된 알림이 예약된 상태 그대로 유지 될수 있도록 해주는 설정입니다.
+       <service
+               android:name="com.dexterous.flutterlocalnotifications.ForegroundService"
+               android:exported="false"
+               android:stopWithTask="false"/>
+       <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
+            <intent-filter>
+               <action android:name="android.intent.action.BOOT_COMPLETED"></action>
+               </intent-filter>
+        </receiver>
+       <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
+       //이것은 재부팅시 예약된 알림이 예약된 상태 그대로 유지 될수 있도록 해주는 설정입니다.
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data
