@@ -120,6 +120,7 @@ class PostDetailWidget extends StatelessWidget {
                 ),
                 Container(height: 10.w,),
                 Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.w),
                   alignment: Alignment.center,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,

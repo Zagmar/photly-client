@@ -310,12 +310,15 @@ class PostTextFormWidget extends StatelessWidget {
                     iconData: Icons.place_outlined,
                   ),
                   Padding(padding: EdgeInsets.only(right: 10.w)),
-                  Text(
-                    _postViewModel.post!.postLocation!,
-                    style: TextStyle(
-                      fontSize: 15.w,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF000000),
+                  InkWell(
+                    onTap: placeButtonOnTap,
+                    child: Text(
+                      _postViewModel.post!.postLocation!,
+                      style: TextStyle(
+                        fontSize: 15.w,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xFF000000),
+                      ),
                     ),
                   ),
                 ],
