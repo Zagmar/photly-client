@@ -46,7 +46,7 @@ class PhotlyStyle {
         // font for question
         titleLarge: TextStyle(
             fontWeight: FontWeight.w500,
-            fontSize: 21.w,
+            fontSize: 20.w,
             color: Color(0xFF000000),
             overflow: TextOverflow.ellipsis
         ),
