@@ -28,7 +28,8 @@ class DailyCouplePostViewModel extends ChangeNotifier {
   String? _month;
   String? _day;
   int? _questionType;
-  String? _questionText;
+  String? _questionText1;
+  String? _questionText2;
   String? _questionImageUrl;
 
   DateTime? _lastPushTime;
@@ -44,7 +45,8 @@ class DailyCouplePostViewModel extends ChangeNotifier {
   String get month => _month!;
   String get day => _day!;
   int get questionType => _questionType!;
-  String get questionText => _questionText!;
+  String get questionText1 => _questionText1!;
+  String get questionText2 => _questionText2!;
   String? get questionImageUrl => _questionImageUrl;
   bool get isCouple => _isCouple;
   String get pushResultMessage => _pushResultMessage;
@@ -132,7 +134,8 @@ class DailyCouplePostViewModel extends ChangeNotifier {
     _month = null;
     _day = null;
     _questionType = null;
-    _questionText = null;
+    _questionText1 = null;
+    _questionText2 = null;
     _questionImageUrl = null;
 
     _isCouple = false;
@@ -221,7 +224,8 @@ class DailyCouplePostViewModel extends ChangeNotifier {
 
     // Set question data
     _questionType = _dailyCouplePosts[index].questionType;
-    _questionText = _dailyCouplePosts[index].questionText;
+    _questionText1 = _dailyCouplePosts[index].questionText.split("/").first;
+    _questionText2 = _dailyCouplePosts[index].questionText.split("/").last;
     _questionImageUrl = _dailyCouplePosts[index].questionImageUrl;
   }
 

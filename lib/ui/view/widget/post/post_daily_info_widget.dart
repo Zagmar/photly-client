@@ -132,14 +132,23 @@ class PostDailyInfoWidget extends StatelessWidget {
                 ),
                 /// 해당 날짜의 질문
                 Container(
-                  height: 50.w,
+                  height: 25.w,
                   child: Text(
-                    _dailyCouplePostViewModel.questionText,
+                    _dailyCouplePostViewModel.questionText1,
                     style: Theme.of(context).textTheme.titleLarge,
                     overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
+                    maxLines: 1,
                   ),
-                )
+                ),
+                Container(
+                  height: 25.w,
+                  child: Text(
+                    _dailyCouplePostViewModel.questionText2,
+                    style: Theme.of(context).textTheme.titleLarge,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
+                ),
               ],
             ),
           ),
