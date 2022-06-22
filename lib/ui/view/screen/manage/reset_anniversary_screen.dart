@@ -64,7 +64,7 @@ class ResetAnniversaryScreen extends StatelessWidget {
                         _userInfoViewModel.setAnniversary(DateTime.now());
                       }
 
-                      await _userInfoViewModel.uploadUserInfoToDB();
+                      await _userInfoViewModel.updateAnniversary();
                       _userInfoViewModel.isUploaded ?
                       {
                         await Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser(),
