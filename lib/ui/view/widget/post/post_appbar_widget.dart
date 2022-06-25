@@ -98,6 +98,7 @@ class SingleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      splashColor: Colors.transparent,
       child: SizedBox(
         height: 48.w,
         width: 48.w,

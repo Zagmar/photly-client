@@ -1,24 +1,20 @@
-import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_detail_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
 import 'package:couple_seflie_app/ui/view/widget/choice_dialog_widget.dart';
 import 'package:couple_seflie_app/ui/view/widget/loading_widget.dart';
-import 'package:couple_seflie_app/ui/view/widget/route_button_widgets.dart';
 import 'package:couple_seflie_app/ui/view/widget/text_form_field.dart';
 import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-
 import '../../../ui_setting.dart';
 import '../../../view_model/daily_couple_post_view_model.dart';
-import '../../widget/ad_banner_widget.dart';
 import '../../widget/post/post_daily_info_widget.dart';
 import '../../widget/post/post_appbar_widget.dart';
+
+bool _onPressed = false;
 
 class PostEditScreen extends StatelessWidget {
   PostEditScreen({Key? key}) : super(key: key);
@@ -46,47 +42,57 @@ class PostEditScreen extends StatelessWidget {
                 children: <Widget>[
                   PostScreensAppbar(
                     onTap: () {
-                      _postViewModel.clearLocalImage();
-                      Navigator.of(context).pop((route) => PostMainScreen());
+                      if(_onPressed == false) {
+                        _onPressed = true;
+                        _postViewModel.clearLocalImage();
+                        Navigator.of(context).pop((route) => PostMainScreen());
+                        _onPressed = false;
+                      }
                     },
                   ),
                   PostDailyInfoWidget(
                     bottomButton: RightTextButtonWidget(
                       buttonText: "저장",
                       onTap: () async {
-                        FocusScope.of(context).unfocus();
-                        await _postViewModel.checkIsPostOk();
-                        _postViewModel.isPostReady ?
-                        _postViewModel.isNewPost ?
-                        await _postViewModel.createPost()
-                            :
-                        await _postViewModel.editPost()
-                            :
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                                _postViewModel.postErrorMessage!
+                        if(_onPressed == false) {
+                          _onPressed = true;
+                          FocusScope.of(context).unfocus();
+                          await _postViewModel.checkIsPostOk();
+                          _postViewModel.isPostReady ?
+                          _postViewModel.isNewPost ?
+                          await _postViewModel.createPost()
+                              :
+                          await _postViewModel.editPost()
+                              :
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  _postViewModel.postErrorMessage!
+                              ),
                             ),
-                          ),
-                        );
-                        print("시도");
+                          );
+                          print("시도");
 
-                        _postViewModel.isPostOk ?
-                        {
-                          await _dailyCouplePostViewModel.refreshTodayCouplePost(),
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => PostDetailScreen()),
-                          )
-                        }
-                            :
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                                _postViewModel.postFailMessage!
+                          _postViewModel.isPostOk ?
+                          {
+                            await _dailyCouplePostViewModel.refreshTodayCouplePost(),
+                            Navigator.pushReplacement(context, PageRouteBuilder(
+                                pageBuilder: (context, animation1, animation2) => PostDetailScreen(),
+                                transitionDuration: Duration.zero,
+                                reverseTransitionDuration: Duration.zero
+                            ),),
+                          }
+                              :
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  _postViewModel.postFailMessage!
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                          _onPressed = false;
+                        }
+
                       },
                     ),
                   ),
@@ -97,28 +103,41 @@ class PostEditScreen extends StatelessWidget {
                         width: FULL_WIDTH.w,
                         height: FULL_WIDTH.w * IMAGE_RATIO,
                         child: InkWell(
+                            splashColor: Colors.transparent,
                             onTap: (){
-                              FocusScope.of(context).unfocus();
-                              // show dialog to pick the way to get image
-                              showDialog(
-                                  context: context,
-                                  builder: (context){
-                                    return ThreeOptionsDialogWidget(
+                              if(_onPressed == false) {
+                                _onPressed = true;
+                                FocusScope.of(context).unfocus();
+                                // show dialog to pick the way to get image
+                                showDialog(
+                                    context: context,
+                                    builder: (context){
+                                      bool _onPressed2 = false;
+                                      return ThreeOptionsDialogWidget(
                                         title: "이미지 추가",
                                         // Get image from Gallery
                                         firstDialogOption: SingleDialogOption(
                                           dialogText: "갤러리에서 이미지 추가하기",
                                           onPressed: (){
-                                            Navigator.pop(context);
-                                            _postViewModel.pickImage(ImageSource.gallery);
+                                            if(_onPressed2 == false) {
+                                              _onPressed2 = true;
+                                              Navigator.pop(context);
+                                              _postViewModel.pickImage(ImageSource.gallery);
+                                              _onPressed2 = false;
+                                            }
                                           },
                                         ),
                                         // Take a picture with camera
                                         secondDialogOption: SingleDialogOption(
                                           dialogText: "카메라로 이미지 촬영하기",
                                           onPressed: (){
-                                            Navigator.pop(context);
-                                            _postViewModel.pickImage(ImageSource.camera);
+                                            if(_onPressed2 == false) {
+                                              _onPressed2 = true;
+                                              Navigator.pop(context);
+                                              _postViewModel.pickImage(ImageSource.camera);
+                                              _onPressed2 = false;
+                                            }
+
                                           },
                                         ),
                                         // cancel
@@ -126,12 +145,18 @@ class PostEditScreen extends StatelessWidget {
                                           dialogText: "취소",
                                           textColor: Colors.red,
                                           onPressed: (){
-                                            Navigator.pop(context);
+                                            if(_onPressed2 == false) {
+                                              _onPressed2 = true;
+                                              Navigator.pop(context);
+                                              _onPressed2 = false;
+                                            }
                                           },
                                         ),
-                                    );
-                                  }
-                              );
+                                      );
+                                    }
+                                );
+                                _onPressed = false;
+                              }
                             },
                             child: _postViewModel.postImage != null ?
                             // Image from local
@@ -160,22 +185,30 @@ class PostEditScreen extends StatelessWidget {
                       ),
                       PostTextFormWidget(
                         weatherButtonOnTap: (){
-                          FocusScope.of(context).unfocus();
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return WeatherDialogWidget();
-                              }
-                          );
+                          if(_onPressed == false) {
+                            _onPressed = true;
+                            FocusScope.of(context).unfocus();
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return WeatherDialogWidget();
+                                }
+                            );
+                            _onPressed = false;
+                          }
                         },
                         placeButtonOnTap: (){
-                          FocusScope.of(context).unfocus();
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return LocationDialogWidget();
-                              }
-                          );
+                          if(_onPressed == false) {
+                            _onPressed = true;
+                            FocusScope.of(context).unfocus();
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return LocationDialogWidget();
+                                }
+                            );
+                            _onPressed = false;
+                          }
                         },
                         postInputTextOnChanged: (value) {
                           _postViewModel.setPostText(value);
@@ -275,6 +308,7 @@ class PostTextFormWidget extends StatelessWidget {
             children: <Widget>[
               // Weather button
               InkWell(
+                splashColor: Colors.transparent,
                 onTap: weatherButtonOnTap,
                 child: SizedBox(
                   width: 24.w,
@@ -311,6 +345,7 @@ class PostTextFormWidget extends StatelessWidget {
                   ),
                   Padding(padding: EdgeInsets.only(right: 10.w)),
                   InkWell(
+                    splashColor: Colors.transparent,
                     onTap: placeButtonOnTap,
                     child: Text(
                       _postViewModel.post!.postLocation!,
@@ -325,6 +360,7 @@ class PostTextFormWidget extends StatelessWidget {
               ),
               // Weather button
               InkWell(
+                splashColor: Colors.transparent,
                 onTap: weatherButtonOnTap,
                 child: SizedBox(
                   width: 24.w,
@@ -444,6 +480,7 @@ class WeatherButton extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(right: 10.w),
       child: InkWell(
+        splashColor: Colors.transparent,
         onTap: () {
           Navigator.pop(context);
           Provider.of<PostViewModel>(context, listen: false).setPostWeather(indexWeather);
@@ -503,6 +540,7 @@ class LocationDialogWidget extends StatelessWidget {
                   },
                 ),
                 InkWell(
+                  splashColor: Colors.transparent,
                   onTap: (){
                     _formKey.currentState!.save();
                     FocusScope.of(context).unfocus();
@@ -548,6 +586,7 @@ class PostButtonWidget extends StatelessWidget {
       height: 24.w,
       width: 24.w,
       child: InkWell(
+          splashColor: Colors.transparent,
           onTap: onTap,
           child: Container(
             padding: EdgeInsets.zero,

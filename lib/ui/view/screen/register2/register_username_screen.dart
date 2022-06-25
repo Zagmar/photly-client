@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
+bool _onPressed = false;
+
 class RegisterUsernameScreen extends StatelessWidget {
   RegisterUsernameScreen({Key? key}) : super(key: key);
   late UserInfoViewModel _userInfoViewModel;
@@ -52,18 +54,22 @@ class RegisterUsernameScreen extends StatelessWidget {
                     // Hide button when use keyboard
                     RightButtonOnlyWidget(
                         onTap: () {
-                          _formKey.currentState!.save();
-                          FocusScope.of(context).unfocus();
-                          _userInfoViewModel.isUsernameOk ?
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterAnniversaryScreen()))
-                              :
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  _userInfoViewModel.usernameErrorMessage!
+                          if(_onPressed == false) {
+                            _onPressed = true;
+                            _formKey.currentState!.save();
+                            FocusScope.of(context).unfocus();
+                            _userInfoViewModel.isUsernameOk ?
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterAnniversaryScreen()))
+                                :
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    _userInfoViewModel.usernameErrorMessage!
+                                ),
                               ),
-                            ),
-                          );
+                            );
+                            _onPressed = false;
+                          }
                         },
                         buttonText: "다음"
                     )

@@ -16,6 +16,7 @@ import '../screen/register3/register_couple_code_screen.dart';
 class MainDrawerWidget extends StatelessWidget {
   late UserProfileViewModel _userProfileViewModel;
   late UserInfoViewModel _userInfoViewModel;
+  bool _onPressed = false;
   @override
   Widget build(BuildContext context) {
     _userProfileViewModel = Provider.of<UserProfileViewModel>(context, listen: false);
@@ -81,48 +82,96 @@ class MainDrawerWidget extends StatelessWidget {
           Provider.of<DailyCouplePostViewModel>(context).isCouple ?
           Container()
               :
-          ListTile(
-            title: Text('커플 등록', style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.blueAccent, fontWeight: FontWeight.w700),),
+          InkWell(
+            splashColor: Colors.transparent,
+            child: Container(
+                padding: EdgeInsets.all(18.w),
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  '커플 등록',
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.blueAccent, fontWeight: FontWeight.w700),
+                )
+            ),
             onTap: () async {
-              FocusScope.of(context).unfocus();
-              await Provider.of<UserInfoViewModel>(context, listen: false).setUserCoupleCode();
-              Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterCoupleCodeScreen(), fullscreenDialog: true,));
-            },
-          ),
-          ListTile(
-            title: Text('로그아웃', style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700),),
-            onTap: () async {
-              await _userInfoViewModel.doLogout();
-
-              _userInfoViewModel.isLogout ?
-              {
-                Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
-                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false)
+              if(_onPressed == false) {
+                _onPressed = true;
+                FocusScope.of(context).unfocus();
+                await Provider.of<UserInfoViewModel>(context, listen: false).setUserCoupleCode();
+                Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterCoupleCodeScreen(), fullscreenDialog: true,));
+                _onPressed = false;
               }
-                  :
-              ScaffoldMessenger(
-                child: SnackBar(
-                  content: Text(
-                      _userInfoViewModel.logoutFailMessage!
+            },
+          ),
+          InkWell(
+            splashColor: Colors.transparent,
+            child: Container(
+              padding: EdgeInsets.all(18.w),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                '로그아웃',
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w700),
+              ),
+            ),
+            onTap: () async {
+              if(_onPressed == false) {
+                _onPressed = true;
+                await _userInfoViewModel.doLogout();
+
+                _userInfoViewModel.isLogout ?
+                {
+                  Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false)
+                }
+                    :
+                ScaffoldMessenger(
+                  child: SnackBar(
+                    content: Text(
+                        _userInfoViewModel.logoutFailMessage!
+                    ),
                   ),
-                ),
-              );
+                );
+                _onPressed = false;
+              }
             },
           ),
           Divider(),
-          ListTile(
-            title: Text('계정 관리', style: Theme.of(context).textTheme.bodyLarge,),
+          InkWell(
+            splashColor: Colors.transparent,
+            child: Container(
+              padding: EdgeInsets.all(18.w),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                '계정 관리',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            ),
             onTap: (){
-              FocusScope.of(context).unfocus();
-              Navigator.push(context, MaterialPageRoute(builder: (context) => ManageAccountScreen(), fullscreenDialog: true,));
+              if(_onPressed == false) {
+                _onPressed = true;
+                FocusScope.of(context).unfocus();
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ManageAccountScreen(), fullscreenDialog: true,));
+                _onPressed = false;
+              }
             },
           ),
           Divider(),
-          ListTile(
-            title: Text('서비스 문의', style: Theme.of(context).textTheme.bodyLarge,),
+          InkWell(
+            splashColor: Colors.transparent,
+            child: Container(
+              padding: EdgeInsets.all(18.w),
+              alignment: Alignment.centerLeft,
+              child: Text(
+                '서비스 문의',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            ),
             onTap: (){
-              FocusScope.of(context).unfocus();
-              Navigator.push(context, MaterialPageRoute(builder: (context) => InformationScreen(), fullscreenDialog: true,));
+              if(_onPressed == false) {
+                _onPressed = true;
+                FocusScope.of(context).unfocus();
+                Navigator.push(context, MaterialPageRoute(builder: (context) => InformationScreen(), fullscreenDialog: true,));
+                _onPressed = false;
+              }
             },
           ),
         ],

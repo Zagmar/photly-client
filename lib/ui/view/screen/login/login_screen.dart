@@ -15,6 +15,8 @@ import '../../widget/one_block_top_widget.dart';
 import '../register1/register_screen.dart';
 import '../register1/register_vertification_screen.dart';
 
+bool _onPressed = false;
+
 class LoginScreen extends StatelessWidget {
   LoginScreen({Key? key}) : super(key: key);
   late UserInfoViewModel _userInfoViewModel;
@@ -40,7 +42,8 @@ class LoginScreen extends StatelessWidget {
                 OneBlockTopWidget(
                   topText: "서로 남기는\n하루 한장\n시작해볼까요?",
                   bottomText: "로그인을 진행합니다",
-                ):
+                )
+                      :
                 OneBlockTopWidgetKeyboardOn(
                     text: "로그인 정보를 입력중입니다"
                 ),
@@ -81,36 +84,31 @@ class LoginScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          /*
-                          SingleTextButton(
-                            buttonText: "아이디 찾기",
-                            onTap: (){
-                              FocusScope.of(context).unfocus();
-                              _formKey.currentState!.reset();
-                              _userInfoViewModel.clear();
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => FindIdScreen()));
-                            },
-                          ),
-                          BorderBetweenTextButtons(),
-
-                           */
                           SingleTextButton(
                             buttonText: "비밀번호 재설정",
                             onTap: () async {
-                              FocusScope.of(context).unfocus();
-                              _formKey.currentState!.reset();
-                              await _userInfoViewModel.clear();
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => ResetPwScreen()));
+                              if(_onPressed == false){
+                                _onPressed = true;
+                                FocusScope.of(context).unfocus();
+                                _formKey.currentState!.reset();
+                                await _userInfoViewModel.clear();
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => ResetPwScreen(),fullscreenDialog: true));
+                                _onPressed = false;
+                              }
                             },
                           ),
                           BorderBetweenTextButtons(),
                           SingleTextButton(
                             buttonText: "회원가입",
                             onTap: () async {
-                              FocusScope.of(context).unfocus();
-                              _formKey.currentState!.reset();
-                              await _userInfoViewModel.clear();
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen()));
+                              if(_onPressed == false){
+                                _onPressed = true;
+                                FocusScope.of(context).unfocus();
+                                _formKey.currentState!.reset();
+                                await _userInfoViewModel.clear();
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen()));
+                                _onPressed = false;
+                              }
                             },
                           )
                         ],
@@ -120,77 +118,73 @@ class LoginScreen extends StatelessWidget {
                 ),
                 BottomLargeButtonWidget(
                     onTap: () async {
-                      _formKey.currentState!.save();
-                      FocusScope.of(context).unfocus();
-                      !_userInfoViewModel.isLoginOk ?
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                              _userInfoViewModel.idErrorMessage ?? _userInfoViewModel.pwErrorMessage ?? '입력된 정보가 올바르지 않습니다'
+                      if(_onPressed == false){
+                        _onPressed = true;
+                        _formKey.currentState!.save();
+                        FocusScope.of(context).unfocus();
+                        !_userInfoViewModel.isLoginOk ?
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                _userInfoViewModel.idErrorMessage ?? _userInfoViewModel.pwErrorMessage ?? '입력된 정보가 올바르지 않습니다'
+                            ),
                           ),
-                        ),
-                      )
-                          :
-                      await _userInfoViewModel.doLogin();
+                        )
+                            :
+                        {
+                          await _userInfoViewModel.doLogin(),
 
-                      switch (_userInfoViewModel.loginFailure) {
-                        case null :
-                          await Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser();
-                          await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts();
-                          await Provider.of<UserInfoViewModel>(context, listen: false).clear();
-                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false);
-                          break;
-                        case "nonVerification" :
-                          //_userInfoViewModel.clearSecret();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  _userInfoViewModel.loginFailMessage!
+                          if(_userInfoViewModel.loginFailure == null){
+                            await Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser(),
+                            await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
+                            await Provider.of<UserInfoViewModel>(context, listen: false).clear(),
+                            Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
+                              pageBuilder: (context, animation1, animation2) => PostMainScreen(),
+                              transitionDuration: Duration.zero,
+                            ), (route) => false),
+                          }
+                          else if(_userInfoViewModel.loginFailure == "nonVerification"){
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    _userInfoViewModel.loginFailMessage!
+                                ),
                               ),
                             ),
-                          );
-                          _formKey.currentState!.reset();
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterVertificationScreen()));
-                          break;
-                        case "nonUserInfo" :
-                          //_userInfoViewModel.clearSecret();
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  _userInfoViewModel.loginFailMessage!
+                            _formKey.currentState!.reset(),
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterVertificationScreen())),
+                          }
+                          else if(_userInfoViewModel.loginFailure == "nonUserInfo") {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                      _userInfoViewModel.loginFailMessage!
+                                  ),
+                                ),
+                              ),
+                              _formKey.currentState!.reset(),
+                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => RegisterUsernameScreen()), (route) => false),
+                          }
+                          else if(_userInfoViewModel.loginFailure == "nonUser" || _userInfoViewModel.loginFailure == "fail") {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    _userInfoViewModel.loginFailMessage!
+                                ),
                               ),
                             ),
-                          );
-                          _formKey.currentState!.reset();
-                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => RegisterUsernameScreen()), (route) => false);
-                          break;
-                        case "nonUser" :
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  _userInfoViewModel.loginFailMessage!
+                          }
+                          else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    _userInfoViewModel.loginFailMessage!
+                                ),
                               ),
                             ),
-                          );
-                          break;
-                        case "fail" :
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  _userInfoViewModel.loginFailMessage!
-                              ),
-                            ),
-                          );
-                          break;
-                        default :
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  "로그인에 실패하였습니다.\n다시 시도해주세요"
-                              ),
-                            ),
-                          );
-                          break;
+                          }
+                        };
+                        _onPressed = false;
                       }
                     },
                     buttonText: "로그인"
@@ -214,6 +208,7 @@ class SingleTextButton extends StatelessWidget {
       height: 20.w,
       alignment: Alignment.center,
       child: InkWell(
+          splashColor: Colors.transparent,
           onTap: onTap,
           child: Text(
             buttonText,

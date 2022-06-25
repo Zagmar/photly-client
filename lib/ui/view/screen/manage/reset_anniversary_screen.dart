@@ -1,5 +1,3 @@
-import 'package:couple_seflie_app/ui/view/screen/login/update_pw_screen.dart';
-import 'package:couple_seflie_app/ui/view/screen/register1/register_vertification_screen.dart';
 import 'package:couple_seflie_app/ui/view/widget/route_button_widgets.dart';
 import 'package:couple_seflie_app/ui/view_model/user_info_view_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../../view_model/user_profile_view_model.dart';
-import '../../widget/text_form_field.dart';
 import '../../widget/one_block_top_widget.dart';
-import '../login/login_screen.dart';
+
+bool _onPressed = false;
 
 class ResetAnniversaryScreen extends StatelessWidget {
   ResetAnniversaryScreen({Key? key}) : super(key: key);
@@ -53,32 +51,40 @@ class ResetAnniversaryScreen extends StatelessWidget {
                 // Hide button when use keyboard
                 BothButtonsWidget(
                     onTapLeft: () {
-                      _userInfoViewModel.clear();
-                      FocusScope.of(context).unfocus();
-                      Navigator.pop(context);
+                      if(_onPressed == false) {
+                        _onPressed = true;
+                        _userInfoViewModel.clear();
+                        FocusScope.of(context).unfocus();
+                        Navigator.pop(context);
+                        _onPressed = false;
+                      }
                     },
                     buttonTextLeft: "이전",
                     onTapRight: () async {
-                      FocusScope.of(context).unfocus();
-                      if(!_userInfoViewModel.isAnniversaryOk){
-                        _userInfoViewModel.setAnniversary(DateTime.now());
-                      }
+                      if(_onPressed == false) {
+                        _onPressed = true;
+                        FocusScope.of(context).unfocus();
+                        if(!_userInfoViewModel.isAnniversaryOk){
+                          _userInfoViewModel.setAnniversary(DateTime.now());
+                        }
 
-                      await _userInfoViewModel.updateAnniversary();
-                      _userInfoViewModel.isUploaded ?
-                      {
-                        await Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser(),
-                        await Provider.of<UserInfoViewModel>(context, listen: false).clear(),
-                        Navigator.pop(context),
+                        await _userInfoViewModel.updateAnniversary();
+                        _userInfoViewModel.isUploaded ?
+                        {
+                          await Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser(),
+                          await Provider.of<UserInfoViewModel>(context, listen: false).clear(),
+                          Navigator.pop(context),
+                        }
+                            :
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(
+                                  _userInfoViewModel.uploadFailMessage !
+                              )
+                          ),
+                        );
+                        _onPressed = false;
                       }
-                          :
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content: Text(
-                                _userInfoViewModel.uploadFailMessage !
-                            )
-                        ),
-                      );
                     },
                     buttonTextRight: "완료"
                 )

@@ -6,7 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../widget/text_form_field.dart';
 import '../../widget/one_block_top_widget.dart';
-import '../login/login_screen.dart';
+
+bool _onPressed = false;
 
 class RegisterScreen extends StatelessWidget {
   RegisterScreen({Key? key}) : super(key: key);
@@ -27,10 +28,15 @@ class RegisterScreen extends StatelessWidget {
           leading: Container(),
           actions: <Widget>[
             InkWell(
+              splashColor: Colors.transparent,
               onTap: (){
-                _userInfoViewModel.clear();
-                FocusScope.of(context).unfocus();
-                Navigator.popUntil(context, (route) => route.isFirst);
+                if(_onPressed == false) {
+                  _onPressed = true;
+                  _userInfoViewModel.clear();
+                  FocusScope.of(context).unfocus();
+                  Navigator.popUntil(context, (route) => route.isFirst);
+                  _onPressed = false;
+                }
               },
               child: SizedBox(
                 width: 50.w,
@@ -63,31 +69,37 @@ class RegisterScreen extends StatelessWidget {
                 // Register Button
                 BottomLargeButtonWidget(
                     onTap: () async {
-                      _formKey.currentState!.save();
-                      FocusScope.of(context).unfocus();
-                      !_userInfoViewModel.isRegisterOk ?
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                              _userInfoViewModel.idErrorMessage ?? _userInfoViewModel.pwErrorMessage ?? '입력된 정보가 올바르지 않습니다'
+                      if(_onPressed == false) {
+                        _onPressed = true;
+                        _formKey.currentState!.save();
+                        FocusScope.of(context).unfocus();
+                        !_userInfoViewModel.isRegisterOk ?
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                _userInfoViewModel.idErrorMessage ?? _userInfoViewModel.pwErrorMessage ?? '입력된 정보가 올바르지 않습니다'
+                            ),
                           ),
-                        ),
-                      )
-                          :
-                      await _userInfoViewModel.doRegistration();
-
-                      _userInfoViewModel.isRegistered ?
-                      {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterVertificationScreen()))
+                        )
+                            :
+                        {
+                          await _userInfoViewModel.doRegistration(),
+                          _userInfoViewModel.isRegistered ?
+                          {
+                            Navigator.push(context, MaterialPageRoute(builder: (
+                                context) => RegisterVertificationScreen()))
+                          }
+                              :
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  _userInfoViewModel.registrationFailMessage!
+                              ),
+                            ),
+                          ),
+                        };
+                        _onPressed = false;
                       }
-                          :
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                              _userInfoViewModel.registrationFailMessage!
-                          ),
-                        ),
-                      );
                     },
                     buttonText: "회원가입"
                 ),

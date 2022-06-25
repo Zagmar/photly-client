@@ -14,6 +14,8 @@ import '../../widget/main_drawer_widget.dart';
 import '../../widget/post/post_appbar_widget.dart';
 import '../../widget/post/post_daily_info_widget.dart';
 
+bool _onPressed = false;
+
 class PostMainScreen extends StatelessWidget {
   PostMainScreen({Key? key}) : super(key: key);
   late DailyCouplePostViewModel _dailyCouplePostViewModel;
@@ -23,7 +25,6 @@ class PostMainScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     _scaffoldKey = GlobalKey<ScaffoldState>();
     _dailyCouplePostViewModel = Provider.of<DailyCouplePostViewModel>(context);
-    print("Postmain 실행");
 
     return RefreshIndicator(
       onRefresh: () => _dailyCouplePostViewModel.refreshTodayCouplePost(),
@@ -85,19 +86,23 @@ class PostMainScreen extends StatelessWidget {
 class ImageButtonWidget extends StatelessWidget {
   final int postId;
   final String postImageUrl;
-  const ImageButtonWidget({Key? key, required this.postId, required this.postImageUrl}) : super(key: key);
+  ImageButtonWidget({Key? key, required this.postId, required this.postImageUrl}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      highlightColor: null,
+      splashColor: Colors.transparent,
       onTap: () async {
-        final PostViewModel _postViewModel = Provider.of<PostViewModel>(context, listen: false);
-        await _postViewModel.getPost(postId);
-        Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => PostDetailScreen())
-        );
+        if(_onPressed == false) {
+          _onPressed = true;
+          final PostViewModel _postViewModel = Provider.of<PostViewModel>(context, listen: false);
+          await _postViewModel.getPost(postId);
+          Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => PostDetailScreen(), fullscreenDialog: true)
+          );
+          _onPressed = false;
+        }
       },
       child: Container(
         width: MAIN_SPACE_WIDTH.w,
@@ -178,13 +183,17 @@ class UserDailyPostWidget extends StatelessWidget {
           subText: '아직 답변을 하지 않았어요\n얼른 답변을 찍어보세요',
           iconData: Icons.edit_outlined,
           onTap: () async {
-            FocusScope.of(context).unfocus();
-            final PostViewModel _postViewModel = Provider.of<PostViewModel>(context, listen: false);
-            await _postViewModel.setEmptyPost();
-            Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => PostEditScreen())
-            );
+            if(_onPressed == false) {
+              _onPressed = true;
+              FocusScope.of(context).unfocus();
+              final PostViewModel _postViewModel = Provider.of<PostViewModel>(context, listen: false);
+              await _postViewModel.setEmptyPost();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => PostEditScreen())
+              );
+              _onPressed = false;
+            }
           },
         )
             :
@@ -247,14 +256,18 @@ class PartnerDailyPostWidget extends StatelessWidget {
                mainText: "답변 푸쉬하기",
                subText: "아직 답변을 하지 않았어요\n답변을 요청해보세요",
                onTap: () async {
-                 await _dailyCouplePostViewModel.pushPartner();
-                 ScaffoldMessenger.of(context).showSnackBar(
-                   SnackBar(
-                     content: Text(
-                         _dailyCouplePostViewModel.pushResultMessage
+                 if(_onPressed == false) {
+                   _onPressed = true;
+                   await _dailyCouplePostViewModel.pushPartner();
+                   ScaffoldMessenger.of(context).showSnackBar(
+                     SnackBar(
+                       content: Text(
+                           _dailyCouplePostViewModel.pushResultMessage
+                       ),
                      ),
-                   ),
-                 );
+                   );
+                   _onPressed = false;
+                 }
                },
              )
                  :
@@ -326,13 +339,15 @@ class PartnerDailyPostWidget extends StatelessWidget {
          mainText: "상대방 등록하기",
          subText: "등록된 상대방이 없어요\n상대방을 등록 후에 같이 즐겨봐요",
          onTap: () async {
-           print("등록");
-           //await Provider.of<Register3ViewModel>(context, listen: false).setUserCoupleCode();
-           await Provider.of<UserInfoViewModel>(context, listen: false).setUserCoupleCode();
-           Navigator.push(
-             context,
-             MaterialPageRoute(builder: (context) => RegisterCoupleCodeScreen(), fullscreenDialog: true),
-           );
+           if(_onPressed == false) {
+             _onPressed = true;
+             await Provider.of<UserInfoViewModel>(context, listen: false).setUserCoupleCode();
+             Navigator.push(
+               context,
+               MaterialPageRoute(builder: (context) => RegisterCoupleCodeScreen(), fullscreenDialog: true),
+             );
+             _onPressed = false;
+           }
          },
        )
    );

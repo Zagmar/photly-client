@@ -1,5 +1,3 @@
-
-
 import 'package:couple_seflie_app/ui/view/screen/manage/reset_anniversary_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/manage/reset_username_screen.dart';
 import 'package:flutter/material.dart';
@@ -8,15 +6,16 @@ import 'package:provider/provider.dart';
 
 import '../../../view_model/daily_couple_post_view_model.dart';
 import '../../../view_model/user_info_view_model.dart';
-import '../../../view_model/user_profile_view_model.dart';
 import '../../widget/post/post_appbar_widget.dart';
 import '../login/login_screen.dart';
 import '../login/reset_pw_screen.dart';
 import '../post/post_main_screen.dart';
 
+bool _onPressed = false;
+
 class ManageAccountScreen extends StatelessWidget {
-  late UserInfoViewModel _userInfoViewModel;
   ManageAccountScreen({Key? key}) : super(key: key);
+  late UserInfoViewModel _userInfoViewModel;
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +36,12 @@ class ManageAccountScreen extends StatelessWidget {
             child: SingleButton(
               icon: Icons.clear,
               onTap: () async {
-                await Provider.of<UserInfoViewModel>(context, listen: false).clear();
-                Navigator.pop(context);
+                if(_onPressed == false) {
+                  _onPressed = true;
+                  await Provider.of<UserInfoViewModel>(context, listen: false).clear();
+                  Navigator.pop(context);
+                  _onPressed = false;
+                }
               },
             ),
           ),
@@ -50,121 +53,175 @@ class ManageAccountScreen extends StatelessWidget {
           scrollDirection: Axis.vertical,
           physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
           children: [
-            ListTile(
-              title: Text('닉네임 변경', style: Theme.of(context).textTheme.bodyLarge,),
+            InkWell(
+              splashColor: Colors.transparent,
+              child: Container(
+                  padding: EdgeInsets.all(18.w),
+                  alignment: Alignment.centerLeft,
+                  child: Text('닉네임 변경', style: Theme.of(context).textTheme.bodyLarge,)
+              ),
               onTap: () async {
-                FocusScope.of(context).unfocus();
-                await _userInfoViewModel.clear();
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ResetUsernameScreen()));
+                if(_onPressed == false) {
+                  _onPressed = true;
+                  FocusScope.of(context).unfocus();
+                  await _userInfoViewModel.clear();
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ResetUsernameScreen()));
+                  _onPressed = false;
+                }
               },
             ),
-            ListTile(
-              title: Text('기념일 변경', style: Theme.of(context).textTheme.bodyLarge,),
+            InkWell(
+              splashColor: Colors.transparent,
+              child: Container(
+                  padding: EdgeInsets.all(18.w),
+                  alignment: Alignment.centerLeft,
+                  child: Text('기념일 변경', style: Theme.of(context).textTheme.bodyLarge,)
+              ),
               onTap: () async {
-                FocusScope.of(context).unfocus();
-                await _userInfoViewModel.clear();
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ResetAnniversaryScreen()));
+                if(_onPressed == false) {
+                  _onPressed = true;
+                  FocusScope.of(context).unfocus();
+                  await _userInfoViewModel.clear();
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ResetAnniversaryScreen()));
+                  _onPressed = false;
+                }
               },
             ),
-            ListTile(
-              title: Text('비밀번호 변경', style: Theme.of(context).textTheme.bodyLarge,),
+            InkWell(
+              splashColor: Colors.transparent,
+              child: Container(
+                  padding: EdgeInsets.all(18.w),
+                  alignment: Alignment.centerLeft,
+                  child: Text('비밀번호 변경', style: Theme.of(context).textTheme.bodyLarge,)
+              ),
               onTap: () async {
-                FocusScope.of(context).unfocus();
-                await _userInfoViewModel.clear();
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ResetPwScreen()));
+                if(_onPressed == false) {
+                  _onPressed = true;
+                  FocusScope.of(context).unfocus();
+                  await _userInfoViewModel.clear();
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ResetPwScreen()));
+                  _onPressed = false;
+                }
               },
             ),
             Divider(),
-            ListTile(
-              title: Text('나의 기록 초기화', style: Theme.of(context).textTheme.bodyLarge,),
-              onTap: (){
-                FocusScope.of(context).unfocus();
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return WarningDialogWidget(
-                        onTap: () async {
-                          await _userInfoViewModel.doClearPosts();
-                          _userInfoViewModel.isPostsClear ?
-                          {
-                            await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
-                            await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
-                            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false)
-                          }
-                              :
-                          ScaffoldMessenger(
-                            child: SnackBar(
-                              content: Text(
-                                  _userInfoViewModel.clearPostsFailMessage !
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    }
-                );
-              },
-            ),
-            ListTile(
-              title: Text('커플 끊기', style: Theme.of(context).textTheme.bodyLarge,),
-              onTap: (){
-                FocusScope.of(context).unfocus();
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return WarningDialogWidget(
-                        onTap: () async {
-                          await _userInfoViewModel.doClearPartner();
-                          _userInfoViewModel.isPartnerClear ?
-                          {
-                            await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
-                            await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
-                            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false)
-                          }
-                              :
-                          ScaffoldMessenger(
-                            child: SnackBar(
-                              content: Text(
-                                  _userInfoViewModel.clearPartnerFailMessage !
-                              ),
-                            ),
-                          );
-                        },
-                      );
-                    }
-                );
-              },
-            ),
-            ListTile(
-              title: Text(
-                '회원 탈퇴',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.red),
+            InkWell(
+              splashColor: Colors.transparent,
+              child: Container(
+                  padding: EdgeInsets.all(18.w),
+                  alignment: Alignment.centerLeft,
+                  child: Text('나의 기록 초기화', style: Theme.of(context).textTheme.bodyLarge,)
               ),
               onTap: (){
-                FocusScope.of(context).unfocus();
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return WarningDialogWidget(
-                        onTap: () async {
-                          await _userInfoViewModel.clearUser();
-                          _userInfoViewModel.isUserClear ?
-                          {
-                            await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
-                            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false)
-                          }
-                              :
-                          ScaffoldMessenger(
-                            child: SnackBar(
-                              content: Text(
-                                  _userInfoViewModel.clearUserFailMessage !
+                if(_onPressed == false) {
+                  _onPressed = true;
+                  FocusScope.of(context).unfocus();
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return WarningDialogWidget(
+                          onTap: () async {
+                            await _userInfoViewModel.doClearPosts();
+                            _userInfoViewModel.isPostsClear ?
+                            {
+                              await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
+                              await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
+                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false)
+                            }
+                                :
+                            ScaffoldMessenger(
+                              child: SnackBar(
+                                content: Text(
+                                    _userInfoViewModel.clearPostsFailMessage !
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                      );
-                    }
-                );
+                            );
+                          },
+                        );
+                      }
+                  );
+                  _onPressed = false;
+                }
+              },
+            ),
+            InkWell(
+              splashColor: Colors.transparent,
+              child: Container(
+                  padding: EdgeInsets.all(18.w),
+                  alignment: Alignment.centerLeft,
+                  child: Text('커플 끊기', style: Theme.of(context).textTheme.bodyLarge,)
+              ),
+              onTap: (){
+                if(_onPressed == false) {
+                  _onPressed = true;
+                  FocusScope.of(context).unfocus();
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return WarningDialogWidget(
+                          onTap: () async {
+                            await _userInfoViewModel.doClearPartner();
+                            _userInfoViewModel.isPartnerClear ?
+                            {
+                              await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
+                              await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
+                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false)
+                            }
+                                :
+                            ScaffoldMessenger(
+                              child: SnackBar(
+                                content: Text(
+                                    _userInfoViewModel.clearPartnerFailMessage !
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }
+                  );
+                  _onPressed = false;
+                }
+              },
+            ),
+            InkWell(
+              splashColor: Colors.transparent,
+              child: Container(
+                padding: EdgeInsets.all(18.w),
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  '회원 탈퇴',
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.red),
+                ),
+              ),
+              onTap: (){
+                if(_onPressed == false) {
+                  _onPressed = true;
+                  FocusScope.of(context).unfocus();
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return WarningDialogWidget(
+                          onTap: () async {
+                            await _userInfoViewModel.clearUser();
+                            _userInfoViewModel.isUserClear ?
+                            {
+                              await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
+                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false)
+                            }
+                                :
+                            ScaffoldMessenger(
+                              child: SnackBar(
+                                content: Text(
+                                    _userInfoViewModel.clearUserFailMessage !
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      }
+                  );
+                  _onPressed = false;
+                }
               },
             ),
           ],
@@ -176,7 +233,7 @@ class ManageAccountScreen extends StatelessWidget {
 
 class WarningDialogWidget extends StatelessWidget {
   final GestureTapCallback onTap;
-  const WarningDialogWidget({Key? key, required this.onTap}) : super(key: key);
+  WarningDialogWidget({Key? key, required this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -213,23 +270,22 @@ class WarningDialogWidget extends StatelessWidget {
       contentPadding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 20.w),
       children: <Widget>[
         InkWell(
+          splashColor: Colors.transparent,
           onTap: onTap,
-          child: Container(
-            width: 100.w,
-            child: Text(
-              "진행할래요",
-              style: TextStyle(
-                fontSize: 12.w,
-                fontWeight: FontWeight.w400,
-                color: Color(0xFF808080),
-                decoration: TextDecoration.underline,
-              ),
-              textAlign: TextAlign.center,
+          child: Text(
+            "진행할래요",
+            style: TextStyle(
+              fontSize: 12.w,
+              fontWeight: FontWeight.w400,
+              color: Color(0xFF808080),
+              decoration: TextDecoration.underline,
             ),
+            textAlign: TextAlign.center,
           ),
         ),
         Container(height: 10.w,),
         InkWell(
+          splashColor: Colors.transparent,
           onTap: (){
             Navigator.pop(context);
           },
@@ -254,5 +310,14 @@ class WarningDialogWidget extends StatelessWidget {
         )
       ],
     );
+  }
+  static Color getColor(Set<MaterialState> states, Color defaultColor) {
+    if (states.contains(MaterialState.pressed) || states.contains(MaterialState.focused)) {
+      return Colors.blue;
+    } else if (states.contains(MaterialState.disabled)) {
+      return Colors.red;
+    } else {
+      return defaultColor;
+    }
   }
 }

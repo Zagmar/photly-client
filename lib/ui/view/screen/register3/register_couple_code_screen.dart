@@ -10,6 +10,8 @@ import 'package:provider/provider.dart';
 import '../../../view_model/daily_couple_post_view_model.dart';
 import '../../../view_model/user_info_view_model.dart';
 
+bool _onPressed = false;
+
 class RegisterCoupleCodeScreen extends StatelessWidget {
   RegisterCoupleCodeScreen({Key? key}) : super(key: key);
   late UserInfoViewModel _userInfoViewModel;
@@ -18,12 +20,6 @@ class RegisterCoupleCodeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _userInfoViewModel = Provider.of<UserInfoViewModel>(context);
-    /*
-    if(_userInfoViewModel.userCode == ""){
-      _userInfoViewModel.setUserCoupleCode();
-    }
-
-     */
     return Container(
         child: GestureDetector(
           onTap: (){
@@ -36,9 +32,14 @@ class RegisterCoupleCodeScreen extends StatelessWidget {
               leading: Container(),
               actions: <Widget>[
                 InkWell(
+                  splashColor: Colors.transparent,
                   onTap: (){
-                    FocusScope.of(context).unfocus();
-                    Navigator.pop(context);
+                    if(_onPressed == false) {
+                      _onPressed = true;
+                      FocusScope.of(context).unfocus();
+                      Navigator.pop(context);
+                      _onPressed = false;
+                    }
                   },
                   child: SizedBox(
                     width: 50.w,
@@ -66,35 +67,39 @@ class RegisterCoupleCodeScreen extends StatelessWidget {
                   MediaQuery.of(context).viewInsets.bottom <= 50 ?
                   BottomLargeButtonWidget(
                       onTap: () async {
-                        _formKey.currentState!.save();
-                        FocusScope.of(context).unfocus();
-                        !_userInfoViewModel.isCoupleCoupleCodeOk ?
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                                _userInfoViewModel.coupleCodeErrorMessage!
-                            ),
-                          ),
-                        )
-                            :
-                        {
-                          await _userInfoViewModel.matchCoupleCode(),
-                          _userInfoViewModel.isCoupleCodeMatched ?
-                          {
-                            await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
-                            await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
-                            //_register3ViewModel.clearCoupleCode(),
-                            Navigator.pop(context),
-                          }
-                              :
+                        if(_onPressed == false) {
+                          _onPressed = true;
+                          _formKey.currentState!.save();
+                          FocusScope.of(context).unfocus();
+                          !_userInfoViewModel.isCoupleCoupleCodeOk ?
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                  _userInfoViewModel.coupleCodeMatchFailMessage!
+                                  _userInfoViewModel.coupleCodeErrorMessage!
                               ),
                             ),
                           )
-                        };
+                              :
+                          {
+                            await _userInfoViewModel.matchCoupleCode(),
+                            _userInfoViewModel.isCoupleCodeMatched ?
+                            {
+                              await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
+                              await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
+                              //_register3ViewModel.clearCoupleCode(),
+                              Navigator.pop(context),
+                            }
+                                :
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    _userInfoViewModel.coupleCodeMatchFailMessage!
+                                ),
+                              ),
+                            )
+                          };
+                          _onPressed = false;
+                        }
                       },
                       buttonText: "등록하기"
                   )
@@ -164,11 +169,14 @@ class RegisterCoupleCodeWidget extends StatelessWidget {
                     ),
                   ),
                   InkWell(
+                    splashColor: Colors.transparent,
                     onTap: (){
-                      FocusScope.of(context).unfocus();
-                      print("복사하기");
-                      print(_userInfoViewModel.userCode);
-                      Clipboard.setData(ClipboardData(text: _userInfoViewModel.userCode));
+                      if(_onPressed == false) {
+                        _onPressed = true;
+                        FocusScope.of(context).unfocus();
+                        Clipboard.setData(ClipboardData(text: _userInfoViewModel.userCode));
+                        _onPressed = false;
+                      }
                     },
                     child: Container(
                       width: 45.w,

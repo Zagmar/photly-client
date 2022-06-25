@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../widget/post/post_appbar_widget.dart';
 
+bool _onPressed = false;
+
 class InformationScreen extends StatelessWidget {
-  const InformationScreen({Key? key}) : super(key: key);
+  InformationScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,11 @@ class InformationScreen extends StatelessWidget {
             child: SingleButton(
               icon: Icons.clear,
               onTap: () async {
-                Navigator.pop(context);
+                if(_onPressed == false) {
+                  _onPressed = true;
+                  Navigator.pop(context);
+                  _onPressed = false;
+                }
               },
             ),
           ),

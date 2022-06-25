@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-
 import '../../view_model/post_view_model.dart';
+
+bool _onPressed = false;
 
 class LargeImageScreen extends StatelessWidget {
   LargeImageScreen({Key? key}) : super(key: key);

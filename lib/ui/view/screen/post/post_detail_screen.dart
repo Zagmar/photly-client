@@ -10,6 +10,8 @@ import '../../../view_model/post_view_model.dart';
 import '../../widget/post/post_appbar_widget.dart';
 import '../../widget/post/post_daily_info_widget.dart';
 
+bool _onPressed = false;
+
 class PostDetailScreen extends StatelessWidget {
   late PostViewModel _postViewModel;
   PostDetailScreen({Key? key}) : super(key: key);
@@ -27,15 +29,27 @@ class PostDetailScreen extends StatelessWidget {
               children: <Widget>[
                 PostScreensAppbar(
                   onTap: () {
-                    Navigator.of(context).pop((route) => PostMainScreen());
+                    if(_onPressed == false) {
+                      _onPressed = true;
+                      Navigator.of(context).pop((route) => PostMainScreen());
+                      _onPressed = false;
+                    }
                   },
                 ),
                 PostDailyInfoWidget(
                   bottomButton: _postViewModel.post!.postUserId == _postViewModel.currentUserId && _postViewModel.post!.postEditTime.year == DateTime.now().year && _postViewModel.post!.postEditTime.month == DateTime.now().month && _postViewModel.post!.postEditTime.day == DateTime.now().day ?
                   RightTextButtonWidget(
                       onTap: (){
-                        FocusScope.of(context).unfocus();
-                        Navigator.popAndPushNamed(context, '/postEditScreen');
+                        if(_onPressed == false) {
+                          _onPressed = true;
+                          FocusScope.of(context).unfocus();
+                          Navigator.pushReplacement(context, PageRouteBuilder(
+                              pageBuilder: (context, animation1, animation2) => PostEditScreen(),
+                              transitionDuration: Duration.zero,
+                              reverseTransitionDuration: Duration.zero
+                          ),);
+                          _onPressed = false;
+                        }
                       },
                       buttonText: "편집"
                   )
@@ -67,9 +81,14 @@ class PostDetailWidget extends StatelessWidget {
             width: FULL_WIDTH.w,
             height: FULL_WIDTH.w * IMAGE_RATIO,
             child: InkWell(
+              splashColor: Colors.transparent,
               onTap: () async {
-                await _postViewModel.setTempImageUrl(_postViewModel.post!.postImageUrl);
-                Navigator.push(context, MaterialPageRoute(builder: (context) => LargeImageScreen(), fullscreenDialog: true));
+                if(_onPressed == false) {
+                  _onPressed = true;
+                  await _postViewModel.setTempImageUrl(_postViewModel.post!.postImageUrl);
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => LargeImageScreen(), fullscreenDialog: true));
+                  _onPressed = false;
+                }
               },
               child: CachedNetworkImageWidget(
                   imageUrl: _postViewModel.post!.postImageUrl,

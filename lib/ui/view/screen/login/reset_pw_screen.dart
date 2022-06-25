@@ -1,5 +1,4 @@
 import 'package:couple_seflie_app/ui/view/screen/login/update_pw_screen.dart';
-import 'package:couple_seflie_app/ui/view/screen/register1/register_vertification_screen.dart';
 import 'package:couple_seflie_app/ui/view/widget/route_button_widgets.dart';
 import 'package:couple_seflie_app/ui/view_model/user_info_view_model.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../widget/text_form_field.dart';
 import '../../widget/one_block_top_widget.dart';
-import '../login/login_screen.dart';
+
+bool _onPressed = false;
 
 class ResetPwScreen extends StatelessWidget {
   ResetPwScreen({Key? key}) : super(key: key);
@@ -52,36 +52,44 @@ class ResetPwScreen extends StatelessWidget {
                 // Hide button when use keyboard
                 BothButtonsWidget(
                     onTapLeft: () {
-                      _userInfoViewModel.clear();
-                      FocusScope.of(context).unfocus();
-                      Navigator.pop(context);
+                      if(_onPressed == false) {
+                        _onPressed = true;
+                        _userInfoViewModel.clear();
+                        FocusScope.of(context).unfocus();
+                        Navigator.pop(context);
+                        _onPressed = false;
+                      }
                     },
                     buttonTextLeft: "이전",
                     onTapRight: () async {
-                      _formKey.currentState!.save();
-                      FocusScope.of(context).unfocus();
-                      _userInfoViewModel.isIdOk ?
-                      {
-                        await _userInfoViewModel.resetPassword(),
+                      if(_onPressed == false){
+                        _onPressed = true;
+                        _formKey.currentState!.save();
+                        FocusScope.of(context).unfocus();
+                        _userInfoViewModel.isIdOk ?
+                        {
+                          await _userInfoViewModel.resetPassword(),
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  _userInfoViewModel.resetPasswordResultMessage!
+                              ),
+                            ),
+                          ),
+                          if(_userInfoViewModel.isPWReset){
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => UpdatePwScreen()))
+                          }
+                        }
+                            :
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                                _userInfoViewModel.resetPasswordResultMessage!
+                                _userInfoViewModel.idErrorMessage!
                             ),
                           ),
-                        ),
-                        if(_userInfoViewModel.isPWReset){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => UpdatePwScreen()))
-                        }
+                        );
+                        _onPressed = false;
                       }
-                          :
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                              _userInfoViewModel.idErrorMessage!
-                          ),
-                        ),
-                      );
                     },
                     buttonTextRight: "완료"
                 )

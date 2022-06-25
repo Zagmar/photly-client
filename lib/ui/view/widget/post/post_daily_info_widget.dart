@@ -184,6 +184,7 @@ class RightIconButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      splashColor: Colors.transparent,
       onTap: onTap,
       child: Container(
         width: 40.w,
@@ -206,6 +207,7 @@ class RightTextButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
+      splashColor: Colors.transparent,
       onTap: onTap,
       child: Text(
         buttonText,

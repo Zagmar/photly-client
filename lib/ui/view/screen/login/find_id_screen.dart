@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../widget/route_button_widgets.dart';
 
+bool _onPressed = false;
+
 class FindIdScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -26,8 +28,12 @@ class FindIdScreen extends StatelessWidget {
               ),
               LeftButtonOnlyWidget(
                 onTap: () {
-                  FocusScope.of(context).unfocus();
-                  Navigator.pop(context);
+                  if(_onPressed == false) {
+                    _onPressed = true;
+                    FocusScope.of(context).unfocus();
+                    Navigator.pop(context);
+                    _onPressed = false;
+                  }
                 },
                 buttonText: "이전",
               )

@@ -9,6 +9,8 @@ import '../../widget/route_button_widgets.dart';
 import '../../widget/one_block_top_widget.dart';
 import '../post/post_main_screen.dart';
 
+bool _onPressed = false;
+
 class RegisterAnniversaryScreen extends StatelessWidget {
   RegisterAnniversaryScreen({Key? key}) : super(key: key);
   //late Register2ViewModel _register2ViewModel;
@@ -52,32 +54,40 @@ class RegisterAnniversaryScreen extends StatelessWidget {
                   ),
                   BothButtonsWidget(
                       onTapLeft: (){
-                        FocusScope.of(context).unfocus();
-                        Navigator.pop(context);
+                        if(_onPressed == false) {
+                          _onPressed = true;
+                          FocusScope.of(context).unfocus();
+                          Navigator.pop(context);
+                          _onPressed = false;
+                        }
                       },
                       buttonTextLeft: "이전",
                       onTapRight: () async {
-                        FocusScope.of(context).unfocus();
-                        if(!_userInfoViewModel.isAnniversaryOk){
-                          _userInfoViewModel.setAnniversary(DateTime.now());
-                        }
+                        if(_onPressed == false) {
+                          _onPressed = true;
+                          FocusScope.of(context).unfocus();
+                          if(!_userInfoViewModel.isAnniversaryOk){
+                            _userInfoViewModel.setAnniversary(DateTime.now());
+                          }
 
-                        await _userInfoViewModel.uploadUserInfoToDB();
-                        _userInfoViewModel.isUploaded ?
-                        {
-                          await Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser(),
-                          await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
-                          await Provider.of<UserInfoViewModel>(context, listen: false).clear(),
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => PostMainScreen()))
+                          await _userInfoViewModel.uploadUserInfoToDB();
+                          _userInfoViewModel.isUploaded ?
+                          {
+                            await Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser(),
+                            await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
+                            await Provider.of<UserInfoViewModel>(context, listen: false).clear(),
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => PostMainScreen()))
+                          }
+                              :
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text(
+                                    _userInfoViewModel.uploadFailMessage !
+                                )
+                            ),
+                          );
+                          _onPressed = false;
                         }
-                            :
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content: Text(
-                                  _userInfoViewModel.uploadFailMessage !
-                              )
-                          ),
-                        );
                       },
                       buttonTextRight: "다음"
                   ),
