@@ -2,7 +2,6 @@ import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:couple_seflie_app/photly_style.dart';
-import 'package:couple_seflie_app/ui/splash_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/login/login_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/manage/manage_account_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_edit_screen.dart';
@@ -23,9 +22,6 @@ import 'amplifyconfiguration.dart';
 import 'data/repository/auth_service.dart';
 import 'data/repository/firebase_cloud_messaging_service.dart';
 import 'data/repository/local_notification_service.dart';
-
-bool _isLogined = false;
-late String username;
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   RemoteNotification? notification = message.notification;
@@ -113,15 +109,6 @@ main() async {
     print('Could not configure Amplify ☠️');
   }
 
-  // Check Whether User Already Sign In
-  final AuthFlowStatus authFlowStatus = await AuthService().checkAuthStatusService();
-  if(authFlowStatus == AuthFlowStatus.session) {
-    _isLogined = true;
-  }
-  else{
-    _isLogined = false;
-  }
-
   runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context)=> DailyCouplePostViewModel(),),
@@ -135,19 +122,9 @@ main() async {
 
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
-  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
-    FlutterNativeSplash.remove();
-    if (_isLogined && !_isLoading) {
-      _isLoading = true;
-      Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser();
-      Provider.of<DailyCouplePostViewModel>(context,listen: false).initDailyCouplePosts();
-      FirebaseCloudMessagingService().fcmSetting();
-    }
-
-    print("myApp 실행");
     return ScreenUtilInit(
         splitScreenMode: false,
         designSize: const Size(375, 667),
@@ -162,14 +139,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: 'Photly',
             theme: PhotlyStyle(MediaQueryData()).photlyThemeData,
-            home: _isLogined ?
-            Provider.of<DailyCouplePostViewModel>(context).isLoadDone ?
-            // Show loading widget when is loading
-            PostMainScreen()
-                :
-            SplashScreen()
-                :
-            LoginScreen(),
+            home: const MyHomePage(),
             routes: {
               '/postEditScreen': (context) => PostEditScreen(),
               '/manageAccountScreen': (context) => ManageAccountScreen(),
@@ -177,5 +147,43 @@ class MyApp extends StatelessWidget {
           ),
         )
     );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key}) : super(key: key);
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  AuthFlowStatus _authFlowStatus = AuthFlowStatus.login;
+  @override
+  void initState() {
+    super.initState();
+    initialization();
+  }
+
+  void initialization() async {
+    // Check Whether User Already Sign In
+    _authFlowStatus = await AuthService().checkAuthStatusService();
+    if(_authFlowStatus == AuthFlowStatus.session) {
+      await Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser();
+      await Provider.of<DailyCouplePostViewModel>(context,listen: false).initDailyCouplePosts();
+      await FirebaseCloudMessagingService().fcmSetting();
+      Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
+        pageBuilder: (context, animation1, animation2) => PostMainScreen(),
+        transitionDuration: Duration.zero,
+        reverseTransitionDuration: Duration.zero
+      ), (route) => false);
+      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PostMainScreen()));
+    }
+    FlutterNativeSplash.remove();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LoginScreen();
   }
 }
