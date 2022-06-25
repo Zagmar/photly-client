@@ -31,9 +31,9 @@
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Please grant camera access</string>
+	<string>업로드할 이미지를 촬영하기 위해서는 카메라 접근 권한을 허용해주세요. 촬영 후 업로드된 사진은 서버로 전송됩니다.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Please grant photo gallery access</string>
+	<string>업로드할 이미지를 불러오기 위해서는 포토 라이브러리 접근 권한을 허용해주세요. 라이브러리를 통해 업로드된 사진은 서버로 전송됩니다.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
