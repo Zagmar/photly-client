@@ -120,7 +120,11 @@ class MainDrawerWidget extends StatelessWidget {
                 _userInfoViewModel.isLogout ?
                 {
                   Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
-                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false)
+                  Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
+                      pageBuilder: (context, animation1, animation2) => LoginScreen(),
+                      transitionDuration: Duration.zero,
+                      reverseTransitionDuration: Duration.zero
+                  ), (route) => false),
                 }
                     :
                 ScaffoldMessenger(
