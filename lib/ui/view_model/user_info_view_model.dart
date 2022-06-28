@@ -51,7 +51,7 @@ class UserInfoViewModel extends ChangeNotifier {
   bool _isUploaded = false;
   String? _usernameErrorMessage = '닉네임은 필수사항입니다';
   String? _anniversaryErrorMessage = '날짜를 선택해주세요';
-  String? _uploadFailMessage = "다시 시도해주세요";
+  String? _uploadFailMessage = "재시도 후 지속적인 오류가 발생 시 문의해주세요";
 
   String _userCode = ""; // temp
   String? _coupleCode; // temp
@@ -323,7 +323,7 @@ class UserInfoViewModel extends ChangeNotifier {
     }
 
     if(result is Failure){
-      _clearPostsFailMessage = result.errorResponse;
+      _clearPostsFailMessage = "재시도 후 지속적인 오류가 발생 시 문의해주세요";
       _isPostsClear = false;
       notifyListeners();
     }
@@ -340,7 +340,7 @@ class UserInfoViewModel extends ChangeNotifier {
     }
 
     if(result is Failure){
-      _clearPartnerFailMessage = result.errorResponse;
+      _clearPartnerFailMessage = "재시도 후 지속적인 오류가 발생 시 문의해주세요";
       _isPartnerClear = false;
       notifyListeners();
     }
@@ -350,7 +350,7 @@ class UserInfoViewModel extends ChangeNotifier {
     final result = await _authService.logOutService();
 
     if(result is Failure){
-      _logoutFailMessage = result.errorResponse;
+      _logoutFailMessage = "재시도 후 지속적인 오류가 발생 시 문의해주세요";
       _isLogout = false;
       notifyListeners();
     }
@@ -369,26 +369,10 @@ class UserInfoViewModel extends ChangeNotifier {
 
       _clearUserFailMessage = null;
       _isUserClear = true;
-
-      /*
-      final resultAuth = await _authService.ClearUserService();
-      print("여기3");
-      if(resultAuth is Failure){
-        _clearUserFailMessage = resultAuth.errorResponse;
-        _isUserClear = false;
-        notifyListeners();
-      }
-      if(resultAuth is Success) {
-        _clearUserFailMessage = null;
-        _isUserClear = true;
-        notifyListeners();
-      }
-
-       */
     }
     if(result is Failure) {
       print("여기4");
-      _clearUserFailMessage = result.errorResponse;
+      _clearUserFailMessage = "재시도 후 지속적인 오류가 발생 시 문의해주세요";
       _isUserClear = false;
       notifyListeners();
     }
@@ -426,7 +410,7 @@ class UserInfoViewModel extends ChangeNotifier {
     }
     else {
       _isUploaded = false;
-      _uploadFailMessage = "요청을 실패하였습니다.";
+      _uploadFailMessage = "재시도 후 지속적인 오류가 발생 시 문의해주세요";
     }
     notifyListeners();
   }
@@ -439,7 +423,7 @@ class UserInfoViewModel extends ChangeNotifier {
     }
     else {
       _isUploaded = false;
-      _uploadFailMessage = "요청을 실패하였습니다.";
+      _uploadFailMessage = "재시도 후 지속적인 오류가 발생 시 문의해주세요";
     }
     notifyListeners();
   }
@@ -452,7 +436,7 @@ class UserInfoViewModel extends ChangeNotifier {
     }
     else {
       _isUploaded = false;
-      _uploadFailMessage = "요청을 실패하였습니다.";
+      _uploadFailMessage = "재시도 후 지속적인 오류가 발생 시 문의해주세요";
     }
     notifyListeners();
   }
@@ -476,7 +460,7 @@ class UserInfoViewModel extends ChangeNotifier {
 
     if(response is Failure){
       _isCoupleCodeMatched = false;
-      _coupleCodeMatchFailMessage = "연결에 실패하였습니다. 다시 한 번 확인해주세요.";
+      _coupleCodeMatchFailMessage = "올바른 코드인지 다시 확인 후 시도해주세요";
     }
 
     if((response is Success)){
