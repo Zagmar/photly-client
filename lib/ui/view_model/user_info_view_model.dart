@@ -170,7 +170,7 @@ class UserInfoViewModel extends ChangeNotifier {
   }
 
   Future<void> doVerification() async {
-    final result = await _authService.verificationService(_input!);
+    final result = await _authService.verificationService(_credential.email!, _input!);
 
     if(result == VerifyStatus.success){
       _resultMessage = null;

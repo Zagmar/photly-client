@@ -58,10 +58,10 @@ class AuthService {
     }
   }
 
-  Future<Object> verificationService(String verificationCode) async {
+  Future<Object> verificationService(String userId, String verificationCode) async {
     try {
       final result = await Amplify.Auth.confirmSignUp(
-          username: await getCurrentUserId(),
+          username: userId,
           confirmationCode: verificationCode
       );
       if (result.isSignUpComplete) {
