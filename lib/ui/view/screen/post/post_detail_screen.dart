@@ -1,4 +1,4 @@
-import 'package:couple_seflie_app/ui/view/screen/large_image_screen.dart';
+import 'package:couple_seflie_app/ui/view/screen/post/large_image_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_edit_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_main_screen.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +37,7 @@ class PostDetailScreen extends StatelessWidget {
                   },
                 ),
                 PostDailyInfoWidget(
-                  bottomButton: _postViewModel.post!.postUserId == _postViewModel.currentUserId && _postViewModel.post!.postEditTime.year == DateTime.now().year && _postViewModel.post!.postEditTime.month == DateTime.now().month && _postViewModel.post!.postEditTime.day == DateTime.now().day ?
+                  bottomButton: _postViewModel.isEditable ?
                   RightTextButtonWidget(
                       onTap: (){
                         if(_onPressed == false) {
@@ -85,7 +85,6 @@ class PostDetailWidget extends StatelessWidget {
               onTap: () async {
                 if(_onPressed == false) {
                   _onPressed = true;
-                  await _postViewModel.setTempImageUrl(_postViewModel.post!.postImageUrl);
                   Navigator.push(context, MaterialPageRoute(builder: (context) => LargeImageScreen(), fullscreenDialog: true));
                   _onPressed = false;
                 }

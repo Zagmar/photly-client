@@ -52,7 +52,7 @@ class PostDailyInfoWidget extends StatelessWidget {
                             color: Color(0xFF000000),
                             alignment: Alignment.center,
                             child: Text(
-                              _dailyCouplePostViewModel.year,
+                              _dailyCouplePostViewModel.dailyCouplePost.year!,
                               style: TextStyle(
                                 color: Color(0xFFFFFFFF),
                                 fontWeight: FontWeight.w300,
@@ -76,7 +76,7 @@ class PostDailyInfoWidget extends StatelessWidget {
                               ),
                             ),
                             child: Text(
-                              _dailyCouplePostViewModel.month,
+                              _dailyCouplePostViewModel.dailyCouplePost.month!,
                               style: TextStyle(
                                 color: Color(0xFF000000),
                                 fontWeight: FontWeight.w600,
@@ -92,7 +92,7 @@ class PostDailyInfoWidget extends StatelessWidget {
                             height: 50.w,
                             alignment: Alignment.center,
                             child: Text(
-                              _dailyCouplePostViewModel.day,
+                              _dailyCouplePostViewModel.dailyCouplePost.day!,
                               style: TextStyle(
                                 color: Color(0xFF000000),
                                 fontWeight: FontWeight.w600,
@@ -106,14 +106,14 @@ class PostDailyInfoWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    _dailyCouplePostViewModel.questionType == 0 ?
+                    _dailyCouplePostViewModel.dailyCouplePost.questionType! == 0 ?
                     Container()
                         :
                     Container(
                       width: 100.w,
                       height: 100.w,
                       child: CachedNetworkImage(
-                        imageUrl: _dailyCouplePostViewModel.questionImageUrl!,
+                        imageUrl: _dailyCouplePostViewModel.dailyCouplePost.questionImageUrl!,
                         width: 100.w,
                         height: 100.w,
                         progressIndicatorBuilder: (context, url, downloadProgress) =>
@@ -134,7 +134,7 @@ class PostDailyInfoWidget extends StatelessWidget {
                 Container(
                   height: 25.w,
                   child: Text(
-                    _dailyCouplePostViewModel.questionText1,
+                    _dailyCouplePostViewModel.dailyCouplePost.questionText1!,
                     style: Theme.of(context).textTheme.titleLarge,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
@@ -143,7 +143,7 @@ class PostDailyInfoWidget extends StatelessWidget {
                 Container(
                   height: 25.w,
                   child: Text(
-                    _dailyCouplePostViewModel.questionText2,
+                    _dailyCouplePostViewModel.dailyCouplePost.questionText2!,
                     style: Theme.of(context).textTheme.titleLarge,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,

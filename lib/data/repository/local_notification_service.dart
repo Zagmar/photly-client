@@ -2,15 +2,13 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 
-/// Notification at 21:00 Today or Next day & After 5days
-///
+/// Notification at 08:00 on Next day
 class LocalNotificationService{
   late FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
   late NotificationDetails _notificationDetails;
 
   Future<void> initialize() async{
     tz.initializeTimeZones();
-    //tz.setLocalLocation(tz.getLocation(DateTime.now().timeZoneName));
     tz.setLocalLocation(tz.getLocation("Asia/Seoul"));
     _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
@@ -22,9 +20,7 @@ class LocalNotificationService{
         iOS: _initializationSettingsIOS
     );
 
-    await _flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        //onSelectNotification: onSelectNotification()
-    );
+    await _flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
     var _androidDetail = AndroidNotificationDetails("id", "channel",
       channelDescription : "description",
@@ -39,13 +35,10 @@ class LocalNotificationService{
     );
 
     _notificationDetails = NotificationDetails(android: _androidDetail, iOS: _iosDetails);
-
-    //tz.initializeDatabase([]);
     await _dailyNotification();
   }
 
   Future<void> _dailyNotification() async {
-    // 자정 알림
     await _flutterLocalNotificationsPlugin.zonedSchedule(
       1,
       'Photly',

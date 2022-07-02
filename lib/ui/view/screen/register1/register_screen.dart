@@ -29,10 +29,10 @@ class RegisterScreen extends StatelessWidget {
           actions: <Widget>[
             InkWell(
               splashColor: Colors.transparent,
-              onTap: (){
+              onTap: () async {
                 if(_onPressed == false) {
                   _onPressed = true;
-                  _userInfoViewModel.clear();
+                  await Provider.of<UserInfoViewModel>(context, listen: false).clearAll();
                   FocusScope.of(context).unfocus();
                   Navigator.popUntil(context, (route) => route.isFirst);
                   _onPressed = false;
@@ -73,31 +73,36 @@ class RegisterScreen extends StatelessWidget {
                         _onPressed = true;
                         _formKey.currentState!.save();
                         FocusScope.of(context).unfocus();
-                        !_userInfoViewModel.isRegisterOk ?
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                                _userInfoViewModel.idErrorMessage ?? _userInfoViewModel.pwErrorMessage ?? '입력된 정보가 올바르지 않습니다'
-                            ),
-                          ),
-                        )
-                            :
+                        await _userInfoViewModel.checkInputOk();
+                        //!_userInfoViewModel.isRegisterOk ?
+                        _userInfoViewModel.inputOk ?
                         {
                           await _userInfoViewModel.doRegistration(),
-                          _userInfoViewModel.isRegistered ?
+                          _userInfoViewModel.resultSuccess ?
+                          //_userInfoViewModel.isRegistered ?
                           {
-                            Navigator.push(context, MaterialPageRoute(builder: (
-                                context) => RegisterVertificationScreen()))
+                            await Provider.of<UserInfoViewModel>(context, listen: false).clearWithoutCredential(),
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterVertificationScreen()))
                           }
                               :
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                  _userInfoViewModel.registrationFailMessage!
+                                  _userInfoViewModel.resultMessage!
+                                  //_userInfoViewModel.registrationFailMessage!
                               ),
                             ),
                           ),
-                        };
+                        }
+                        :
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              //_userInfoViewModel.idErrorMessage ?? _userInfoViewModel.pwErrorMessage ?? '입력된 정보가 올바르지 않습니다'
+                                _userInfoViewModel.inputErrorMessage!
+                            ),
+                          ),
+                        );
                         _onPressed = false;
                       }
                     },

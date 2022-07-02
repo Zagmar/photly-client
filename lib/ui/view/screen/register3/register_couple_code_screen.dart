@@ -33,10 +33,11 @@ class RegisterCoupleCodeScreen extends StatelessWidget {
               actions: <Widget>[
                 InkWell(
                   splashColor: Colors.transparent,
-                  onTap: (){
+                  onTap: () async {
                     if(_onPressed == false) {
                       _onPressed = true;
                       FocusScope.of(context).unfocus();
+                      await Provider.of<UserInfoViewModel>(context, listen: false).clearAll();
                       Navigator.pop(context);
                       _onPressed = false;
                     }
@@ -71,21 +72,17 @@ class RegisterCoupleCodeScreen extends StatelessWidget {
                           _onPressed = true;
                           _formKey.currentState!.save();
                           FocusScope.of(context).unfocus();
-                          !_userInfoViewModel.isCoupleCoupleCodeOk ?
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  _userInfoViewModel.coupleCodeErrorMessage!
-                              ),
-                            ),
-                          )
-                              :
+                          await _userInfoViewModel.checkInputOk();
+                          _userInfoViewModel.inputOk ?
+                          //_userInfoViewModel.isCoupleCoupleCodeOk ?
                           {
                             await _userInfoViewModel.matchCoupleCode(),
-                            _userInfoViewModel.isCoupleCodeMatched ?
+                            _userInfoViewModel.resultSuccess ?
+                            //_userInfoViewModel.isCoupleCodeMatched ?
                             {
                               await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
                               await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
+                              await Provider.of<UserInfoViewModel>(context, listen: false).clearAll(),
                               //_register3ViewModel.clearCoupleCode(),
                               Navigator.pop(context),
                             }
@@ -93,11 +90,21 @@ class RegisterCoupleCodeScreen extends StatelessWidget {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                    _userInfoViewModel.coupleCodeMatchFailMessage!
+                                    _userInfoViewModel.resultMessage!
+                                    //_userInfoViewModel.coupleCodeMatchFailMessage!
                                 ),
                               ),
                             )
-                          };
+                          }
+                          :
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  _userInfoViewModel.inputErrorMessage!
+                                  //_userInfoViewModel.coupleCodeErrorMessage!
+                              ),
+                            ),
+                          );
                           _onPressed = false;
                         }
                       },
@@ -160,7 +167,7 @@ class RegisterCoupleCodeWidget extends StatelessWidget {
                     width: 255.w,
                     height: 20.w,
                     child: Text(
-                      _userInfoViewModel.userCode,
+                      _userInfoViewModel.userCode??"로드 실패",
                       style: TextStyle(
                         fontSize: 16.w,
                         fontWeight: FontWeight.w400,
@@ -174,7 +181,7 @@ class RegisterCoupleCodeWidget extends StatelessWidget {
                       if(_onPressed == false) {
                         _onPressed = true;
                         FocusScope.of(context).unfocus();
-                        Clipboard.setData(ClipboardData(text: _userInfoViewModel.userCode));
+                        Clipboard.setData(ClipboardData(text: _userInfoViewModel.userCode!));
                         _onPressed = false;
                       }
                     },

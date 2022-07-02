@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../view_model/post_view_model.dart';
+import '../../../view_model/post_view_model.dart';
 
 bool _onPressed = false;
 
@@ -53,7 +53,7 @@ class LargeImageScreen extends StatelessWidget {
             color: Color(0xFF000000),
             alignment: Alignment.center,
             child: CachedNetworkImage(
-              imageUrl: _postViewModel.tempImageUrl,
+              imageUrl: _postViewModel.post!.postImageUrl,
               fit: BoxFit.contain,
             ),
           )

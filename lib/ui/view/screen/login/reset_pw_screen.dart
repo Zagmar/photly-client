@@ -51,10 +51,10 @@ class ResetPwScreen extends StatelessWidget {
                 MediaQuery.of(context).viewInsets.bottom <= 50 ?
                 // Hide button when use keyboard
                 BothButtonsWidget(
-                    onTapLeft: () {
+                    onTapLeft: () async {
                       if(_onPressed == false) {
                         _onPressed = true;
-                        _userInfoViewModel.clear();
+                        await Provider.of<UserInfoViewModel>(context, listen: false).clearAll();
                         FocusScope.of(context).unfocus();
                         Navigator.pop(context);
                         _onPressed = false;
@@ -66,25 +66,31 @@ class ResetPwScreen extends StatelessWidget {
                         _onPressed = true;
                         _formKey.currentState!.save();
                         FocusScope.of(context).unfocus();
-                        _userInfoViewModel.isIdOk ?
+                        //_userInfoViewModel.isIdOk ?
+                        await _userInfoViewModel.checkInputOk();
+                        _userInfoViewModel.inputOk ?
                         {
                           await _userInfoViewModel.resetPassword(),
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                  _userInfoViewModel.resetPasswordResultMessage!
+                                  _userInfoViewModel.resultMessage!
+                                  //_userInfoViewModel.resetPasswordResultMessage!
                               ),
                             ),
                           ),
-                          if(_userInfoViewModel.isPWReset){
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => UpdatePwScreen()))
+                          if(_userInfoViewModel.resultSuccess){
+                          //if(_userInfoViewModel.isPWReset){
+                          await Provider.of<UserInfoViewModel>(context, listen: false).clearWithoutCredential(),
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => UpdatePwScreen()))
                           }
                         }
                             :
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                                _userInfoViewModel.idErrorMessage!
+                                _userInfoViewModel.inputErrorMessage!
+                                //_userInfoViewModel.idErrorMessage!
                             ),
                           ),
                         );

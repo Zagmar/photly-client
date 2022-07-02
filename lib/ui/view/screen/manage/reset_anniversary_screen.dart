@@ -41,8 +41,8 @@ class ResetAnniversaryScreen extends StatelessWidget {
                       maximumYear: DateTime.now().year,
                       initialDateTime: DateTime.now(),
                       maximumDate: DateTime.now(),
-                      onDateTimeChanged: (DateTime value) {
-                        _userInfoViewModel.setAnniversary(value);
+                      onDateTimeChanged: (DateTime value) async {
+                        await _userInfoViewModel.setAnniversary(value);
                       },
                       mode: CupertinoDatePickerMode.date,
                     )
@@ -50,11 +50,11 @@ class ResetAnniversaryScreen extends StatelessWidget {
                 MediaQuery.of(context).viewInsets.bottom <= 50 ?
                 // Hide button when use keyboard
                 BothButtonsWidget(
-                    onTapLeft: () {
+                    onTapLeft: () async {
                       if(_onPressed == false) {
                         _onPressed = true;
-                        _userInfoViewModel.clear();
                         FocusScope.of(context).unfocus();
+                        await Provider.of<UserInfoViewModel>(context, listen: false).clearAll();
                         Navigator.pop(context);
                         _onPressed = false;
                       }
@@ -64,22 +64,33 @@ class ResetAnniversaryScreen extends StatelessWidget {
                       if(_onPressed == false) {
                         _onPressed = true;
                         FocusScope.of(context).unfocus();
-                        if(!_userInfoViewModel.isAnniversaryOk){
-                          _userInfoViewModel.setAnniversary(DateTime.now());
-                        }
-
-                        await _userInfoViewModel.updateAnniversary();
-                        _userInfoViewModel.isUploaded ?
+                        await _userInfoViewModel.checkInputOk();
+                        _userInfoViewModel.inputOk ?
                         {
-                          await Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser(),
-                          await Provider.of<UserInfoViewModel>(context, listen: false).clear(),
-                          Navigator.pop(context),
+                          await _userInfoViewModel.updateAnniversary(),
+                          //_userInfoViewModel.isUploaded ?
+                          _userInfoViewModel.resultSuccess ?
+                          {
+                            await Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser(),
+                            await Provider.of<UserInfoViewModel>(context, listen: false).clearAll(),
+                            Navigator.pop(context),
+                          }
+                              :
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content: Text(
+                                    _userInfoViewModel.resultMessage!
+                                  //_userInfoViewModel.uploadFailMessage !
+                                )
+                            ),
+                          ),
                         }
                             :
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                               content: Text(
-                                  _userInfoViewModel.uploadFailMessage !
+                                  "날짜를 선택해주세요"
+                                //_userInfoViewModel.uploadFailMessage !
                               )
                           ),
                         );

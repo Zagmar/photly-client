@@ -91,7 +91,7 @@ class LoginScreen extends StatelessWidget {
                                 _onPressed = true;
                                 FocusScope.of(context).unfocus();
                                 _formKey.currentState!.reset();
-                                await _userInfoViewModel.clear();
+                                await Provider.of<UserInfoViewModel>(context, listen: false).clearAll();
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => ResetPwScreen(),fullscreenDialog: true));
                                 _onPressed = false;
                               }
@@ -105,7 +105,7 @@ class LoginScreen extends StatelessWidget {
                                 _onPressed = true;
                                 FocusScope.of(context).unfocus();
                                 _formKey.currentState!.reset();
-                                await _userInfoViewModel.clear();
+                                await Provider.of<UserInfoViewModel>(context, listen: false).clearAll();
                                 Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen()));
                                 _onPressed = false;
                               }
@@ -122,54 +122,57 @@ class LoginScreen extends StatelessWidget {
                         _onPressed = true;
                         _formKey.currentState!.save();
                         FocusScope.of(context).unfocus();
-                        !_userInfoViewModel.isLoginOk ?
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                                _userInfoViewModel.idErrorMessage ?? _userInfoViewModel.pwErrorMessage ?? '입력된 정보가 올바르지 않습니다'
-                            ),
-                          ),
-                        )
-                            :
+                        await _userInfoViewModel.checkInputOk();
+                        //!_userInfoViewModel.isLoginOk ?
+                        _userInfoViewModel.inputOk ?
                         {
                           await _userInfoViewModel.doLogin(),
 
-                          if(_userInfoViewModel.loginFailure == null){
+                          if(_userInfoViewModel.resultState == null){
+                          //if(_userInfoViewModel.loginFailure == null){
                             await Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser(),
                             await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
-                            await Provider.of<UserInfoViewModel>(context, listen: false).clear(),
+                            await Provider.of<UserInfoViewModel>(context, listen: false).clearAll(),
                             Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
                               pageBuilder: (context, animation1, animation2) => PostMainScreen(),
                               transitionDuration: Duration.zero,
                             ), (route) => false),
                           }
-                          else if(_userInfoViewModel.loginFailure == "nonVerification"){
+                          else if(_userInfoViewModel.resultState == "nonVerification"){
+                          //else if(_userInfoViewModel.loginFailure == "nonVerification"){
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                    _userInfoViewModel.loginFailMessage!
+                                    _userInfoViewModel.resultMessage!
+                                    //_userInfoViewModel.loginFailMessage!
                                 ),
                               ),
                             ),
                             _formKey.currentState!.reset(),
+                            await Provider.of<UserInfoViewModel>(context, listen: false).clearWithoutCredential(),
                             Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterVertificationScreen())),
                           }
-                          else if(_userInfoViewModel.loginFailure == "nonUserInfo") {
+                          else if(_userInfoViewModel.resultState == "nonUserInfo") {
+                          //else if(_userInfoViewModel.loginFailure == "nonUserInfo") {
                             ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                      _userInfoViewModel.loginFailMessage!
+                                      _userInfoViewModel.resultMessage!
+                                      //_userInfoViewModel.loginFailMessage!
                                   ),
                                 ),
                               ),
                               _formKey.currentState!.reset(),
+                              await Provider.of<UserInfoViewModel>(context, listen: false).clearAll(),
                               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => RegisterUsernameScreen()), (route) => false),
                           }
-                          else if(_userInfoViewModel.loginFailure == "nonUser" || _userInfoViewModel.loginFailure == "fail") {
+                          else if(_userInfoViewModel.resultState == "nonUser" || _userInfoViewModel.resultState == "fail") {
+                          //else if(_userInfoViewModel.loginFailure == "nonUser" || _userInfoViewModel.loginFailure == "fail") {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                    _userInfoViewModel.loginFailMessage!
+                                    _userInfoViewModel.resultMessage!
+                                    //_userInfoViewModel.loginFailMessage!
                                 ),
                               ),
                             ),
@@ -178,12 +181,22 @@ class LoginScreen extends StatelessWidget {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                    _userInfoViewModel.loginFailMessage!
+                                    _userInfoViewModel.resultMessage!
+                                    //_userInfoViewModel.loginFailMessage!
                                 ),
                               ),
                             ),
                           }
-                        };
+                        }
+                        :
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              //_userInfoViewModel.idErrorMessage ?? _userInfoViewModel.pwErrorMessage ?? '입력된 정보가 올바르지 않습니다'
+                                _userInfoViewModel.inputErrorMessage!
+                            ),
+                          ),
+                        );
                         _onPressed = false;
                       }
                     },

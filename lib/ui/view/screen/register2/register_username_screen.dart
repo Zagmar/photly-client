@@ -53,18 +53,24 @@ class RegisterUsernameScreen extends StatelessWidget {
                     MediaQuery.of(context).viewInsets.bottom <= 50 ?
                     // Hide button when use keyboard
                     RightButtonOnlyWidget(
-                        onTap: () {
+                        onTap: () async {
                           if(_onPressed == false) {
                             _onPressed = true;
                             _formKey.currentState!.save();
                             FocusScope.of(context).unfocus();
-                            _userInfoViewModel.isUsernameOk ?
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterAnniversaryScreen()))
+                            await _userInfoViewModel.checkInputOk();
+                            _userInfoViewModel.inputOk ?
+                            //_userInfoViewModel.isUsernameOk ?
+                            {
+                              await Provider.of<UserInfoViewModel>(context, listen: false).clearWithoutCredential(),
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterAnniversaryScreen()))
+                            }
                                 :
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                    _userInfoViewModel.usernameErrorMessage!
+                                    _userInfoViewModel.inputErrorMessage!
+                                    //_userInfoViewModel.usernameErrorMessage!
                                 ),
                               ),
                             );

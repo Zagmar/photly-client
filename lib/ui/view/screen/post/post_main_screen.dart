@@ -262,7 +262,7 @@ class PartnerDailyPostWidget extends StatelessWidget {
                    ScaffoldMessenger.of(context).showSnackBar(
                      SnackBar(
                        content: Text(
-                           _dailyCouplePostViewModel.pushResultMessage
+                           _dailyCouplePostViewModel.resultMessage!
                        ),
                      ),
                    );
@@ -335,7 +335,7 @@ class PartnerDailyPostWidget extends StatelessWidget {
        )
            :
        EmptyPostButton(
-         iconData: Icons.cancel_outlined,
+         iconData: Icons.person_add_alt_1_outlined,
          mainText: "상대방 등록하기",
          subText: "등록된 상대방이 없어요\n상대방을 등록 후에 같이 즐겨봐요",
          onTap: () async {

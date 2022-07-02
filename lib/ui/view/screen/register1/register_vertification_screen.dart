@@ -36,8 +36,8 @@ class RegisterVertificationScreen extends StatelessWidget {
               onTap: () async {
                 if(_onPressed == false) {
                   _onPressed = true;
-                  await _userInfoViewModel.clear();
                   FocusScope.of(context).unfocus();
+                  await Provider.of<UserInfoViewModel>(context, listen: false).clearAll();
                   Navigator.popUntil(context, (route) => route.isFirst);
                   _onPressed = false;
                 }
@@ -82,26 +82,35 @@ class RegisterVertificationScreen extends StatelessWidget {
                         _onPressed = true;
                         _formKey.currentState!.save();
                         FocusScope.of(context).unfocus();
-                        _userInfoViewModel.isVerificationCodeOk ?
+                        await _userInfoViewModel.checkInputOk();
+                        //_userInfoViewModel.isVerificationCodeOk ?
+                        _userInfoViewModel.inputOk ?
                         {
                           await _userInfoViewModel.doVerification(),
-                          _userInfoViewModel.isVerified ?
+                          _userInfoViewModel.resultSuccess ?
+                          //_userInfoViewModel.isVerified ?
                           {
-                            if(_userInfoViewModel.loginFailure == null) {
+                            if(_userInfoViewModel.resultState == null) {
+                            //if(_userInfoViewModel.loginFailure == null) {
                               await Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser(),
                               await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
+                              await Provider.of<UserInfoViewModel>(context, listen: false).clearAll(),
                               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false),
                             }
-                            else if(_userInfoViewModel.loginFailure == "nonUserInfo"){
+                            else if(_userInfoViewModel.resultState == "nonUserInfo"){
+                            //else if(_userInfoViewModel.loginFailure == "nonUserInfo"){
+                              await Provider.of<UserInfoViewModel>(context, listen: false).clearAll(),
                               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => RegisterUsernameScreen()), (route) => false),
-                            } else {
+                            }
+                            else {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text(
-                                      "로그인에 실패하였습니다.\n다시 시도해주세요"
+                                      "로그인에 실패하였습니다.\n다시 로그인해주세요"
                                   ),
                                 ),
                               ),
+                              await Provider.of<UserInfoViewModel>(context, listen: false).clearAll(),
                               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false),
                             }
                           }
@@ -109,7 +118,8 @@ class RegisterVertificationScreen extends StatelessWidget {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                  _userInfoViewModel.verificationFailMessage!
+                                  _userInfoViewModel.resultMessage!
+                                  //_userInfoViewModel.verificationFailMessage!
                               ),
                             ),
                           ),
@@ -118,7 +128,8 @@ class RegisterVertificationScreen extends StatelessWidget {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                                _userInfoViewModel.verificationCodeErrorMessage!
+                                _userInfoViewModel.inputErrorMessage!
+                                //_userInfoViewModel.verificationCodeErrorMessage!
                             ),
                           ),
                         );

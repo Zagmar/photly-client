@@ -52,10 +52,10 @@ class ResetUsernameScreen extends StatelessWidget {
                 MediaQuery.of(context).viewInsets.bottom <= 50 ?
                 // Hide button when use keyboard
                 BothButtonsWidget(
-                    onTapLeft: () {
+                    onTapLeft: () async {
                       if(_onPressed == false) {
                         _onPressed = true;
-                        _userInfoViewModel.clear();
+                        await Provider.of<UserInfoViewModel>(context, listen: false).clearAll();
                         FocusScope.of(context).unfocus();
                         Navigator.pop(context);
                         _onPressed = false;
@@ -67,20 +67,24 @@ class ResetUsernameScreen extends StatelessWidget {
                         _onPressed = true;
                         _formKey.currentState!.save();
                         FocusScope.of(context).unfocus();
-                        _userInfoViewModel.isUsernameOk ?
+                        await _userInfoViewModel.checkInputOk();
+                        _userInfoViewModel.inputOk ?
+                        //_userInfoViewModel.isUsernameOk ?
                         {
                           await _userInfoViewModel.updateUsername(),
-                          _userInfoViewModel.isUploaded ?
+                          _userInfoViewModel.resultSuccess ?
+                          //_userInfoViewModel.isUploaded ?
                           {
                             await Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser(),
-                            await Provider.of<UserInfoViewModel>(context, listen: false).clear(),
+                            await Provider.of<UserInfoViewModel>(context, listen: false).clearAll(),
                             Navigator.pop(context),
                           }
                               :
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                  _userInfoViewModel.uploadFailMessage!
+                                  _userInfoViewModel.resultMessage!
+                                  //_userInfoViewModel.uploadFailMessage!
                               ),
                             ),
                           )
@@ -89,7 +93,8 @@ class ResetUsernameScreen extends StatelessWidget {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                                _userInfoViewModel.usernameErrorMessage!
+                                _userInfoViewModel.inputErrorMessage!
+                                //_userInfoViewModel.usernameErrorMessage!
                             ),
                           ),
                         );

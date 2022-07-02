@@ -41,10 +41,10 @@ class PostEditScreen extends StatelessWidget {
             child: Column(
                 children: <Widget>[
                   PostScreensAppbar(
-                    onTap: () {
+                    onTap: () async {
                       if(_onPressed == false) {
                         _onPressed = true;
-                        _postViewModel.clearLocalImage();
+                        await _postViewModel.clearAll();
                         Navigator.of(context).pop((route) => PostMainScreen());
                         _onPressed = false;
                       }
@@ -58,35 +58,40 @@ class PostEditScreen extends StatelessWidget {
                           _onPressed = true;
                           FocusScope.of(context).unfocus();
                           await _postViewModel.checkIsPostOk();
-                          _postViewModel.isPostReady ?
-                          _postViewModel.isNewPost ?
-                          await _postViewModel.createPost()
-                              :
-                          await _postViewModel.editPost()
-                              :
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                  _postViewModel.postErrorMessage!
+                          //_postViewModel.isPostReady ?
+                          _postViewModel.inputOk ?
+                          {
+                            await _postViewModel.postPost(),
+                            //_postViewModel.isNewPost ?
+                            //await _postViewModel.createPost() : await _postViewModel.editPost(),
+
+                            //_postViewModel.isPostOk ?
+                            _postViewModel.resultSuccess ?
+                            {
+                              await _dailyCouplePostViewModel.refreshTodayCouplePost(),
+                              await _postViewModel.clearCheck(),
+                              Navigator.pushReplacement(context, PageRouteBuilder(
+                                  pageBuilder: (context, animation1, animation2) => PostDetailScreen(),
+                                  transitionDuration: Duration.zero,
+                                  reverseTransitionDuration: Duration.zero
+                              ),),
+                            }
+                                :
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                    _postViewModel.resultMessage!
+                                  //_postViewModel.postFailMessage!
+                                ),
                               ),
                             ),
-                          );
-                          print("시도");
-
-                          _postViewModel.isPostOk ?
-                          {
-                            await _dailyCouplePostViewModel.refreshTodayCouplePost(),
-                            Navigator.pushReplacement(context, PageRouteBuilder(
-                                pageBuilder: (context, animation1, animation2) => PostDetailScreen(),
-                                transitionDuration: Duration.zero,
-                                reverseTransitionDuration: Duration.zero
-                            ),),
                           }
                               :
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                  _postViewModel.postFailMessage!
+                                  _postViewModel.inputErrorMessage!
+                                  //_postViewModel.postErrorMessage!
                               ),
                             ),
                           );
@@ -439,7 +444,6 @@ class WeatherDialogWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int _nWeathers = Provider.of<PostViewModel>(context).nWeather;
     return SimpleDialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
@@ -482,8 +486,12 @@ class WeatherButton extends StatelessWidget {
       child: InkWell(
         splashColor: Colors.transparent,
         onTap: () {
-          Navigator.pop(context);
-          Provider.of<PostViewModel>(context, listen: false).setPostWeather(indexWeather);
+          if(_onPressed == false) {
+            _onPressed = true;
+            Navigator.pop(context);
+            Provider.of<PostViewModel>(context, listen: false).setPostWeather(indexWeather);
+            _onPressed = false;
+          }
         },
         child: SizedBox(
           width: 24.w,
@@ -542,9 +550,14 @@ class LocationDialogWidget extends StatelessWidget {
                 InkWell(
                   splashColor: Colors.transparent,
                   onTap: (){
-                    _formKey.currentState!.save();
-                    FocusScope.of(context).unfocus();
-                    Navigator.pop(context);
+                    if(_onPressed == false) {
+                      _onPressed = true;
+                      _formKey.currentState!.save();
+                      FocusScope.of(context).unfocus();
+                      Navigator.pop(context);
+                      _onPressed = false;
+                    }
+
                   },
                   child: Container(
                     decoration: BoxDecoration(

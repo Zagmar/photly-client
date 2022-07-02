@@ -38,7 +38,7 @@ class ManageAccountScreen extends StatelessWidget {
               onTap: () async {
                 if(_onPressed == false) {
                   _onPressed = true;
-                  await Provider.of<UserInfoViewModel>(context, listen: false).clear();
+                  await Provider.of<UserInfoViewModel>(context, listen: false).clearAll();
                   Navigator.pop(context);
                   _onPressed = false;
                 }
@@ -64,7 +64,7 @@ class ManageAccountScreen extends StatelessWidget {
                 if(_onPressed == false) {
                   _onPressed = true;
                   FocusScope.of(context).unfocus();
-                  await _userInfoViewModel.clear();
+                  await Provider.of<UserInfoViewModel>(context, listen: false).clearAll();
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ResetUsernameScreen()));
                   _onPressed = false;
                 }
@@ -81,7 +81,7 @@ class ManageAccountScreen extends StatelessWidget {
                 if(_onPressed == false) {
                   _onPressed = true;
                   FocusScope.of(context).unfocus();
-                  await _userInfoViewModel.clear();
+                  await Provider.of<UserInfoViewModel>(context, listen: false).clearAll();
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ResetAnniversaryScreen()));
                   _onPressed = false;
                 }
@@ -98,7 +98,7 @@ class ManageAccountScreen extends StatelessWidget {
                 if(_onPressed == false) {
                   _onPressed = true;
                   FocusScope.of(context).unfocus();
-                  await _userInfoViewModel.clear();
+                  await Provider.of<UserInfoViewModel>(context, listen: false).clearAll();
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ResetPwScreen()));
                   _onPressed = false;
                 }
@@ -122,10 +122,12 @@ class ManageAccountScreen extends StatelessWidget {
                         return WarningDialogWidget(
                           onTap: () async {
                             await _userInfoViewModel.doClearPosts();
-                            _userInfoViewModel.isPostsClear ?
+                            _userInfoViewModel.resultSuccess ?
+                            //_userInfoViewModel.isPostsClear ?
                             {
                               await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
                               await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
+                              await Provider.of<UserInfoViewModel>(context, listen: false).clearAll(),
                               Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
                                   pageBuilder: (context, animation1, animation2) => PostMainScreen(),
                                   transitionDuration: Duration.zero,
@@ -136,7 +138,8 @@ class ManageAccountScreen extends StatelessWidget {
                             ScaffoldMessenger(
                               child: SnackBar(
                                 content: Text(
-                                    _userInfoViewModel.clearPostsFailMessage !
+                                    _userInfoViewModel.resultMessage !
+                                    //_userInfoViewModel.clearPostsFailMessage !
                                 ),
                               ),
                             );
@@ -165,10 +168,12 @@ class ManageAccountScreen extends StatelessWidget {
                         return WarningDialogWidget(
                           onTap: () async {
                             await _userInfoViewModel.doClearPartner();
-                            _userInfoViewModel.isPartnerClear ?
+                            _userInfoViewModel.resultSuccess ?
+                            //_userInfoViewModel.isPartnerClear ?
                             {
                               await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
                               await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
+                              await Provider.of<UserInfoViewModel>(context, listen: false).clearAll(),
                               Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
                                   pageBuilder: (context, animation1, animation2) => PostMainScreen(),
                                   transitionDuration: Duration.zero,
@@ -179,7 +184,8 @@ class ManageAccountScreen extends StatelessWidget {
                             ScaffoldMessenger(
                               child: SnackBar(
                                 content: Text(
-                                    _userInfoViewModel.clearPartnerFailMessage !
+                                    _userInfoViewModel.resultMessage !
+                                    //_userInfoViewModel.clearPartnerFailMessage !
                                 ),
                               ),
                             );
@@ -211,7 +217,8 @@ class ManageAccountScreen extends StatelessWidget {
                         return WarningDialogWidget(
                           onTap: () async {
                             await _userInfoViewModel.clearUser();
-                            _userInfoViewModel.isUserClear ?
+                            _userInfoViewModel.resultSuccess ?
+                            //_userInfoViewModel.isUserClear ?
                             {
                               await Provider.of<DailyCouplePostViewModel>(context, listen: false).clear(),
                               Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
@@ -224,7 +231,8 @@ class ManageAccountScreen extends StatelessWidget {
                             ScaffoldMessenger(
                               child: SnackBar(
                                 content: Text(
-                                    _userInfoViewModel.clearUserFailMessage !
+                                    _userInfoViewModel.resultMessage!
+                                    //_userInfoViewModel.clearUserFailMessage !
                                 ),
                               ),
                             );
@@ -298,7 +306,7 @@ class WarningDialogWidget extends StatelessWidget {
         Container(height: 10.w,),
         InkWell(
           splashColor: Colors.transparent,
-          onTap: (){
+          onTap: () async {
             Navigator.pop(context);
           },
           child: Container(

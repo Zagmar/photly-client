@@ -79,10 +79,11 @@ class UpdatePwScreen extends StatelessWidget {
                 MediaQuery.of(context).viewInsets.bottom <= 50 ?
                 // Hide button when use keyboard
                 BothButtonsWidget(
-                    onTapLeft: () {
+                    onTapLeft: () async {
                       if(_onPressed == false) {
                         _onPressed = true;
                         FocusScope.of(context).unfocus();
+                        await Provider.of<UserInfoViewModel>(context, listen: false).clearAll();
                         Navigator.pop(context);
                         _onPressed = false;
                       }
@@ -93,21 +94,25 @@ class UpdatePwScreen extends StatelessWidget {
                         _onPressed = true;
                         _formKey.currentState!.save();
                         FocusScope.of(context).unfocus();
-                        _userInfoViewModel.isConfirmResetPassword ?
+                        await _userInfoViewModel.checkInputOk();
+                        _userInfoViewModel.inputOk ?
+                        //_userInfoViewModel.isConfirmResetPassword ?
                         {
                           await _userInfoViewModel.confirmResetPassword(),
 
-                          _userInfoViewModel.isPWReset ?
+                          _userInfoViewModel.resultSuccess ?
+                          //_userInfoViewModel.isPWReset ?
                           {
                             FocusScope.of(context).unfocus(),
-                            _userInfoViewModel.clear(),
+                            await Provider.of<UserInfoViewModel>(context, listen: false).clearAll(),
                             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false),
                           }
                               :
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(
-                                  _userInfoViewModel.resetPasswordResultMessage!
+                                  _userInfoViewModel.resultMessage!
+                                  //_userInfoViewModel.resetPasswordResultMessage!
                               ),
                             ),
                           ),
@@ -116,7 +121,8 @@ class UpdatePwScreen extends StatelessWidget {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                                _userInfoViewModel.pwErrorMessage??_userInfoViewModel.pwCheckErrorMessage??_userInfoViewModel.pwResetErrorMessage??"Unknown Error"
+                                _userInfoViewModel.inputErrorMessage!
+                                //_userInfoViewModel.pwErrorMessage??_userInfoViewModel.pwCheckErrorMessage??_userInfoViewModel.pwResetErrorMessage??"Unknown Error"
                             ),
                           ),
                         );

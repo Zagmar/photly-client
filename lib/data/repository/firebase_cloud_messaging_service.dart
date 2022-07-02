@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-
 import '../datasource/remote_datasource.dart';
 import 'auth_service.dart';
 
@@ -10,42 +9,27 @@ class FirebaseCloudMessagingService {
   static const String PUSH = "$PHOTLY/user/push";
 
   Future<Object> pushPartnerToUpload() async {
-    String _userId = await AuthService().getCurrentUserId();
-
-    // convert inputData to use for API
     Map<String, dynamic> inputData = {
-      'user_id' : _userId,
+      'user_id' : await AuthService().getCurrentUserId(),
       'req_type' : 0,
     };
-    // call API
     return await _remoteDataSource.postToUri(PUSH, inputData);
   }
 
   Future<Object> pushUploadedNotification() async {
-    String _userId = await AuthService().getCurrentUserId();
-
-    // convert inputData to use for API
     Map<String, dynamic> inputData = {
-      'user_id' : _userId,
+      'user_id' : await AuthService().getCurrentUserId(),
       'req_type' : 1,
     };
-    // call API
     return await _remoteDataSource.postToUri(PUSH, inputData);
   }
 
   Future<Object> registerDevice() async {
-    String _userId = await AuthService().getCurrentUserId();
-    String? _deviceToken = await FirebaseMessaging.instance.getToken();
-    print(_deviceToken);
-
-    // convert inputData to use for API
     Map<String, dynamic> inputData = {
-      'user_id' : _userId,
-      'user_device_token' : _deviceToken,
+      'user_id' : await AuthService().getCurrentUserId(),
+      'user_device_token' : await FirebaseMessaging.instance.getToken(),
     };
 
-    print(inputData);
-    // call API
     return await _remoteDataSource.putToUri(PUSH, inputData);
   }
 
@@ -72,10 +56,10 @@ class FirebaseCloudMessagingService {
     // Register Device
     var response = await registerDevice();
     if(response is Success){
-      print("디바이스 등록 성공");
+      print("Success to register device");
     }
     if(response is Failure) {
-      print("디바이스 등록 실패");
+      print("Failure to register device");
     }
 
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
@@ -85,7 +69,7 @@ class FirebaseCloudMessagingService {
       importance: Importance.max,
     );
 
-    // foreground에서의 푸시 알림 표시를 위한 local notifications 설정
+    // local notifications setting for notification on foreground
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
     await flutterLocalNotificationsPlugin
@@ -99,19 +83,11 @@ class FirebaseCloudMessagingService {
             iOS: IOSInitializationSettings()),
         onSelectNotification: (String? payload) async {});
 
-    // foreground 푸시 알림 핸들링
+    // foreground notification handling
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
 
-      print('Got a message whilst in the foreground!');
-      print('Message data: ${message.data.keys}');
-      print('Message data: ${message.data.values}');
-
-      // background 푸시 알림 핸들링
-      print('Got a message whilst in the background!');
-      print(notification?.title);
-      print(notification?.body);
       // If `onMessage` is triggered with a notification, construct our own
       // local notification to show to users using the created channel.
       if (notification != null) {

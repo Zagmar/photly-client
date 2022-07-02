@@ -1,10 +1,3 @@
-import 'dart:convert';
-
-List<PostModel> postListFromJson(String str) => List<PostModel>.from(json.decode(str).map((x) => PostModel.fromJson(x)));
-PostModel postFromJson(var str) => PostModel.fromJson(str);
-
-String postInfoModelToJson(List<PostModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
-
 class PostModel {
   PostModel({
     required this.postId,
@@ -39,16 +32,4 @@ class PostModel {
     postWeather: json["postWeather"],
     postLocation: json["postLocation"],
   );
-
-  Map<String, dynamic> toJson() => {
-    "postId": postId,
-    "postUserId": postUserId,
-    "postImageUrl": postImageUrl,
-    "postIsPublic": postIsPublic,
-    "postEditTime": postEditTime.toString(),
-    "postText": postText,
-    "postEmotion": postEmotion,
-    "postWeather": postWeather,
-    "postLocation": postLocation,
-  };
 }

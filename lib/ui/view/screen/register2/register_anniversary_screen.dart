@@ -46,17 +46,18 @@ class RegisterAnniversaryScreen extends StatelessWidget {
                         maximumYear: DateTime.now().year,
                         initialDateTime: DateTime.now(),
                         maximumDate: DateTime.now(),
-                        onDateTimeChanged: (DateTime value) {
-                          _userInfoViewModel.setAnniversary(value);
+                        onDateTimeChanged: (DateTime value) async {
+                          await _userInfoViewModel.setAnniversary(value);
                         },
                         mode: CupertinoDatePickerMode.date,
                       )
                   ),
                   BothButtonsWidget(
-                      onTapLeft: (){
+                      onTapLeft: () async {
                         if(_onPressed == false) {
                           _onPressed = true;
                           FocusScope.of(context).unfocus();
+                          await Provider.of<UserInfoViewModel>(context, listen: false).clearWithoutCredential();
                           Navigator.pop(context);
                           _onPressed = false;
                         }
@@ -66,23 +67,21 @@ class RegisterAnniversaryScreen extends StatelessWidget {
                         if(_onPressed == false) {
                           _onPressed = true;
                           FocusScope.of(context).unfocus();
-                          if(!_userInfoViewModel.isAnniversaryOk){
-                            _userInfoViewModel.setAnniversary(DateTime.now());
-                          }
-
                           await _userInfoViewModel.uploadUserInfoToDB();
-                          _userInfoViewModel.isUploaded ?
+                          _userInfoViewModel.resultSuccess ?
+                          //_userInfoViewModel.isUploaded ?
                           {
                             await Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser(),
                             await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
-                            await Provider.of<UserInfoViewModel>(context, listen: false).clear(),
+                            await Provider.of<UserInfoViewModel>(context, listen: false).clearAll(),
                             Navigator.push(context, MaterialPageRoute(builder: (context) => PostMainScreen()))
                           }
                               :
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                                 content: Text(
-                                    _userInfoViewModel.uploadFailMessage !
+                                    _userInfoViewModel.resultMessage!
+                                    //_userInfoViewModel.uploadFailMessage !
                                 )
                             ),
                           );

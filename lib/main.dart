@@ -52,10 +52,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
           )),
       onSelectNotification: (String? payload) async {});
 
-  // background 푸시 알림 핸들링
-  print('Got a message whilst in the background!');
-  print(notification?.title);
-  print(notification?.body);
   // If `onMessage` is triggered with a notification, construct our own
   // local notification to show to users using the created channel.
   if (notification != null && android != null) {
@@ -79,17 +75,11 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 main() async {
-  // Show Flutter native Splash with Bind Flutter Widget
   FlutterNativeSplash.preserve(widgetsBinding: WidgetsFlutterBinding.ensureInitialized());
-  // Init Firebase to use FCM
-  //await Firebase.initializeApp();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  // Init ScreenUtil to correspond to various device size
   await ScreenUtil.ensureScreenSize();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  // Init Local Notification
   LocalNotificationService().initialize();
-  // Add Amplify category plugins
   Amplify.addPlugins([AmplifyAuthCognito(),AmplifyAPI(), ]);
 
   // Configure Amplify categories via the amplifyconfiguration.dart
@@ -166,7 +156,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void initialization() async {
-    // Check Whether User Already Sign In
     _authFlowStatus = await AuthService().checkAuthStatusService();
     if(_authFlowStatus == AuthFlowStatus.session) {
       await Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser();
@@ -177,7 +166,6 @@ class _MyHomePageState extends State<MyHomePage> {
         transitionDuration: Duration.zero,
         reverseTransitionDuration: Duration.zero
       ), (route) => false);
-      //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PostMainScreen()));
     }
     FlutterNativeSplash.remove();
   }
