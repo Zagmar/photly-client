@@ -138,7 +138,6 @@ class MainDrawerWidget extends StatelessWidget {
                     child: SnackBar(
                       content: Text(
                           _userInfoViewModel.resultMessage!
-                          //_userInfoViewModel.logoutFailMessage!
                       ),
                     ),
                   );
