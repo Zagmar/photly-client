@@ -1,7 +1,7 @@
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:couple_seflie_app/photly_style.dart';
+import 'package:couple_seflie_app/theme/photly_style.dart';
 import 'package:couple_seflie_app/ui/view/screen/login/login_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/manage/manage_account_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_edit_screen.dart';

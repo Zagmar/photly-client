@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-import '../../../ui_setting.dart';
+import '../../../../theme/ui_setting.dart';
 import '../../../view_model/daily_couple_post_view_model.dart';
 import '../../../view_model/user_info_view_model.dart';
 import '../../widget/main_drawer_widget.dart';

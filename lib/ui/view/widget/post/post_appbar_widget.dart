@@ -3,7 +3,7 @@ import 'package:couple_seflie_app/ui/view_model/post_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../ui_setting.dart';
+import '../../../../theme/ui_setting.dart';
 
 // Custom Appbars for post screens
 
