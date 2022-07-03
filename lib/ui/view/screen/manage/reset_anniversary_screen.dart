@@ -64,32 +64,19 @@ class ResetAnniversaryScreen extends StatelessWidget {
                       if(_onPressed == false) {
                         _onPressed = true;
                         FocusScope.of(context).unfocus();
-                        await _userInfoViewModel.checkInputOk();
-                        _userInfoViewModel.inputOk ?
+                        await _userInfoViewModel.updateAnniversary();
+                        //_userInfoViewModel.isUploaded ?
+                        _userInfoViewModel.resultSuccess ?
                         {
-                          await _userInfoViewModel.updateAnniversary(),
-                          //_userInfoViewModel.isUploaded ?
-                          _userInfoViewModel.resultSuccess ?
-                          {
-                            await Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser(),
-                            await Provider.of<UserInfoViewModel>(context, listen: false).clearAll(),
-                            Navigator.pop(context),
-                          }
-                              :
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text(
-                                    _userInfoViewModel.resultMessage!
-                                  //_userInfoViewModel.uploadFailMessage !
-                                )
-                            ),
-                          ),
+                          await Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser(),
+                          await Provider.of<UserInfoViewModel>(context, listen: false).clearAll(),
+                          Navigator.pop(context),
                         }
                             :
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                               content: Text(
-                                  "날짜를 선택해주세요"
+                                  _userInfoViewModel.resultMessage!
                                 //_userInfoViewModel.uploadFailMessage !
                               )
                           ),

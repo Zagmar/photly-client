@@ -66,6 +66,7 @@ class RegisterAnniversaryScreen extends StatelessWidget {
                       onTapRight: () async {
                         if(_onPressed == false) {
                           _onPressed = true;
+                          print("푸시");
                           FocusScope.of(context).unfocus();
                           await _userInfoViewModel.uploadUserInfoToDB();
                           _userInfoViewModel.resultSuccess ?

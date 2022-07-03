@@ -100,9 +100,10 @@ class MainDrawerWidget extends StatelessWidget {
               onTap: () async {
                 if(_onPressed == false) {
                   _onPressed = true;
+                  Scaffold.of(context).openEndDrawer();
                   FocusScope.of(context).unfocus();
-                  await Provider.of<UserInfoViewModel>(context, listen: false).setUserCoupleCode();
                   await Provider.of<UserInfoViewModel>(context, listen: false).clearAll();
+                  await Provider.of<UserInfoViewModel>(context, listen: false).setUserCoupleCode();
                   Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterCoupleCodeScreen(), fullscreenDialog: true,));
                   _onPressed = false;
                 }
@@ -159,6 +160,7 @@ class MainDrawerWidget extends StatelessWidget {
               onTap: () async {
                 if(_onPressed == false) {
                   _onPressed = true;
+                  Scaffold.of(context).openEndDrawer();
                   FocusScope.of(context).unfocus();
                   await Provider.of<UserInfoViewModel>(context, listen: false).clearAll();
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ManageAccountScreen(), fullscreenDialog: true,));
@@ -180,6 +182,7 @@ class MainDrawerWidget extends StatelessWidget {
               onTap: () async {
                 if(_onPressed == false) {
                   _onPressed = true;
+                  Scaffold.of(context).openEndDrawer();
                   FocusScope.of(context).unfocus();
                   await Provider.of<UserInfoViewModel>(context, listen: false).clearAll();
                   Navigator.push(context, MaterialPageRoute(builder: (context) => InformationScreen(), fullscreenDialog: true,));

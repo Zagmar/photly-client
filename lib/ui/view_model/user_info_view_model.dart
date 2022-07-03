@@ -140,12 +140,7 @@ class UserInfoViewModel extends ChangeNotifier {
   }
 
   Future<void> setAnniversary(DateTime? val) async {
-    if(val == null){
-      _credential.coupleAnniversary = DateTime.now();
-    }
-    else{
-      _credential.coupleAnniversary = val;
-    }
+    _credential.coupleAnniversary = val;
     _inputOk = true;
   }
 
@@ -202,7 +197,7 @@ class UserInfoViewModel extends ChangeNotifier {
       _resultState = "nonUserInfo";
     }
     else if(result == LoginStatus.nonUser){
-      _resultMessage = "일치하는 사용자 정보가 없습니다";
+      _resultMessage = "로그인 정보가 일치하지 않습니다";
       _resultState = "nonUser";
     }
     else if(result == LoginStatus.unknownFail){
@@ -271,6 +266,9 @@ class UserInfoViewModel extends ChangeNotifier {
   }
 
   Future<void> uploadUserInfoToDB() async {
+    if(_credential.coupleAnniversary == null) {
+      await setAnniversary(DateTime.now());
+    }
     var response = await _userInfoRepository.createUserInfo(_credential.userName!, _credential.coupleAnniversary!);
     if(response is Success) {
       _resultSuccess = true;
@@ -297,6 +295,9 @@ class UserInfoViewModel extends ChangeNotifier {
   }
 
   Future<void> updateAnniversary() async {
+    if(_credential.coupleAnniversary == null) {
+      await setAnniversary(DateTime.now());
+    }
     var response = await _userInfoRepository.updateAnniversary(_credential.coupleAnniversary!);
     if(response is Success) {
       _resultSuccess = true;

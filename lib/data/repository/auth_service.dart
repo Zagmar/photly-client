@@ -32,6 +32,7 @@ class AuthService {
     } on UserNotConfirmedException {
       return LoginStatus.nonVerification;
     } on AuthException catch (authError) {
+      print(authError.message);
       return LoginStatus.nonUser;
     } catch (e){
       return LoginStatus.unknownFail;

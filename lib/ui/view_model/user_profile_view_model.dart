@@ -26,5 +26,7 @@ class UserProfileViewModel extends ChangeNotifier {
       _userCredentials!.coupleAnniversary = DateTime.now();
       _coupleDays = 0;
     }
+
+    notifyListeners();
   }
 }
