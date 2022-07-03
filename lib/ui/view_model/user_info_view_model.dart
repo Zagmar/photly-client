@@ -338,7 +338,7 @@ class UserInfoViewModel extends ChangeNotifier {
   }
 
   Future<void> resetPassword() async {
-    var response = await _authService.resetPassword();
+    var response = await _authService.resetPassword(_credential.email!);
 
     if(response is Failure){
       _resultSuccess = false;
@@ -353,7 +353,7 @@ class UserInfoViewModel extends ChangeNotifier {
   }
 
   Future<void> confirmResetPassword() async {
-    var response = await _authService.updatePassword(_credential.password!, _input!);
+    var response = await _authService.updatePassword(_credential.email!, _credential.password!, _input!);
 
     if(response is Failure){
       _resultSuccess = false;

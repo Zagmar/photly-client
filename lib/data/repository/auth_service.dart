@@ -115,10 +115,10 @@ class AuthService {
     return userId;
   }
 
-  Future<Object> resetPassword() async {
+  Future<Object> resetPassword(String userId) async {
     try {
       await Amplify.Auth.resetPassword(
-        username: await getCurrentUserId(),
+        username: userId,
       );
       return Success(response: "이메일을 확인해주세요");
     } on UserNotFoundException catch(e) {
@@ -128,10 +128,10 @@ class AuthService {
     }
   }
 
-  Future<Object> updatePassword(String password, String confirmCode) async {
+  Future<Object> updatePassword(String userId, String password, String confirmCode) async {
     try {
       await Amplify.Auth.confirmResetPassword(
-          username: await getCurrentUserId(),
+          username: userId,
           newPassword: password,
           confirmationCode: confirmCode
       );
