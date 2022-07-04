@@ -227,6 +227,7 @@ class UserInfoViewModel extends ChangeNotifier {
     final result = await _userInfoRepository.clearPartner();
 
     if(result is Success){
+      await _firebaseCloudMessagingService.pushPartnerClearNotification();
       _resultMessage = null;
       _resultSuccess = true;
     }
@@ -331,6 +332,7 @@ class UserInfoViewModel extends ChangeNotifier {
     }
 
     if((response is Success)){
+      await _firebaseCloudMessagingService.pushPartnerMatchedNotification();
       _resultSuccess = true;
       _resultMessage = null;
     }

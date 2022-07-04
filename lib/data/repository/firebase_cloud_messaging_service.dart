@@ -24,6 +24,22 @@ class FirebaseCloudMessagingService {
     return await _remoteDataSource.postToUri(PUSH, inputData);
   }
 
+  Future<Object> pushPartnerMatchedNotification() async {
+    Map<String, dynamic> inputData = {
+      'user_id' : await AuthService().getCurrentUserId(),
+      'req_type' : 4,
+    };
+    return await _remoteDataSource.postToUri(PUSH, inputData);
+  }
+
+  Future<Object> pushPartnerClearNotification() async {
+    Map<String, dynamic> inputData = {
+      'user_id' : await AuthService().getCurrentUserId(),
+      'req_type' : 5,
+    };
+    return await _remoteDataSource.postToUri(PUSH, inputData);
+  }
+
   Future<Object> registerDevice() async {
     Map<String, dynamic> inputData = {
       'user_id' : await AuthService().getCurrentUserId(),
