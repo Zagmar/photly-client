@@ -17,6 +17,7 @@ class PostAppbarModel extends StatelessWidget {
     return Container(
       width: 375.w,
       height: 58.w,
+      margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
       child: Row(
         children: <Widget>[
           Container(

@@ -7,6 +7,7 @@ import 'package:couple_seflie_app/data/repository/post_info_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../data/datasource/remote_datasource.dart';
+import '../../data/repository/data_repository.dart';
 
 class PostViewModel extends ChangeNotifier {
   final PostInfoRepository _postInfoRepository = PostInfoRepository();
@@ -87,12 +88,17 @@ class PostViewModel extends ChangeNotifier {
   }
 
   setEmptyPost() async {
+    await clearAll();
     _post = PostModel(
         postId: 0,
         postUserId: await AuthService().getCurrentUserId(),
         postImageUrl: "",
         postEditTime: DateTime.now(),
         postIsPublic: false,
+        postText: null,
+        postEmotion: null,
+        postLocation: null,
+        postWeather: null
     );
     notifyListeners();
   }
@@ -103,6 +109,9 @@ class PostViewModel extends ChangeNotifier {
       _resultSuccess = true;
       _resultMessage = null;
       _post = PostModel.fromJson(response.response);
+      if(DateTime(_post!.postEditTime.year,_post!.postEditTime.month, _post!.postEditTime.day) == DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day) && _post!.postUserId != await AuthService().getCurrentUserId()){
+        DataRepository().sendReadPoint();
+      }
       _isEditable = _post!.postUserId == await AuthService().getCurrentUserId() && _post!.postEditTime.year == DateTime.now().year && _post!.postEditTime.month == DateTime.now().month && _post!.postEditTime.day == DateTime.now().day;
     }
     if(response is Failure) {

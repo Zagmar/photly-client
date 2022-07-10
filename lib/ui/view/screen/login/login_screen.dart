@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../data/repository/data_repository.dart';
 import '../../../view_model/daily_couple_post_view_model.dart';
 import '../../../view_model/user_info_view_model.dart';
 import '../../widget/text_form_field.dart';
@@ -133,6 +134,7 @@ class LoginScreen extends StatelessWidget {
                             await Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser(),
                             await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
                             await Provider.of<UserInfoViewModel>(context, listen: false).clearAll(),
+                            DataRepository().sendExecutionPoint(),
                             Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
                               pageBuilder: (context, animation1, animation2) => PostMainScreen(),
                               transitionDuration: Duration.zero,

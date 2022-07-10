@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import '../datasource/local_datasource.dart';
 import '../datasource/remote_datasource.dart';
 import 'auth_service.dart';
+import 'data_repository.dart';
 
 class PostInfoRepository {
   final RemoteDataSource _remoteDataSource = RemoteDataSource();
@@ -30,6 +31,8 @@ class PostInfoRepository {
       'post_is_public' : postModel.postIsPublic,
       'post_weather' : postModel.postWeather??0,
     };
+
+    DataRepository().sendPostPoint();
 
     return await _remoteDataSource.postToUri(POST, inputData);
   }

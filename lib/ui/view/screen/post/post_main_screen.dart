@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:blur/blur.dart';
+import 'package:couple_seflie_app/data/repository/data_repository.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_detail_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/post/post_edit_screen.dart';
 import 'package:couple_seflie_app/ui/view/screen/register3/register_couple_code_screen.dart';
@@ -16,10 +19,11 @@ import '../../widget/post/post_daily_info_widget.dart';
 
 bool _onPressed = false;
 
-class PostMainScreen extends StatelessWidget {
+class PostMainScreen extends StatelessWidget with WidgetsBindingObserver {
   PostMainScreen({Key? key}) : super(key: key);
   late DailyCouplePostViewModel _dailyCouplePostViewModel;
   late GlobalKey<ScaffoldState> _scaffoldKey;
+  StreamSubscription? _eventStream;
 
   @override
   Widget build(BuildContext context) {
@@ -28,56 +32,65 @@ class PostMainScreen extends StatelessWidget {
 
     return RefreshIndicator(
       onRefresh: () => _dailyCouplePostViewModel.refreshTodayCouplePost(),
-      child: GestureDetector(
-        onTap: (){
-          FocusScope.of(context).unfocus();
-        },
-        child: Scaffold(
-          key: _scaffoldKey,
-          drawer: MainDrawerWidget(),
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          body: SafeArea(
-            child: SingleChildScrollView(
-              scrollDirection: Axis.vertical,
-              physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    //Container(),
-                    PostMainScreenAppbar(scaffoldKey: _scaffoldKey),
-                    PostDailyInfoWidget(),
-                    Container(
-                      width: FULL_WIDTH.w,
-                      height: (MAIN_SPACE_WIDTH * IMAGE_RATIO * 2 + 30).w,
-                      child: PageView.builder(
-                          reverse: true,
-                          scrollDirection: Axis.horizontal,
-                          itemCount: _dailyCouplePostViewModel.dailyCouplePosts.length,
-                          onPageChanged: (index) {
-                            if(index == _dailyCouplePostViewModel.dailyCouplePosts.length - 1) {
-                              _dailyCouplePostViewModel.loadMoreCouplePosts();
-                              print("인덱스 끝");
-                            }
-                            _dailyCouplePostViewModel.setDailyInfo(index);
-                          },
-                          controller: PageController(initialPage: _dailyCouplePostViewModel.index??0),
-                          itemBuilder: (context, index) {
-                            print("itemBuilder" + index.toString());
-                            return Column(
-                              children: <Widget>[
-                                UserDailyPostWidget(index: index),
-                                Container(height: 30.w),
-                                PartnerDailyPostWidget(index: index),
-                              ],
-                            );
-                          }
-                      ),
-                    ),
-                  ]
+      child: StreamBuilder(
+          stream: Stream.periodic(Duration(seconds: 2), (_) {
+            if(WidgetsBinding.instance!.lifecycleState == AppLifecycleState.resumed){
+              DataRepository().sendPeriodically();
+            }
+          }),
+        builder: (context, _) {
+          return GestureDetector(
+            onTap: (){
+              FocusScope.of(context).unfocus();
+            },
+            child: Scaffold(
+              key: _scaffoldKey,
+              drawer: MainDrawerWidget(),
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              body: Container(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  physics: BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        //Container(),
+                        PostMainScreenAppbar(scaffoldKey: _scaffoldKey),
+                        PostDailyInfoWidget(),
+                        Container(
+                          width: FULL_WIDTH.w,
+                          height: (MAIN_SPACE_WIDTH * IMAGE_RATIO * 2 + 30).w,
+                          child: PageView.builder(
+                              reverse: true,
+                              scrollDirection: Axis.horizontal,
+                              itemCount: _dailyCouplePostViewModel.dailyCouplePosts.length,
+                              onPageChanged: (index) {
+                                if(index == _dailyCouplePostViewModel.dailyCouplePosts.length - 1) {
+                                  _dailyCouplePostViewModel.loadMoreCouplePosts();
+                                  print("인덱스 끝");
+                                }
+                                _dailyCouplePostViewModel.setDailyInfo(index);
+                              },
+                              controller: PageController(initialPage: _dailyCouplePostViewModel.index??0),
+                              itemBuilder: (context, index) {
+                                print("itemBuilder" + index.toString());
+                                return Column(
+                                  children: <Widget>[
+                                    UserDailyPostWidget(index: index),
+                                    Container(height: 30.w),
+                                    PartnerDailyPostWidget(index: index),
+                                  ],
+                                );
+                              }
+                          ),
+                        ),
+                      ]
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        }
       ),
     );
   }

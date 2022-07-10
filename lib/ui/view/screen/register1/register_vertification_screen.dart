@@ -5,6 +5,7 @@ import 'package:couple_seflie_app/ui/view_model/user_info_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import '../../../../data/repository/data_repository.dart';
 import '../../../view_model/daily_couple_post_view_model.dart';
 import '../../../view_model/user_profile_view_model.dart';
 import '../../widget/text_form_field.dart';
@@ -95,6 +96,7 @@ class RegisterVertificationScreen extends StatelessWidget {
                               await Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser(),
                               await Provider.of<DailyCouplePostViewModel>(context, listen: false).initDailyCouplePosts(),
                               await Provider.of<UserInfoViewModel>(context, listen: false).clearAll(),
+                              DataRepository().sendExecutionPoint(),
                               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => PostMainScreen()), (route) => false),
                             }
                             else if(_userInfoViewModel.resultState == "nonUserInfo"){

@@ -20,6 +20,7 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:provider/provider.dart';
 import 'amplifyconfiguration.dart';
 import 'data/repository/auth_service.dart';
+import 'data/repository/data_repository.dart';
 import 'data/repository/firebase_cloud_messaging_service.dart';
 import 'data/repository/local_notification_service.dart';
 
@@ -79,6 +80,8 @@ main() async {
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await ScreenUtil.ensureScreenSize();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top]);
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
   LocalNotificationService().initialize();
   Amplify.addPlugins([AmplifyAuthCognito(),AmplifyAPI(), ]);
 
@@ -118,8 +121,8 @@ class MyApp extends StatelessWidget {
     return ScreenUtilInit(
         splitScreenMode: false,
         designSize: const Size(375, 667),
-        builder: (context, _) => OverlaySupport(
-          child: MaterialApp(
+        builder: (context, _) {
+          return MaterialApp(
             builder: (context, child) => MediaQuery(
               data: MediaQuery.of(context).copyWith(
                 textScaleFactor: 1.0,
@@ -134,8 +137,8 @@ class MyApp extends StatelessWidget {
               '/postEditScreen': (context) => PostEditScreen(),
               '/manageAccountScreen': (context) => ManageAccountScreen(),
             },
-          ),
-        )
+          );
+        }
     );
   }
 }
@@ -161,6 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
       await Provider.of<UserProfileViewModel>(context, listen: false).setCurrentUser();
       await Provider.of<DailyCouplePostViewModel>(context,listen: false).initDailyCouplePosts();
       await FirebaseCloudMessagingService().fcmSetting();
+      DataRepository().sendExecutionPoint();
       Navigator.pushAndRemoveUntil(context, PageRouteBuilder(
         pageBuilder: (context, animation1, animation2) => PostMainScreen(),
         transitionDuration: Duration.zero,

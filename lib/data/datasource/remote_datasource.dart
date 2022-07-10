@@ -36,7 +36,7 @@ class RemoteDataSource {
       final response = await Dio()
           .get(
           uri,
-          queryParameters: inputData).timeout(const Duration(seconds: 600))
+          queryParameters: inputData).timeout(const Duration(seconds: 10))
           .catchError((e) {
         print(e.message);
       });
@@ -68,7 +68,7 @@ class RemoteDataSource {
           .post(
           uri,
           data: inputData,
-      ).timeout(const Duration(seconds: 600))
+      ).timeout(const Duration(seconds: 10))
           .catchError((e) {
         print(e.message);
       });
@@ -95,7 +95,7 @@ class RemoteDataSource {
           .put(
         uri,
         data: inputData,
-      ).timeout(const Duration(seconds: 600))
+      ).timeout(const Duration(seconds: 10))
           .catchError((e) {
         print(e.message);
       });
@@ -121,7 +121,7 @@ class RemoteDataSource {
       final response = await Dio()
           .delete(
           uri,
-          queryParameters: inputData).timeout(const Duration(seconds: 600))
+          queryParameters: inputData).timeout(const Duration(seconds: 10))
           .catchError((e) {
         print(e.message);
       });
