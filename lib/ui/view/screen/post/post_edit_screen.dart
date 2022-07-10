@@ -44,7 +44,6 @@ class PostEditScreen extends StatelessWidget {
                     onTap: () async {
                       if(_onPressed == false) {
                         _onPressed = true;
-                        await _postViewModel.clearAll();
                         Navigator.of(context).pop((route) => PostMainScreen());
                         _onPressed = false;
                       }

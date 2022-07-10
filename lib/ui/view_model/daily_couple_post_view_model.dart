@@ -133,11 +133,12 @@ class DailyCouplePostViewModel extends ChangeNotifier {
           newDailyCouplePostList.add(DailyCouplePostModel.fromJson(element));
         }
         _dailyCouplePosts += newDailyCouplePostList;
+
+        if(_dailyCouplePosts.first.dailyPostDate!.year != DateTime.now().year || _dailyCouplePosts.first.dailyPostDate!.month != DateTime.now().month || _dailyCouplePosts.first.dailyPostDate!.day != DateTime.now().day) {
+          await _createTodayCouplePost();
+        }
       }
       else{
-        await _createTodayCouplePost();
-      }
-      if(_dailyCouplePosts.first.dailyPostDate!.year != DateTime.now().year || _dailyCouplePosts.first.dailyPostDate!.month != DateTime.now().month || _dailyCouplePosts.first.dailyPostDate!.day != DateTime.now().day) {
         await _createTodayCouplePost();
       }
       await _setPages(_dailyCouplePosts);
