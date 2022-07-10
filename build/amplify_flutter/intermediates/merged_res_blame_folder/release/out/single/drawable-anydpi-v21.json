@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_flutter/intermediates/merged_res/release/drawable-anydpi-v21/design_ic_visibility.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/841476d56b41fedcc7ef6cb3d0aa8757/transformed/material-1.0.0/res/drawable-anydpi-v21/design_ic_visibility.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_flutter/intermediates/merged_res/release/drawable-anydpi-v21/design_ic_visibility_off.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/841476d56b41fedcc7ef6cb3d0aa8757/transformed/material-1.0.0/res/drawable-anydpi-v21/design_ic_visibility_off.xml"
+    }
+]

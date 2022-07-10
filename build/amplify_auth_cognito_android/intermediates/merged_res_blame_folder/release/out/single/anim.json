@@ -1,0 +1,146 @@
+[
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/fragment_close_enter.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/264835be351d15658f435b3094282cb7/transformed/fragment-1.2.4/res/anim/fragment_close_enter.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/abc_fade_out.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/c771b90d43d601e2dc5fc235227231e7/transformed/appcompat-1.2.0/res/anim/abc_fade_out.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/fragment_close_exit.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/264835be351d15658f435b3094282cb7/transformed/fragment-1.2.4/res/anim/fragment_close_exit.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/abc_slide_in_bottom.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/c771b90d43d601e2dc5fc235227231e7/transformed/appcompat-1.2.0/res/anim/abc_slide_in_bottom.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/fragment_fade_enter.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/264835be351d15658f435b3094282cb7/transformed/fragment-1.2.4/res/anim/fragment_fade_enter.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/abc_grow_fade_in_from_bottom.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/c771b90d43d601e2dc5fc235227231e7/transformed/appcompat-1.2.0/res/anim/abc_grow_fade_in_from_bottom.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/fragment_open_enter.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/264835be351d15658f435b3094282cb7/transformed/fragment-1.2.4/res/anim/fragment_open_enter.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/fragment_open_exit.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/264835be351d15658f435b3094282cb7/transformed/fragment-1.2.4/res/anim/fragment_open_exit.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/abc_tooltip_enter.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/c771b90d43d601e2dc5fc235227231e7/transformed/appcompat-1.2.0/res/anim/abc_tooltip_enter.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/btn_checkbox_to_unchecked_check_path_merged_animation.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/c771b90d43d601e2dc5fc235227231e7/transformed/appcompat-1.2.0/res/anim/btn_checkbox_to_unchecked_check_path_merged_animation.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/btn_checkbox_to_unchecked_box_inner_merged_animation.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/c771b90d43d601e2dc5fc235227231e7/transformed/appcompat-1.2.0/res/anim/btn_checkbox_to_unchecked_box_inner_merged_animation.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/btn_checkbox_to_checked_box_outer_merged_animation.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/c771b90d43d601e2dc5fc235227231e7/transformed/appcompat-1.2.0/res/anim/btn_checkbox_to_checked_box_outer_merged_animation.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/abc_popup_exit.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/c771b90d43d601e2dc5fc235227231e7/transformed/appcompat-1.2.0/res/anim/abc_popup_exit.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/abc_tooltip_exit.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/c771b90d43d601e2dc5fc235227231e7/transformed/appcompat-1.2.0/res/anim/abc_tooltip_exit.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/btn_checkbox_to_checked_icon_null_animation.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/c771b90d43d601e2dc5fc235227231e7/transformed/appcompat-1.2.0/res/anim/btn_checkbox_to_checked_icon_null_animation.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/nav_default_pop_enter_anim.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/597aa30985e099b87b115ca0cf7519d6/transformed/navigation-ui-2.3.4/res/anim/nav_default_pop_enter_anim.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/abc_fade_in.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/c771b90d43d601e2dc5fc235227231e7/transformed/appcompat-1.2.0/res/anim/abc_fade_in.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/btn_radio_to_on_mtrl_ring_outer_animation.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/c771b90d43d601e2dc5fc235227231e7/transformed/appcompat-1.2.0/res/anim/btn_radio_to_on_mtrl_ring_outer_animation.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/btn_radio_to_off_mtrl_ring_outer_animation.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/c771b90d43d601e2dc5fc235227231e7/transformed/appcompat-1.2.0/res/anim/btn_radio_to_off_mtrl_ring_outer_animation.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/fragment_fade_exit.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/264835be351d15658f435b3094282cb7/transformed/fragment-1.2.4/res/anim/fragment_fade_exit.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/abc_popup_enter.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/c771b90d43d601e2dc5fc235227231e7/transformed/appcompat-1.2.0/res/anim/abc_popup_enter.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/abc_shrink_fade_out_from_bottom.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/c771b90d43d601e2dc5fc235227231e7/transformed/appcompat-1.2.0/res/anim/abc_shrink_fade_out_from_bottom.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/nav_default_exit_anim.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/597aa30985e099b87b115ca0cf7519d6/transformed/navigation-ui-2.3.4/res/anim/nav_default_exit_anim.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/design_snackbar_out.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/841476d56b41fedcc7ef6cb3d0aa8757/transformed/material-1.0.0/res/anim/design_snackbar_out.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/btn_checkbox_to_checked_box_inner_merged_animation.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/c771b90d43d601e2dc5fc235227231e7/transformed/appcompat-1.2.0/res/anim/btn_checkbox_to_checked_box_inner_merged_animation.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/btn_radio_to_off_mtrl_ring_outer_path_animation.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/c771b90d43d601e2dc5fc235227231e7/transformed/appcompat-1.2.0/res/anim/btn_radio_to_off_mtrl_ring_outer_path_animation.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/btn_radio_to_off_mtrl_dot_group_animation.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/c771b90d43d601e2dc5fc235227231e7/transformed/appcompat-1.2.0/res/anim/btn_radio_to_off_mtrl_dot_group_animation.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/btn_radio_to_on_mtrl_dot_group_animation.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/c771b90d43d601e2dc5fc235227231e7/transformed/appcompat-1.2.0/res/anim/btn_radio_to_on_mtrl_dot_group_animation.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/nav_default_enter_anim.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/597aa30985e099b87b115ca0cf7519d6/transformed/navigation-ui-2.3.4/res/anim/nav_default_enter_anim.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/btn_checkbox_to_unchecked_icon_null_animation.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/c771b90d43d601e2dc5fc235227231e7/transformed/appcompat-1.2.0/res/anim/btn_checkbox_to_unchecked_icon_null_animation.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/abc_slide_in_top.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/c771b90d43d601e2dc5fc235227231e7/transformed/appcompat-1.2.0/res/anim/abc_slide_in_top.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/btn_radio_to_on_mtrl_ring_outer_path_animation.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/c771b90d43d601e2dc5fc235227231e7/transformed/appcompat-1.2.0/res/anim/btn_radio_to_on_mtrl_ring_outer_path_animation.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/design_snackbar_in.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/841476d56b41fedcc7ef6cb3d0aa8757/transformed/material-1.0.0/res/anim/design_snackbar_in.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/abc_slide_out_top.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/c771b90d43d601e2dc5fc235227231e7/transformed/appcompat-1.2.0/res/anim/abc_slide_out_top.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/nav_default_pop_exit_anim.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/597aa30985e099b87b115ca0cf7519d6/transformed/navigation-ui-2.3.4/res/anim/nav_default_pop_exit_anim.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_auth_cognito_android/intermediates/merged_res/release/anim/abc_slide_out_bottom.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/c771b90d43d601e2dc5fc235227231e7/transformed/appcompat-1.2.0/res/anim/abc_slide_out_bottom.xml"
+    }
+]

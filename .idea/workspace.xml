@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
+  </component>
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="Show only selected application" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="5efffc2d-7294-4cb8-a119-62b0d273d7b1" name="Changes" comment="# [Prefix] &lt;Description&gt; (#Issue_Number)&#10;&#10;##### 제목은 최대 50 글자까지만 입력 ############## -&gt; |&#10;&#10;&#10;# 본문은 위에 작성&#10;######## 본문은 한 줄에 최대 72 글자까지만 입력 ########################### -&gt; |&#10;# 꼬릿말은 아래에 작성: ex) #이슈 번호&#10;&#10;# --- COMMIT END ---&#10;#- ✅[CHORE] : 코드 수정, 내부 파일 수정&#10;#- ✨[FEAT] : 새로운 기능 구현&#10;#- ➕[ADD] : Feat 이외의 부수적인 코드 추가, 라이브러리 추가, 새로운 파일 생성 시&#10;#- 🍱[ADD] : 에셋 추가&#10;#- 🚑️[HOTFIX] : issue나, QA에서 급한 버그 수정에 사용&#10;#- 🔨[FIX] : 버그, 오류 해결&#10;#- ⚰️ [DEL] : 쓸모없는 코드 삭제&#10;#- 📝[DOCS] : README나 WIKI 등의 문서 개정&#10;#- 💄[MOD] : storyboard 파일,UI 수정한 경우&#10;#- ✏️ [CORRECT] : 주로 문법의 오류나 타입의 변경, 이름 변경 등에 사용합니다.&#10;#- 🚚[MOVE] : 프로젝트 내 파일이나 코드의 이동&#10;#- ⏪️[RENAME] : 파일 이름 변경이 있을 때 사용합니다.&#10;#- ⚡️[IMPROVE] : 향상이 있을 때 사용합니다.&#10;#- ♻️[REFACTOR] : 전면 수정이 있을 때 사용합니다&#10;#- 🔀[MERGE]: 다른브렌치를 merge 할 때 사용합니다.&#10;# ------------------&#10;#     제목 첫 글자를 대문자로&#10;#     제목은 명령문으로&#10;#     제목 끝에 마침표(.) 금지&#10;#     제목과 본문을 한 줄 띄워 분리하기&#10;#     본문은 &quot;어떻게&quot; 보다 &quot;무엇을&quot;, &quot;왜&quot;를 설명한다.&#10;#     본문에 여러줄의 메시지를 작성할 땐 &quot;-&quot;로 구분&#10;# ------------------" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Dart File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="27SaH6c9vzIc4sQ7xOhYv21hv7f" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="android.sdk.path" value="$USER_HOME$/Library/Android/sdk" />
+    <property name="dart.analysis.tool.window.visible" value="false" />
+    <property name="io.flutter.reload.alreadyRun" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib/ui/view/screen/manage" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="preferences.language.Kotlin" />
+    <property name="show.migrate.to.gradle.popup" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/lib/ui/view/screen/manage" />
+      <recent name="$PROJECT_DIR$/lib/ui/view_model" />
+      <recent name="$PROJECT_DIR$/lib/ui/view/screen/register1" />
+      <recent name="$PROJECT_DIR$/lib/ui/view/screen/register" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/lib/theme" />
+      <recent name="$PROJECT_DIR$/lib/ui/view/screen/post" />
+      <recent name="$PROJECT_DIR$/android/app" />
+      <recent name="$PROJECT_DIR$/lib" />
+      <recent name="$PROJECT_DIR$/android/app/src/main/res" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="FlutterRunConfigurationType" factoryName="Flutter">
+      <option name="filePath" value="lib/main.dart" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5efffc2d-7294-4cb8-a119-62b0d273d7b1" name="Changes" comment="" />
+      <created>1649315855366</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1649315855366</updated>
+      <workItem from="1649315857706" duration="11211000" />
+      <workItem from="1649353362282" duration="266000" />
+      <workItem from="1649379791392" duration="26225000" />
+      <workItem from="1650214411487" duration="4734000" />
+      <workItem from="1650256536732" duration="2539000" />
+      <workItem from="1650338344834" duration="32317000" />
+      <workItem from="1650377918007" duration="8802000" />
+      <workItem from="1650417562917" duration="1600000" />
+      <workItem from="1650504562531" duration="24234000" />
+      <workItem from="1650548307171" duration="11665000" />
+      <workItem from="1651108947751" duration="33468000" />
+      <workItem from="1651206323552" duration="16428000" />
+      <workItem from="1651277234242" duration="3564000" />
+      <workItem from="1651280943071" duration="1380000" />
+      <workItem from="1651290000889" duration="2491000" />
+      <workItem from="1651296122159" duration="57407000" />
+      <workItem from="1651547333445" duration="2741000" />
+      <workItem from="1651573341622" duration="8477000" />
+      <workItem from="1651673134938" duration="2790000" />
+      <workItem from="1651675934623" duration="443000" />
+      <workItem from="1651676415250" duration="13000" />
+      <workItem from="1651676464986" duration="417000" />
+      <workItem from="1651676905228" duration="682000" />
+      <workItem from="1651677590943" duration="2078000" />
+      <workItem from="1651971753462" duration="8980000" />
+      <workItem from="1651991237779" duration="6941000" />
+      <workItem from="1651998246324" duration="33491000" />
+      <workItem from="1652151597203" duration="4825000" />
+      <workItem from="1652159570009" duration="1273000" />
+      <workItem from="1652160851390" duration="6909000" />
+      <workItem from="1652188164093" duration="7991000" />
+      <workItem from="1652243240687" duration="1160000" />
+      <workItem from="1652265357581" duration="22808000" />
+      <workItem from="1652326779832" duration="87166000" />
+      <workItem from="1652965420661" duration="28117000" />
+      <workItem from="1653125513038" duration="2190000" />
+      <workItem from="1653178440795" duration="10254000" />
+      <workItem from="1653269827841" duration="7453000" />
+      <workItem from="1653315856363" duration="6145000" />
+      <workItem from="1653365584815" duration="5000" />
+      <workItem from="1653385010318" duration="39142000" />
+      <workItem from="1653551256593" duration="24107000" />
+      <workItem from="1653792604290" duration="15696000" />
+      <workItem from="1653915808643" duration="14557000" />
+      <workItem from="1654094926615" duration="7988000" />
+      <workItem from="1654133090411" duration="16056000" />
+      <workItem from="1654181907024" duration="38310000" />
+      <workItem from="1654513785342" duration="1459000" />
+      <workItem from="1654579144539" duration="7506000" />
+      <workItem from="1654672398519" duration="9858000" />
+      <workItem from="1654733946158" duration="1894000" />
+      <workItem from="1654736314515" duration="15000" />
+      <workItem from="1654736343916" duration="35459000" />
+      <workItem from="1654796017169" duration="2253000" />
+      <workItem from="1654874737185" duration="5698000" />
+      <workItem from="1654910466574" duration="24396000" />
+      <workItem from="1655018112410" duration="9844000" />
+      <workItem from="1655047978697" duration="1206000" />
+      <workItem from="1655208518847" duration="3115000" />
+      <workItem from="1655216843487" duration="22390000" />
+      <workItem from="1655345408064" duration="33963000" />
+      <workItem from="1655475903026" duration="33698000" />
+      <workItem from="1655728358027" duration="1716000" />
+      <workItem from="1655730113041" duration="4895000" />
+      <workItem from="1655735026015" duration="3616000" />
+      <workItem from="1655798403920" duration="20008000" />
+      <workItem from="1655879360658" duration="1959000" />
+      <workItem from="1656053958679" duration="18684000" />
+      <workItem from="1656343782758" duration="1566000" />
+      <workItem from="1656396571170" duration="493000" />
+      <workItem from="1656513425178" duration="22277000" />
+      <workItem from="1656603631609" duration="9375000" />
+      <workItem from="1656722938991" duration="3906000" />
+      <workItem from="1656742656316" duration="3713000" />
+      <workItem from="1656777695100" duration="1553000" />
+      <workItem from="1656779255020" duration="2714000" />
+      <workItem from="1656809631274" duration="3358000" />
+      <workItem from="1656813118686" duration="82000" />
+      <workItem from="1656824040249" duration="200000" />
+      <workItem from="1656825849109" duration="6912000" />
+      <workItem from="1656929878031" duration="4243000" />
+      <workItem from="1656955903386" duration="4428000" />
+      <workItem from="1657153683610" duration="750000" />
+      <workItem from="1657363348501" duration="14077000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+        <option value="Space.CommitStatus" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/release-1.0.0" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Implement MVVM structure" />
+    <MESSAGE value="FEAT : Add MainScreen UI&#10;&#10;Implement MainScreen with dummy data" />
+    <MESSAGE value="Feat: Add PostDetailScreen UI with dummy data" />
+    <MESSAGE value="Feat: Add PostEditScreen UI with dummy data" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

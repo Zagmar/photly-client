@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_flutter/intermediates/merged_res/release/layout-watch-v20/abc_alert_dialog_button_bar_material.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/263fffb13444808d765ed6bb81fbc8e0/transformed/appcompat-1.0.0/res/layout-watch-v20/abc_alert_dialog_button_bar_material.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_flutter/intermediates/merged_res/release/layout-watch-v20/abc_alert_dialog_title_material.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/263fffb13444808d765ed6bb81fbc8e0/transformed/appcompat-1.0.0/res/layout-watch-v20/abc_alert_dialog_title_material.xml"
+    }
+]

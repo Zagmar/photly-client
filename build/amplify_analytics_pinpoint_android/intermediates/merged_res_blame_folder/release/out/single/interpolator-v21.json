@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_analytics_pinpoint_android/intermediates/merged_res/release/interpolator-v21/mtrl_linear_out_slow_in.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/841476d56b41fedcc7ef6cb3d0aa8757/transformed/material-1.0.0/res/interpolator-v21/mtrl_linear_out_slow_in.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_analytics_pinpoint_android/intermediates/merged_res/release/interpolator-v21/mtrl_fast_out_slow_in.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/841476d56b41fedcc7ef6cb3d0aa8757/transformed/material-1.0.0/res/interpolator-v21/mtrl_fast_out_slow_in.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_analytics_pinpoint_android/intermediates/merged_res/release/interpolator-v21/mtrl_fast_out_linear_in.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/841476d56b41fedcc7ef6cb3d0aa8757/transformed/material-1.0.0/res/interpolator-v21/mtrl_fast_out_linear_in.xml"
+    }
+]

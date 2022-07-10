@@ -1,0 +1,25 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/geonhyopark/Development/flutter/.pub-cache/hosted/pub.dartlang.org/amplify_auth_cognito_android-0.4.5/android/src/main/AndroidManifest.xml:1:1-2:60
+INJECTED from /Users/geonhyopark/Development/flutter/.pub-cache/hosted/pub.dartlang.org/amplify_auth_cognito_android-0.4.5/android/src/main/AndroidManifest.xml:1:1-2:60
+INJECTED from /Users/geonhyopark/Development/flutter/.pub-cache/hosted/pub.dartlang.org/amplify_auth_cognito_android-0.4.5/android/src/main/AndroidManifest.xml:1:1-2:60
+	package
+		ADDED from /Users/geonhyopark/Development/flutter/.pub-cache/hosted/pub.dartlang.org/amplify_auth_cognito_android-0.4.5/android/src/main/AndroidManifest.xml:2:5-57
+		INJECTED from /Users/geonhyopark/Development/flutter/.pub-cache/hosted/pub.dartlang.org/amplify_auth_cognito_android-0.4.5/android/src/main/AndroidManifest.xml
+		INJECTED from /Users/geonhyopark/Development/flutter/.pub-cache/hosted/pub.dartlang.org/amplify_auth_cognito_android-0.4.5/android/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/geonhyopark/Development/flutter/.pub-cache/hosted/pub.dartlang.org/amplify_auth_cognito_android-0.4.5/android/src/main/AndroidManifest.xml:1:11-69
+uses-sdk
+INJECTED from /Users/geonhyopark/Development/flutter/.pub-cache/hosted/pub.dartlang.org/amplify_auth_cognito_android-0.4.5/android/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /Users/geonhyopark/Development/flutter/.pub-cache/hosted/pub.dartlang.org/amplify_auth_cognito_android-0.4.5/android/src/main/AndroidManifest.xml
+INJECTED from /Users/geonhyopark/Development/flutter/.pub-cache/hosted/pub.dartlang.org/amplify_auth_cognito_android-0.4.5/android/src/main/AndroidManifest.xml
+INJECTED from /Users/geonhyopark/Development/flutter/.pub-cache/hosted/pub.dartlang.org/amplify_auth_cognito_android-0.4.5/android/src/main/AndroidManifest.xml
+INJECTED from /Users/geonhyopark/Development/flutter/.pub-cache/hosted/pub.dartlang.org/amplify_auth_cognito_android-0.4.5/android/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /Users/geonhyopark/Development/flutter/.pub-cache/hosted/pub.dartlang.org/amplify_auth_cognito_android-0.4.5/android/src/main/AndroidManifest.xml
+		ADDED from /Users/geonhyopark/Development/flutter/.pub-cache/hosted/pub.dartlang.org/amplify_auth_cognito_android-0.4.5/android/src/main/AndroidManifest.xml
+		INJECTED from /Users/geonhyopark/Development/flutter/.pub-cache/hosted/pub.dartlang.org/amplify_auth_cognito_android-0.4.5/android/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Users/geonhyopark/Development/flutter/.pub-cache/hosted/pub.dartlang.org/amplify_auth_cognito_android-0.4.5/android/src/main/AndroidManifest.xml
+		ADDED from /Users/geonhyopark/Development/flutter/.pub-cache/hosted/pub.dartlang.org/amplify_auth_cognito_android-0.4.5/android/src/main/AndroidManifest.xml
+		INJECTED from /Users/geonhyopark/Development/flutter/.pub-cache/hosted/pub.dartlang.org/amplify_auth_cognito_android-0.4.5/android/src/main/AndroidManifest.xml

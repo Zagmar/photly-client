@@ -1,0 +1,460 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.zagmar.couple_seflie_app"
+4    android:versionCode="4"
+5    android:versionName="1.0.3" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+8-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml
+9        android:targetSdkVersion="31" />
+9-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml
+10    //예약 알림과, 진동을 통한 알림을 이용하기 위해서 사용해주는 것입니다.
+11    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+11-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:4:5-77
+11-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:4:22-74
+12    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+12-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:5:5-80
+12-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:5:22-78
+13    <uses-permission android:name="android.permission.VIBRATE" />
+13-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:6:5-66
+13-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:6:22-63
+14    <uses-permission android:name="android.permission.INTERNET" />
+14-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:7:5-67
+14-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:7:22-64
+15    <uses-permission android:name="android.permission.WAKE_LOCK" />
+15-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:8:5-68
+15-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:8:22-65
+16    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+16-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:9:5-81
+16-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:9:22-78
+17    //예약 알림과, 진동을 통한 알림을 이용하기 위해서 사용해주는 것입니다.
+18    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+18-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:11:5-79
+18-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:11:22-76
+19    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" /> <!-- Required by older versions of Google Play services to create IID tokens -->
+19-->[:flutter_local_notifications] /Users/geonhyopark/Development/IdeaProjects/photly/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:12:5-79
+19-->[:flutter_local_notifications] /Users/geonhyopark/Development/IdeaProjects/photly/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:12:22-76
+20    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+20-->[com.google.firebase:firebase-messaging:23.0.5] /Users/geonhyopark/.gradle/caches/transforms-3/7d0c74da4b2b3064ee0b2917d2788831/transformed/jetified-firebase-messaging-23.0.5/AndroidManifest.xml:28:5-82
+20-->[com.google.firebase:firebase-messaging:23.0.5] /Users/geonhyopark/.gradle/caches/transforms-3/7d0c74da4b2b3064ee0b2917d2788831/transformed/jetified-firebase-messaging-23.0.5/AndroidManifest.xml:28:22-79
+21
+22    <application
+23        android:name="android.app.Application"
+23-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:16:9-42
+24        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+24-->[androidx.core:core:1.8.0] /Users/geonhyopark/.gradle/caches/transforms-3/507db748440bce95909c434a56d22892/transformed/core-1.8.0/AndroidManifest.xml:24:18-86
+25        android:icon="@mipmap/ic_launcher"
+25-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:17:9-43
+26        android:label="photly" >
+26-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:15:9-31
+27        <activity
+27-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:18:9-47:20
+28            android:name="com.zagmar.couple_seflie_app.MainActivity"
+28-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:19:13-41
+29            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+29-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:23:13-163
+30            android:exported="true"
+30-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:20:13-36
+31            android:hardwareAccelerated="true"
+31-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:24:13-47
+32            android:launchMode="singleTop"
+32-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:21:13-43
+33            android:showWhenLocked="true"
+33-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:26:13-42
+34            android:theme="@style/LaunchTheme"
+34-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:22:13-47
+35            android:turnScreenOn="true"
+35-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:27:13-40
+36            android:windowSoftInputMode="adjustResize" >
+36-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:25:13-55
+37            <meta-data
+37-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:28:13-30:63
+38                android:name="com.google.firebase.messaging.default_notification_channel_id"
+38-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:29:21-97
+39                android:value="high_importance_channel" />
+39-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:30:21-60
+40            <!--
+41                 Specifies an Android theme to apply to this Activity as soon as
+42                 the Android process has started. This theme is visible to the user
+43                 while the Flutter UI initializes. After that, this theme continues
+44                 to determine the Window background behind the Flutter UI.
+45            -->
+46            <meta-data
+46-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:35:13-38:17
+47                android:name="io.flutter.embedding.android.NormalTheme"
+47-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:36:15-70
+48                android:resource="@style/NormalTheme" />
+48-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:37:15-52
+49
+50            <intent-filter>
+50-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:39:13-46:29
+51                <action android:name="android.intent.action.MAIN" />
+51-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:40:17-68
+51-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:40:25-66
+52
+53                <category android:name="android.intent.category.LAUNCHER" />
+53-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:41:17-76
+53-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:41:27-74
+54                // FCM
+55                <action android:name="FLUTTER_NOTIFICATION_CLICK" />
+55-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:43:17-69
+55-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:43:25-66
+56
+57                <category android:name="android.intent.category.DEFAULT" />
+57-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:44:17-76
+57-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:44:27-73
+58                // FCM
+59            </intent-filter>
+60        </activity>
+61       //이것은 재부팅시 예약된 알림이 예약된 상태 그대로 유지 될수 있도록 해주는 설정입니다.
+62        <service
+62-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:49:8-52:46
+63            android:name="com.dexterous.flutterlocalnotifications.ForegroundService"
+63-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:50:16-88
+64            android:exported="false"
+64-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:51:16-40
+65            android:stopWithTask="false" />
+65-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:52:16-44
+66
+67        <receiver
+67-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:53:8-57:20
+68            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"
+68-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:53:18-106
+69            android:exported="false" >
+69-->[:flutter_local_notifications] /Users/geonhyopark/Development/IdeaProjects/photly/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:20:13-37
+70            <intent-filter>
+70-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:54:13-56:32
+71                <action android:name="android.intent.action.BOOT_COMPLETED" />
+71-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:55:16-85
+71-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:55:24-75
+72            </intent-filter>
+73            <intent-filter>
+73-->[:flutter_local_notifications] /Users/geonhyopark/Development/IdeaProjects/photly/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:21:13-26:29
+74                <action android:name="android.intent.action.BOOT_COMPLETED" />
+74-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:55:16-85
+74-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:55:24-75
+75                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+75-->[:flutter_local_notifications] /Users/geonhyopark/Development/IdeaProjects/photly/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:23:17-84
+75-->[:flutter_local_notifications] /Users/geonhyopark/Development/IdeaProjects/photly/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:23:25-81
+76                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+76-->[:flutter_local_notifications] /Users/geonhyopark/Development/IdeaProjects/photly/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:24:17-82
+76-->[:flutter_local_notifications] /Users/geonhyopark/Development/IdeaProjects/photly/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:24:25-79
+77                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+77-->[:flutter_local_notifications] /Users/geonhyopark/Development/IdeaProjects/photly/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:25:17-82
+77-->[:flutter_local_notifications] /Users/geonhyopark/Development/IdeaProjects/photly/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:25:25-79
+78            </intent-filter>
+79        </receiver>
+80        <receiver
+80-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:58:8-105
+81            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"
+81-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:58:18-102
+82            android:exported="false" />
+82-->[:flutter_local_notifications] /Users/geonhyopark/Development/IdeaProjects/photly/build/flutter_local_notifications/intermediates/merged_manifest/release/AndroidManifest.xml:17:13-37
+83       //이것은 재부팅시 예약된 알림이 예약된 상태 그대로 유지 될수 있도록 해주는 설정입니다.
+84        <!--
+85             Don't delete the meta-data below.
+86             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
+87        -->
+88        <meta-data
+88-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:62:9-64:33
+89            android:name="flutterEmbedding"
+89-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:63:13-44
+90            android:value="2" />
+90-->/Users/geonhyopark/Development/IdeaProjects/photly/android/app/src/main/AndroidManifest.xml:64:13-30
+91
+92        <activity
+92-->[:amplify_analytics_pinpoint_android] /Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_analytics_pinpoint_android/intermediates/merged_manifest/release/AndroidManifest.xml:10:9-12:40
+93            android:name="com.amazonaws.amplify.amplify_analytics_pinpoint.EmptyActivity"
+93-->[:amplify_analytics_pinpoint_android] /Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_analytics_pinpoint_android/intermediates/merged_manifest/release/AndroidManifest.xml:11:13-90
+94            android:exported="false" />
+94-->[:amplify_analytics_pinpoint_android] /Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_analytics_pinpoint_android/intermediates/merged_manifest/release/AndroidManifest.xml:12:13-37
+95
+96        <service
+96-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:14:9-17:72
+97            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingBackgroundService"
+97-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:15:13-107
+98            android:exported="false"
+98-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:16:13-37
+99            android:permission="android.permission.BIND_JOB_SERVICE" />
+99-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:17:13-69
+100        <service
+100-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:18:9-24:19
+101            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingService"
+101-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:19:13-97
+102            android:exported="false" >
+102-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:20:13-37
+103            <intent-filter>
+103-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:21:13-23:29
+104                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+104-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:22:17-78
+104-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:22:25-75
+105            </intent-filter>
+106        </service>
+107
+108        <receiver
+108-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:26:9-33:20
+109            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingReceiver"
+109-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:27:13-98
+110            android:exported="true"
+110-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:28:13-36
+111            android:permission="com.google.android.c2dm.permission.SEND" >
+111-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:29:13-73
+112            <intent-filter>
+112-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:30:13-32:29
+113                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+113-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:31:17-81
+113-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:31:25-78
+114            </intent-filter>
+115        </receiver>
+116
+117        <service
+117-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:35:9-39:19
+118            android:name="com.google.firebase.components.ComponentDiscoveryService"
+118-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:35:18-89
+119            android:directBootAware="true"
+119-->[com.google.firebase:firebase-common:20.1.1] /Users/geonhyopark/.gradle/caches/transforms-3/6a4c6d1c6c123dd0fc5c77c2fb3649c5/transformed/jetified-firebase-common-20.1.1/AndroidManifest.xml:35:13-43
+120            android:exported="false" >
+120-->[com.google.firebase:firebase-messaging:23.0.5] /Users/geonhyopark/.gradle/caches/transforms-3/7d0c74da4b2b3064ee0b2917d2788831/transformed/jetified-firebase-messaging-23.0.5/AndroidManifest.xml:54:13-37
+121            <meta-data
+121-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:36:13-38:85
+122                android:name="com.google.firebase.components:io.flutter.plugins.firebase.messaging.FlutterFirebaseAppRegistrar"
+122-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:37:17-128
+123                android:value="com.google.firebase.components.ComponentRegistrar" />
+123-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:38:17-82
+124            <meta-data
+124-->[:firebase_core] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_core/intermediates/merged_manifest/release/AndroidManifest.xml:11:13-13:85
+125                android:name="com.google.firebase.components:io.flutter.plugins.firebase.core.FlutterFirebaseCoreRegistrar"
+125-->[:firebase_core] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_core/intermediates/merged_manifest/release/AndroidManifest.xml:12:17-124
+126                android:value="com.google.firebase.components.ComponentRegistrar" />
+126-->[:firebase_core] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_core/intermediates/merged_manifest/release/AndroidManifest.xml:13:17-82
+127            <meta-data
+127-->[com.google.firebase:firebase-messaging:23.0.5] /Users/geonhyopark/.gradle/caches/transforms-3/7d0c74da4b2b3064ee0b2917d2788831/transformed/jetified-firebase-messaging-23.0.5/AndroidManifest.xml:55:13-57:85
+128                android:name="com.google.firebase.components:com.google.firebase.messaging.FirebaseMessagingRegistrar"
+128-->[com.google.firebase:firebase-messaging:23.0.5] /Users/geonhyopark/.gradle/caches/transforms-3/7d0c74da4b2b3064ee0b2917d2788831/transformed/jetified-firebase-messaging-23.0.5/AndroidManifest.xml:56:17-119
+129                android:value="com.google.firebase.components.ComponentRegistrar" />
+129-->[com.google.firebase:firebase-messaging:23.0.5] /Users/geonhyopark/.gradle/caches/transforms-3/7d0c74da4b2b3064ee0b2917d2788831/transformed/jetified-firebase-messaging-23.0.5/AndroidManifest.xml:57:17-82
+130            <meta-data
+130-->[com.google.firebase:firebase-datatransport:18.1.4] /Users/geonhyopark/.gradle/caches/transforms-3/1aeb56ca9d82bf955003861e2445a48d/transformed/jetified-firebase-datatransport-18.1.4/AndroidManifest.xml:28:13-30:85
+131                android:name="com.google.firebase.components:com.google.firebase.datatransport.TransportRegistrar"
+131-->[com.google.firebase:firebase-datatransport:18.1.4] /Users/geonhyopark/.gradle/caches/transforms-3/1aeb56ca9d82bf955003861e2445a48d/transformed/jetified-firebase-datatransport-18.1.4/AndroidManifest.xml:29:17-115
+132                android:value="com.google.firebase.components.ComponentRegistrar" />
+132-->[com.google.firebase:firebase-datatransport:18.1.4] /Users/geonhyopark/.gradle/caches/transforms-3/1aeb56ca9d82bf955003861e2445a48d/transformed/jetified-firebase-datatransport-18.1.4/AndroidManifest.xml:30:17-82
+133            <meta-data
+133-->[com.google.firebase:firebase-installations:17.0.1] /Users/geonhyopark/.gradle/caches/transforms-3/a1512c266bbe21a222e2087b42c2d08f/transformed/jetified-firebase-installations-17.0.1/AndroidManifest.xml:18:13-20:85
+134                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar"
+134-->[com.google.firebase:firebase-installations:17.0.1] /Users/geonhyopark/.gradle/caches/transforms-3/a1512c266bbe21a222e2087b42c2d08f/transformed/jetified-firebase-installations-17.0.1/AndroidManifest.xml:19:17-127
+135                android:value="com.google.firebase.components.ComponentRegistrar" />
+135-->[com.google.firebase:firebase-installations:17.0.1] /Users/geonhyopark/.gradle/caches/transforms-3/a1512c266bbe21a222e2087b42c2d08f/transformed/jetified-firebase-installations-17.0.1/AndroidManifest.xml:20:17-82
+136        </service>
+137
+138        <provider
+138-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:41:9-45:38
+139            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingInitProvider"
+139-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:42:13-102
+140            android:authorities="com.zagmar.couple_seflie_app.flutterfirebasemessaginginitprovider"
+140-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:43:13-88
+141            android:exported="false"
+141-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:44:13-37
+142            android:initOrder="99" />
+142-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:45:13-35
+143        <provider
+143-->[:image_picker_android] /Users/geonhyopark/Development/IdeaProjects/photly/build/image_picker_android/intermediates/merged_manifest/release/AndroidManifest.xml:10:9-18:20
+144            android:name="io.flutter.plugins.imagepicker.ImagePickerFileProvider"
+144-->[:image_picker_android] /Users/geonhyopark/Development/IdeaProjects/photly/build/image_picker_android/intermediates/merged_manifest/release/AndroidManifest.xml:11:13-82
+145            android:authorities="com.zagmar.couple_seflie_app.flutter.image_provider"
+145-->[:image_picker_android] /Users/geonhyopark/Development/IdeaProjects/photly/build/image_picker_android/intermediates/merged_manifest/release/AndroidManifest.xml:12:13-74
+146            android:exported="false"
+146-->[:image_picker_android] /Users/geonhyopark/Development/IdeaProjects/photly/build/image_picker_android/intermediates/merged_manifest/release/AndroidManifest.xml:13:13-37
+147            android:grantUriPermissions="true" >
+147-->[:image_picker_android] /Users/geonhyopark/Development/IdeaProjects/photly/build/image_picker_android/intermediates/merged_manifest/release/AndroidManifest.xml:14:13-47
+148            <meta-data
+148-->[:image_picker_android] /Users/geonhyopark/Development/IdeaProjects/photly/build/image_picker_android/intermediates/merged_manifest/release/AndroidManifest.xml:15:13-17:75
+149                android:name="android.support.FILE_PROVIDER_PATHS"
+149-->[:image_picker_android] /Users/geonhyopark/Development/IdeaProjects/photly/build/image_picker_android/intermediates/merged_manifest/release/AndroidManifest.xml:16:17-67
+150                android:resource="@xml/flutter_image_picker_file_paths" />
+150-->[:image_picker_android] /Users/geonhyopark/Development/IdeaProjects/photly/build/image_picker_android/intermediates/merged_manifest/release/AndroidManifest.xml:17:17-72
+151        </provider>
+152
+153        <activity
+153-->[com.amplifyframework:core:1.32.1] /Users/geonhyopark/.gradle/caches/transforms-3/96975a9c8ed7e32980857eff7ee2d96d/transformed/jetified-core-1.32.1/AndroidManifest.xml:27:9-29:54
+154            android:name="com.amplifyframework.devmenu.DeveloperMenuActivity"
+154-->[com.amplifyframework:core:1.32.1] /Users/geonhyopark/.gradle/caches/transforms-3/96975a9c8ed7e32980857eff7ee2d96d/transformed/jetified-core-1.32.1/AndroidManifest.xml:28:13-78
+155            android:theme="@style/OverlayActivity" />
+155-->[com.amplifyframework:core:1.32.1] /Users/geonhyopark/.gradle/caches/transforms-3/96975a9c8ed7e32980857eff7ee2d96d/transformed/jetified-core-1.32.1/AndroidManifest.xml:29:13-51
+156
+157        <uses-library
+157-->[androidx.window:window:1.0.0-beta04] /Users/geonhyopark/.gradle/caches/transforms-3/65d7f496e0c0fefec8fa7195c7c8a034/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:25:9-27:40
+158            android:name="androidx.window.extensions"
+158-->[androidx.window:window:1.0.0-beta04] /Users/geonhyopark/.gradle/caches/transforms-3/65d7f496e0c0fefec8fa7195c7c8a034/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:26:13-54
+159            android:required="false" />
+159-->[androidx.window:window:1.0.0-beta04] /Users/geonhyopark/.gradle/caches/transforms-3/65d7f496e0c0fefec8fa7195c7c8a034/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:27:13-37
+160        <uses-library
+160-->[androidx.window:window:1.0.0-beta04] /Users/geonhyopark/.gradle/caches/transforms-3/65d7f496e0c0fefec8fa7195c7c8a034/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:28:9-30:40
+161            android:name="androidx.window.sidecar"
+161-->[androidx.window:window:1.0.0-beta04] /Users/geonhyopark/.gradle/caches/transforms-3/65d7f496e0c0fefec8fa7195c7c8a034/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:29:13-51
+162            android:required="false" />
+162-->[androidx.window:window:1.0.0-beta04] /Users/geonhyopark/.gradle/caches/transforms-3/65d7f496e0c0fefec8fa7195c7c8a034/transformed/jetified-window-1.0.0-beta04/AndroidManifest.xml:30:13-37
+163
+164        <receiver
+164-->[com.google.firebase:firebase-messaging:23.0.5] /Users/geonhyopark/.gradle/caches/transforms-3/7d0c74da4b2b3064ee0b2917d2788831/transformed/jetified-firebase-messaging-23.0.5/AndroidManifest.xml:31:9-38:20
+165            android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
+165-->[com.google.firebase:firebase-messaging:23.0.5] /Users/geonhyopark/.gradle/caches/transforms-3/7d0c74da4b2b3064ee0b2917d2788831/transformed/jetified-firebase-messaging-23.0.5/AndroidManifest.xml:32:13-78
+166            android:exported="true"
+166-->[com.google.firebase:firebase-messaging:23.0.5] /Users/geonhyopark/.gradle/caches/transforms-3/7d0c74da4b2b3064ee0b2917d2788831/transformed/jetified-firebase-messaging-23.0.5/AndroidManifest.xml:33:13-36
+167            android:permission="com.google.android.c2dm.permission.SEND" >
+167-->[com.google.firebase:firebase-messaging:23.0.5] /Users/geonhyopark/.gradle/caches/transforms-3/7d0c74da4b2b3064ee0b2917d2788831/transformed/jetified-firebase-messaging-23.0.5/AndroidManifest.xml:34:13-73
+168            <intent-filter>
+168-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:30:13-32:29
+169                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+169-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:31:17-81
+169-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:31:25-78
+170            </intent-filter>
+171        </receiver>
+172        <!--
+173             FirebaseMessagingService performs security checks at runtime,
+174             but set to not exported to explicitly avoid allowing another app to call it.
+175        -->
+176        <service
+176-->[com.google.firebase:firebase-messaging:23.0.5] /Users/geonhyopark/.gradle/caches/transforms-3/7d0c74da4b2b3064ee0b2917d2788831/transformed/jetified-firebase-messaging-23.0.5/AndroidManifest.xml:44:9-51:19
+177            android:name="com.google.firebase.messaging.FirebaseMessagingService"
+177-->[com.google.firebase:firebase-messaging:23.0.5] /Users/geonhyopark/.gradle/caches/transforms-3/7d0c74da4b2b3064ee0b2917d2788831/transformed/jetified-firebase-messaging-23.0.5/AndroidManifest.xml:45:13-82
+178            android:directBootAware="true"
+178-->[com.google.firebase:firebase-messaging:23.0.5] /Users/geonhyopark/.gradle/caches/transforms-3/7d0c74da4b2b3064ee0b2917d2788831/transformed/jetified-firebase-messaging-23.0.5/AndroidManifest.xml:46:13-43
+179            android:exported="false" >
+179-->[com.google.firebase:firebase-messaging:23.0.5] /Users/geonhyopark/.gradle/caches/transforms-3/7d0c74da4b2b3064ee0b2917d2788831/transformed/jetified-firebase-messaging-23.0.5/AndroidManifest.xml:47:13-37
+180            <intent-filter android:priority="-500" >
+180-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:21:13-23:29
+181                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+181-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:22:17-78
+181-->[:firebase_messaging] /Users/geonhyopark/Development/IdeaProjects/photly/build/firebase_messaging/intermediates/merged_manifest/release/AndroidManifest.xml:22:25-75
+182            </intent-filter>
+183        </service>
+184        <service
+184-->[com.google.android.datatransport:transport-backend-cct:3.1.5] /Users/geonhyopark/.gradle/caches/transforms-3/d1b50347f8a90f56e38de04d4ad627c5/transformed/jetified-transport-backend-cct-3.1.5/AndroidManifest.xml:29:9-35:19
+185            android:name="com.google.android.datatransport.runtime.backends.TransportBackendDiscovery"
+185-->[com.google.android.datatransport:transport-backend-cct:3.1.5] /Users/geonhyopark/.gradle/caches/transforms-3/d1b50347f8a90f56e38de04d4ad627c5/transformed/jetified-transport-backend-cct-3.1.5/AndroidManifest.xml:30:13-103
+186            android:exported="false" >
+186-->[com.google.android.datatransport:transport-backend-cct:3.1.5] /Users/geonhyopark/.gradle/caches/transforms-3/d1b50347f8a90f56e38de04d4ad627c5/transformed/jetified-transport-backend-cct-3.1.5/AndroidManifest.xml:31:13-37
+187            <meta-data
+187-->[com.google.android.datatransport:transport-backend-cct:3.1.5] /Users/geonhyopark/.gradle/caches/transforms-3/d1b50347f8a90f56e38de04d4ad627c5/transformed/jetified-transport-backend-cct-3.1.5/AndroidManifest.xml:32:13-34:39
+188                android:name="backend:com.google.android.datatransport.cct.CctBackendFactory"
+188-->[com.google.android.datatransport:transport-backend-cct:3.1.5] /Users/geonhyopark/.gradle/caches/transforms-3/d1b50347f8a90f56e38de04d4ad627c5/transformed/jetified-transport-backend-cct-3.1.5/AndroidManifest.xml:33:17-94
+189                android:value="cct" />
+189-->[com.google.android.datatransport:transport-backend-cct:3.1.5] /Users/geonhyopark/.gradle/caches/transforms-3/d1b50347f8a90f56e38de04d4ad627c5/transformed/jetified-transport-backend-cct-3.1.5/AndroidManifest.xml:34:17-36
+190        </service>
+191        <service
+191-->[com.google.android.datatransport:transport-runtime:3.1.5] /Users/geonhyopark/.gradle/caches/transforms-3/4e78dcc198c9420ac4b830e9e8390b93/transformed/jetified-transport-runtime-3.1.5/AndroidManifest.xml:26:9-30:19
+192            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.JobInfoSchedulerService"
+192-->[com.google.android.datatransport:transport-runtime:3.1.5] /Users/geonhyopark/.gradle/caches/transforms-3/4e78dcc198c9420ac4b830e9e8390b93/transformed/jetified-transport-runtime-3.1.5/AndroidManifest.xml:27:13-117
+193            android:exported="false"
+193-->[com.google.android.datatransport:transport-runtime:3.1.5] /Users/geonhyopark/.gradle/caches/transforms-3/4e78dcc198c9420ac4b830e9e8390b93/transformed/jetified-transport-runtime-3.1.5/AndroidManifest.xml:28:13-37
+194            android:permission="android.permission.BIND_JOB_SERVICE" >
+194-->[com.google.android.datatransport:transport-runtime:3.1.5] /Users/geonhyopark/.gradle/caches/transforms-3/4e78dcc198c9420ac4b830e9e8390b93/transformed/jetified-transport-runtime-3.1.5/AndroidManifest.xml:29:13-69
+195        </service>
+196
+197        <receiver
+197-->[com.google.android.datatransport:transport-runtime:3.1.5] /Users/geonhyopark/.gradle/caches/transforms-3/4e78dcc198c9420ac4b830e9e8390b93/transformed/jetified-transport-runtime-3.1.5/AndroidManifest.xml:32:9-34:40
+198            android:name="com.google.android.datatransport.runtime.scheduling.jobscheduling.AlarmManagerSchedulerBroadcastReceiver"
+198-->[com.google.android.datatransport:transport-runtime:3.1.5] /Users/geonhyopark/.gradle/caches/transforms-3/4e78dcc198c9420ac4b830e9e8390b93/transformed/jetified-transport-runtime-3.1.5/AndroidManifest.xml:33:13-132
+199            android:exported="false" />
+199-->[com.google.android.datatransport:transport-runtime:3.1.5] /Users/geonhyopark/.gradle/caches/transforms-3/4e78dcc198c9420ac4b830e9e8390b93/transformed/jetified-transport-runtime-3.1.5/AndroidManifest.xml:34:13-37
+200
+201        <provider
+201-->[com.google.firebase:firebase-common:20.1.1] /Users/geonhyopark/.gradle/caches/transforms-3/6a4c6d1c6c123dd0fc5c77c2fb3649c5/transformed/jetified-firebase-common-20.1.1/AndroidManifest.xml:26:9-31:39
+202            android:name="com.google.firebase.provider.FirebaseInitProvider"
+202-->[com.google.firebase:firebase-common:20.1.1] /Users/geonhyopark/.gradle/caches/transforms-3/6a4c6d1c6c123dd0fc5c77c2fb3649c5/transformed/jetified-firebase-common-20.1.1/AndroidManifest.xml:27:13-77
+203            android:authorities="com.zagmar.couple_seflie_app.firebaseinitprovider"
+203-->[com.google.firebase:firebase-common:20.1.1] /Users/geonhyopark/.gradle/caches/transforms-3/6a4c6d1c6c123dd0fc5c77c2fb3649c5/transformed/jetified-firebase-common-20.1.1/AndroidManifest.xml:28:13-72
+204            android:directBootAware="true"
+204-->[com.google.firebase:firebase-common:20.1.1] /Users/geonhyopark/.gradle/caches/transforms-3/6a4c6d1c6c123dd0fc5c77c2fb3649c5/transformed/jetified-firebase-common-20.1.1/AndroidManifest.xml:29:13-43
+205            android:exported="false"
+205-->[com.google.firebase:firebase-common:20.1.1] /Users/geonhyopark/.gradle/caches/transforms-3/6a4c6d1c6c123dd0fc5c77c2fb3649c5/transformed/jetified-firebase-common-20.1.1/AndroidManifest.xml:30:13-37
+206            android:initOrder="100" />
+206-->[com.google.firebase:firebase-common:20.1.1] /Users/geonhyopark/.gradle/caches/transforms-3/6a4c6d1c6c123dd0fc5c77c2fb3649c5/transformed/jetified-firebase-common-20.1.1/AndroidManifest.xml:31:13-36
+207
+208        <activity
+208-->[com.amazonaws:aws-android-sdk-cognitoauth:2.41.0] /Users/geonhyopark/.gradle/caches/transforms-3/8f7de1ae5c7996746e56ecf621fc3b06/transformed/jetified-aws-android-sdk-cognitoauth-2.41.0/AndroidManifest.xml:12:9-16:75
+209            android:name="com.amazonaws.mobileconnectors.cognitoauth.activities.CustomTabsManagerActivity"
+209-->[com.amazonaws:aws-android-sdk-cognitoauth:2.41.0] /Users/geonhyopark/.gradle/caches/transforms-3/8f7de1ae5c7996746e56ecf621fc3b06/transformed/jetified-aws-android-sdk-cognitoauth-2.41.0/AndroidManifest.xml:13:13-107
+210            android:exported="false"
+210-->[com.amazonaws:aws-android-sdk-cognitoauth:2.41.0] /Users/geonhyopark/.gradle/caches/transforms-3/8f7de1ae5c7996746e56ecf621fc3b06/transformed/jetified-aws-android-sdk-cognitoauth-2.41.0/AndroidManifest.xml:14:13-37
+211            android:launchMode="singleTask"
+211-->[com.amazonaws:aws-android-sdk-cognitoauth:2.41.0] /Users/geonhyopark/.gradle/caches/transforms-3/8f7de1ae5c7996746e56ecf621fc3b06/transformed/jetified-aws-android-sdk-cognitoauth-2.41.0/AndroidManifest.xml:15:13-44
+212            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+212-->[com.amazonaws:aws-android-sdk-cognitoauth:2.41.0] /Users/geonhyopark/.gradle/caches/transforms-3/8f7de1ae5c7996746e56ecf621fc3b06/transformed/jetified-aws-android-sdk-cognitoauth-2.41.0/AndroidManifest.xml:16:13-72
+213
+214        <uses-library
+214-->[com.amazonaws:aws-android-sdk-core:2.41.0] /Users/geonhyopark/.gradle/caches/transforms-3/d4848a1781c42db80b4a0d81ff4158be/transformed/jetified-aws-android-sdk-core-2.41.0/AndroidManifest.xml:11:9-13:40
+215            android:name="org.apache.http.legacy"
+215-->[com.amazonaws:aws-android-sdk-core:2.41.0] /Users/geonhyopark/.gradle/caches/transforms-3/d4848a1781c42db80b4a0d81ff4158be/transformed/jetified-aws-android-sdk-core-2.41.0/AndroidManifest.xml:12:13-50
+216            android:required="false" />
+216-->[com.amazonaws:aws-android-sdk-core:2.41.0] /Users/geonhyopark/.gradle/caches/transforms-3/d4848a1781c42db80b4a0d81ff4158be/transformed/jetified-aws-android-sdk-core-2.41.0/AndroidManifest.xml:13:13-37
+217
+218        <activity
+218-->[com.google.android.gms:play-services-base:18.0.1] /Users/geonhyopark/.gradle/caches/transforms-3/c13d9e5ecb09d9c19ab8309c72c4c353/transformed/jetified-play-services-base-18.0.1/AndroidManifest.xml:20:9-22:45
+219            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+219-->[com.google.android.gms:play-services-base:18.0.1] /Users/geonhyopark/.gradle/caches/transforms-3/c13d9e5ecb09d9c19ab8309c72c4c353/transformed/jetified-play-services-base-18.0.1/AndroidManifest.xml:20:19-85
+220            android:exported="false"
+220-->[com.google.android.gms:play-services-base:18.0.1] /Users/geonhyopark/.gradle/caches/transforms-3/c13d9e5ecb09d9c19ab8309c72c4c353/transformed/jetified-play-services-base-18.0.1/AndroidManifest.xml:22:19-43
+221            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+221-->[com.google.android.gms:play-services-base:18.0.1] /Users/geonhyopark/.gradle/caches/transforms-3/c13d9e5ecb09d9c19ab8309c72c4c353/transformed/jetified-play-services-base-18.0.1/AndroidManifest.xml:21:19-78
+222
+223        <meta-data
+223-->[com.google.android.gms:play-services-basement:18.0.0] /Users/geonhyopark/.gradle/caches/transforms-3/fc0b42180d6cfa4088f876f2de646fba/transformed/jetified-play-services-basement-18.0.0/AndroidManifest.xml:21:9-23:69
+224            android:name="com.google.android.gms.version"
+224-->[com.google.android.gms:play-services-basement:18.0.0] /Users/geonhyopark/.gradle/caches/transforms-3/fc0b42180d6cfa4088f876f2de646fba/transformed/jetified-play-services-basement-18.0.0/AndroidManifest.xml:22:13-58
+225            android:value="@integer/google_play_services_version" /> <!-- The activities will be merged into the manifest of the hosting app. -->
+225-->[com.google.android.gms:play-services-basement:18.0.0] /Users/geonhyopark/.gradle/caches/transforms-3/fc0b42180d6cfa4088f876f2de646fba/transformed/jetified-play-services-basement-18.0.0/AndroidManifest.xml:23:13-66
+226        <activity
+226-->[com.google.android.play:core:1.9.1] /Users/geonhyopark/.gradle/caches/transforms-3/945cb5de546df2465833c24fa41ec12e/transformed/jetified-core-1.9.1/AndroidManifest.xml:12:5-271
+227            android:name="com.google.android.play.core.missingsplits.PlayCoreMissingSplitsActivity"
+227-->[com.google.android.play:core:1.9.1] /Users/geonhyopark/.gradle/caches/transforms-3/945cb5de546df2465833c24fa41ec12e/transformed/jetified-core-1.9.1/AndroidManifest.xml:12:15-102
+228            android:enabled="false"
+228-->[com.google.android.play:core:1.9.1] /Users/geonhyopark/.gradle/caches/transforms-3/945cb5de546df2465833c24fa41ec12e/transformed/jetified-core-1.9.1/AndroidManifest.xml:12:103-126
+229            android:exported="false"
+229-->[com.google.android.play:core:1.9.1] /Users/geonhyopark/.gradle/caches/transforms-3/945cb5de546df2465833c24fa41ec12e/transformed/jetified-core-1.9.1/AndroidManifest.xml:12:127-151
+230            android:launchMode="singleInstance"
+230-->[com.google.android.play:core:1.9.1] /Users/geonhyopark/.gradle/caches/transforms-3/945cb5de546df2465833c24fa41ec12e/transformed/jetified-core-1.9.1/AndroidManifest.xml:12:204-239
+231            android:process=":playcore_missing_splits_activity"
+231-->[com.google.android.play:core:1.9.1] /Users/geonhyopark/.gradle/caches/transforms-3/945cb5de546df2465833c24fa41ec12e/transformed/jetified-core-1.9.1/AndroidManifest.xml:12:152-203
+232            android:stateNotNeeded="true" />
+232-->[com.google.android.play:core:1.9.1] /Users/geonhyopark/.gradle/caches/transforms-3/945cb5de546df2465833c24fa41ec12e/transformed/jetified-core-1.9.1/AndroidManifest.xml:12:240-269
+233        <activity
+233-->[com.google.android.play:core:1.9.1] /Users/geonhyopark/.gradle/caches/transforms-3/945cb5de546df2465833c24fa41ec12e/transformed/jetified-core-1.9.1/AndroidManifest.xml:13:5-226
+234            android:name="com.google.android.play.core.common.PlayCoreDialogWrapperActivity"
+234-->[com.google.android.play:core:1.9.1] /Users/geonhyopark/.gradle/caches/transforms-3/945cb5de546df2465833c24fa41ec12e/transformed/jetified-core-1.9.1/AndroidManifest.xml:13:15-95
+235            android:enabled="false"
+235-->[com.google.android.play:core:1.9.1] /Users/geonhyopark/.gradle/caches/transforms-3/945cb5de546df2465833c24fa41ec12e/transformed/jetified-core-1.9.1/AndroidManifest.xml:13:96-119
+236            android:exported="false"
+236-->[com.google.android.play:core:1.9.1] /Users/geonhyopark/.gradle/caches/transforms-3/945cb5de546df2465833c24fa41ec12e/transformed/jetified-core-1.9.1/AndroidManifest.xml:13:120-144
+237            android:stateNotNeeded="true"
+237-->[com.google.android.play:core:1.9.1] /Users/geonhyopark/.gradle/caches/transforms-3/945cb5de546df2465833c24fa41ec12e/transformed/jetified-core-1.9.1/AndroidManifest.xml:13:145-174
+238            android:theme="@style/Theme.PlayCore.Transparent" /> <!-- The services will be merged into the manifest of the hosting app. -->
+238-->[com.google.android.play:core:1.9.1] /Users/geonhyopark/.gradle/caches/transforms-3/945cb5de546df2465833c24fa41ec12e/transformed/jetified-core-1.9.1/AndroidManifest.xml:13:175-224
+239        <service
+239-->[com.google.android.play:core:1.9.1] /Users/geonhyopark/.gradle/caches/transforms-3/945cb5de546df2465833c24fa41ec12e/transformed/jetified-core-1.9.1/AndroidManifest.xml:16:5-18:15
+240            android:name="com.google.android.play.core.assetpacks.AssetPackExtractionService"
+240-->[com.google.android.play:core:1.9.1] /Users/geonhyopark/.gradle/caches/transforms-3/945cb5de546df2465833c24fa41ec12e/transformed/jetified-core-1.9.1/AndroidManifest.xml:16:14-95
+241            android:enabled="false"
+241-->[com.google.android.play:core:1.9.1] /Users/geonhyopark/.gradle/caches/transforms-3/945cb5de546df2465833c24fa41ec12e/transformed/jetified-core-1.9.1/AndroidManifest.xml:16:96-119
+242            android:exported="true" >
+242-->[com.google.android.play:core:1.9.1] /Users/geonhyopark/.gradle/caches/transforms-3/945cb5de546df2465833c24fa41ec12e/transformed/jetified-core-1.9.1/AndroidManifest.xml:16:120-143
+243            <meta-data
+243-->[com.google.android.play:core:1.9.1] /Users/geonhyopark/.gradle/caches/transforms-3/945cb5de546df2465833c24fa41ec12e/transformed/jetified-core-1.9.1/AndroidManifest.xml:17:7-108
+244                android:name="com.google.android.play.core.assetpacks.versionCode"
+244-->[com.google.android.play:core:1.9.1] /Users/geonhyopark/.gradle/caches/transforms-3/945cb5de546df2465833c24fa41ec12e/transformed/jetified-core-1.9.1/AndroidManifest.xml:17:18-84
+245                android:value="10901" />
+245-->[com.google.android.play:core:1.9.1] /Users/geonhyopark/.gradle/caches/transforms-3/945cb5de546df2465833c24fa41ec12e/transformed/jetified-core-1.9.1/AndroidManifest.xml:17:85-106
+246        </service>
+247        <service
+247-->[com.google.android.play:core:1.9.1] /Users/geonhyopark/.gradle/caches/transforms-3/945cb5de546df2465833c24fa41ec12e/transformed/jetified-core-1.9.1/AndroidManifest.xml:19:5-147
+248            android:name="com.google.android.play.core.assetpacks.ExtractionForegroundService"
+248-->[com.google.android.play:core:1.9.1] /Users/geonhyopark/.gradle/caches/transforms-3/945cb5de546df2465833c24fa41ec12e/transformed/jetified-core-1.9.1/AndroidManifest.xml:19:14-96
+249            android:enabled="false"
+249-->[com.google.android.play:core:1.9.1] /Users/geonhyopark/.gradle/caches/transforms-3/945cb5de546df2465833c24fa41ec12e/transformed/jetified-core-1.9.1/AndroidManifest.xml:19:97-120
+250            android:exported="false" />
+250-->[com.google.android.play:core:1.9.1] /Users/geonhyopark/.gradle/caches/transforms-3/945cb5de546df2465833c24fa41ec12e/transformed/jetified-core-1.9.1/AndroidManifest.xml:19:121-145
+251    </application>
+252
+253</manifest>

@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_core/intermediates/merged_res/release/anim-v21/design_bottom_sheet_slide_in.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/841476d56b41fedcc7ef6cb3d0aa8757/transformed/material-1.0.0/res/anim-v21/design_bottom_sheet_slide_in.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_core/intermediates/merged_res/release/anim-v21/fragment_fast_out_extra_slow_in.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/264835be351d15658f435b3094282cb7/transformed/fragment-1.2.4/res/anim-v21/fragment_fast_out_extra_slow_in.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_core/intermediates/merged_res/release/anim-v21/design_bottom_sheet_slide_out.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/841476d56b41fedcc7ef6cb3d0aa8757/transformed/material-1.0.0/res/anim-v21/design_bottom_sheet_slide_out.xml"
+    }
+]

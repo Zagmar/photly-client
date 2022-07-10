@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_core/intermediates/merged_res/release/layout-sw600dp-v13/mtrl_layout_snackbar.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/841476d56b41fedcc7ef6cb3d0aa8757/transformed/material-1.0.0/res/layout-sw600dp-v13/mtrl_layout_snackbar.xml"
+    },
+    {
+        "merged": "/Users/geonhyopark/Development/IdeaProjects/photly/build/amplify_core/intermediates/merged_res/release/layout-sw600dp-v13/design_layout_snackbar.xml",
+        "source": "/Users/geonhyopark/.gradle/caches/transforms-3/841476d56b41fedcc7ef6cb3d0aa8757/transformed/material-1.0.0/res/layout-sw600dp-v13/design_layout_snackbar.xml"
+    }
+]

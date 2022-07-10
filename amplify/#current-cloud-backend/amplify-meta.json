@@ -1,0 +1,52 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-photly-dev-03829-authRole",
+      "UnauthRoleArn": "arn:aws:iam::630483499643:role/amplify-photly-dev-03829-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::630483499643:role/amplify-photly-dev-03829-authRole",
+      "Region": "ap-northeast-2",
+      "DeploymentBucketName": "amplify-photly-dev-03829-deployment",
+      "UnauthRoleName": "amplify-photly-dev-03829-unauthRole",
+      "StackName": "amplify-photly-dev-03829",
+      "StackId": "arn:aws:cloudformation:ap-northeast-2:630483499643:stack/amplify-photly-dev-03829/ba27a220-dc40-11ec-bac4-069df0887dd0",
+      "AmplifyAppId": "d1rzq597yatck4"
+    }
+  },
+  "auth": {
+    "photly": {
+      "service": "Cognito",
+      "serviceType": "imported",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false,
+      "output": {
+        "UserPoolId": "ap-northeast-2_VX4UB4Vr3",
+        "UserPoolName": "photly_userpool_test1",
+        "AppClientID": "4gmrm0cgmc7mo367jfhplm6f1c",
+        "AppClientIDWeb": "4gmrm0cgmc7mo367jfhplm6f1c"
+      },
+      "frontendAuthConfig": {
+        "socialProviders": [],
+        "usernameAttributes": [
+          "EMAIL"
+        ],
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyMinLength": 8,
+          "passwordPolicyCharacters": [
+            "REQUIRES_LOWERCASE",
+            "REQUIRES_NUMBERS"
+          ]
+        },
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "lastPushTimeStamp": "2022-05-25T17:37:11.608Z"
+    }
+  }
+}

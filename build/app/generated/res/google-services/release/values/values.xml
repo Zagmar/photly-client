@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">653690506781-4uh2b1ed8372f4nt9r64a4n8tpeknf6g.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">653690506781</string>
+    <string name="google_api_key" translatable="false">AIzaSyDm9Su19OseGd3P4Mxb0_BU21bdl5USm1s</string>
+    <string name="google_app_id" translatable="false">1:653690506781:android:bfba87584f6e35610240f4</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyDm9Su19OseGd3P4Mxb0_BU21bdl5USm1s</string>
+    <string name="google_storage_bucket" translatable="false">photly-efd8d.appspot.com</string>
+    <string name="project_id" translatable="false">photly-efd8d</string>
+</resources>

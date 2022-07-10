@@ -1,0 +1,6 @@
+framework module amplify_analytics_pinpoint_ios {
+  umbrella header "amplify_analytics_pinpoint_ios-umbrella.h"
+
+  export *
+  module * { export * }
+}
